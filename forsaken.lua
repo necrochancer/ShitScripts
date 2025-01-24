@@ -5,10 +5,14 @@
 local SoundService = game:GetService("SoundService")
 local DebugNotifications = getgenv and getgenv().DebugNotifications or false
 local VirtualInputManager = game:GetService('VirtualInputManager')
+local BlockRemote = game:GetService("ReplicatedStorage").Modules.Network.RemoteEvent
+local RunService = game:GetService("RunService")
 local Mercury = loadstring(game:HttpGet("https://raw.githubusercontent.com/deeeity/mercury-lib/master/src.lua"))()
-local GUI, PlayerTab, VisualsTab, GeneratorTab, BlatantTab = Mercury:Create{ Name = "FartSaken", Size = UDim2.fromOffset(600, 400), Theme = Mercury.Themes.Dark, Link = "https://github.com/ivannetta/ShitScripts/Forsaken" }, nil, nil, nil, nil
+local GUI, PlayerTab, VisualsTab, GeneratorTab, BlatantTab, BabyShark, KillerFartPart, HRP, SkibidiDistance, BlockEnabled = Mercury:Create{ Name = "FartSaken", Size = UDim2.fromOffset(600, 400), Theme = Mercury.Themes.Dark, Link = "https://github.com/ivannetta/ShitScripts/Forsaken" }, nil, nil, nil, nil, nil, nil, nil, 6, false
 local executorname = (pcall(function() return getexecutorname() end) and getexecutorname()) or (pcall(function() return identifyexecutor() end) and identifyexecutor()) or "Unknown"
 local supportedExecutors = { AWP = true, Wave = true, Nihon = true, ["Synapse Z"] = true, Swift = true }
+local SoundList = {"rbxassetid://112809109188560", "rbxassetid://101199185291628", "rbxassetid://102228729296384", "rbxassetid://140242176732868"}
+local CurrentFartsActive = {}
 
 GUI:Notification{
     Title = supportedExecutors[executorname] and "Executor Supported" or "Executor Not Supported",
@@ -259,6 +263,64 @@ local function TpDoGenerator()
     end
 end
 
+local function InjectRobux(sound)
+    while sound.Parent and BlockEnabled do
+        local success, err = pcall(function()
+            HRP = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+            if HRP and KillerFartPart then
+                local distance = (KillerFartPart.Position - HRP.Position).Magnitude
+                if distance < SkibidiDistance then
+                    BlockRemote:FireServer("UseActorAbility", "Block")
+                    return
+                end
+            end
+        end)
+        if not success then GUI:Notification{Title = "An error occured!", Text = err, Duration = 10} end
+        task.wait(0.1)
+    end
+    CurrentFartsActive[sound] = nil
+end
+
+local function HawkTuah()
+    if not BlockEnabled then return end
+    local success, err = pcall(function()
+        BabyShark = workspace:WaitForChild("Players"):FindFirstChild("Killers")
+        BabyShark = BabyShark and BabyShark:GetChildren()[1] or nil
+        KillerFartPart = BabyShark and BabyShark:FindFirstChild("HumanoidRootPart") or nil
+    end)
+    if not success then GUI:Notification{Title = "An error occured!", Text = err, Duration = 10} end
+    
+    if KillerFartPart then
+        KillerFartPart.ChildAdded:Connect(function(descendant)
+            if not BlockEnabled then return end
+            local success, err = pcall(function()
+                if descendant:IsA("Sound") and table.find(SoundList, descendant.SoundId) then
+                    if not CurrentFartsActive[descendant] then
+                        CurrentFartsActive[descendant] = true
+                        task.spawn(InjectRobux, descendant)
+                    end
+                end
+            end)
+            if not success then GUI:Notification{Title = "An error occured!", Text = err, Duration = 10} end
+        end)
+    end
+end
+
+game:GetService("Players").ChildAdded:Connect(function(child)
+    if not BlockEnabled then return end
+    local success, err = pcall(function()
+        if child.Name == "Killers" then HawkTuah() end
+    end)
+    if not success then GUI:Notification{Title = "An error occured!", Text = err, Duration = 10} end
+end)
+
+game:GetService("Players").ChildRemoved:Connect(function(child)
+    if not BlockEnabled then return end
+    local success, err = pcall(function()
+        if child.Name == "Killers" then HawkTuah() end
+    end)
+    if not success then GUI:Notification{Title = "An error occured!", Text = err, Duration = 10} end
+end)
 
 local function ToggleFart(state)
     SkibidiStaminaLoop = state
@@ -304,6 +366,7 @@ local function InitializeGUI()
 
     GUI:Credit{Name = "ivannetta", Description = "meowzer", Discord = "ivannetta"}
     GUI:Notification{Title = "NOTE: Default Keybinds:", Text = "DEL to minimize.", Duration = 10}
+    GUI:Notification{Title = "NOTE: Auto Block Is In BETA!!!:", Text = "This has NOT been tested much so DONT rely on it.", Duration = 10}
     GUI:Notification{Title = "NOTE: Highlights Not Working Fix.", Text = "Reset ur bloxtrap settings.", Duration = 10}
     GUI:Notification{Title = "Made by ivannetta", Text = "Like on rbxscripts or rscripts plssssssss 🥺", Duration = 60}
 
@@ -394,6 +457,21 @@ local function InitializeGUI()
         end
     }
 
+    BlatantTab:Toggle{
+        Name = "Auto Block",
+        Description = "Automatically Use Block On Guest 1337, Currently only working on M1",
+        StartingState = false,
+        Callback = function(state)
+            BlockEnabled = state
+            local success, err = pcall(function()
+                if BlockEnabled then
+                    HawkTuah()
+                end
+            end)
+            if not success then GUI:Notification{Title = "An error occured!", Text = err, Duration = 10} end
+        end
+    }
+
     BlatantTab:Button{
         Name = "Do ALL Generators",
         Description = "Join the Fart Hub discord server.",
@@ -409,6 +487,18 @@ local function InitializeGUI()
         Value = 0.5,
         Callback = function(value)
             LopticaWaitTime = value
+        end
+    }
+
+    BlatantTab:Slider{
+        Name = "Auto Block Distance",
+        Description = "Change Treshold Of Magnitude To Block Killer, Change if you know what ur doing.",
+        Default = 6,
+        Min = 1,
+        Max = 20,
+        Value = 6,
+        Callback = function(value)
+            SkibidiDistance = value
         end
     }
 
