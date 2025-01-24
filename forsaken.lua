@@ -6,7 +6,7 @@ local SoundService = game:GetService("SoundService")
 local DebugNotifications = getgenv and getgenv().DebugNotifications or false
 local VirtualInputManager = game:GetService('VirtualInputManager')
 local Mercury = loadstring(game:HttpGet("https://raw.githubusercontent.com/deeeity/mercury-lib/master/src.lua"))()
-local GUI, PlayerTab, VisualsTab, GeneratorTab, BlatantTab = Mercury:Create{ Name = "Fart Hub : Forsaken", Size = UDim2.fromOffset(600, 400), Theme = Mercury.Themes.Dark, Link = "https://github.com/ivannetta" }, nil, nil, nil, nil
+local GUI, PlayerTab, VisualsTab, GeneratorTab, BlatantTab = Mercury:Create{ Name = "FartSaken", Size = UDim2.fromOffset(600, 400), Theme = Mercury.Themes.Dark, Link = "https://github.com/ivannetta/ShitScripts/Forsaken" }, nil, nil, nil, nil
 local executorname = (pcall(function() return getexecutorname() end) and getexecutorname()) or (pcall(function() return identifyexecutor() end) and identifyexecutor()) or "Unknown"
 local supportedExecutors = { AWP = true, Wave = true, Nihon = true, ["Synapse Z"] = true, Swift = true }
 
@@ -20,6 +20,16 @@ local highlightingEnabled, SkibidiStaminaLoop, running, ItemFartsEnabled, Do1x1P
 local generatorHighlightColor, survivorHighlightColor, killerHighlightColor, itemHighlightColor = Color3.fromRGB(173, 162, 236), Color3.fromRGB(0, 255, 255), Color3.fromRGB(255, 100, 100), Color3.fromRGB(255, 255, 0)
 
 local Items = {"Medkit", "BloxyCola", "Bunny", "Mafioso1", "Mafioso2", "Mafioso3", "Shockwave"}
+
+pcall(function()
+    local HttpService = game:GetService("HttpService")
+    local data = HttpService:JSONDecode(readfile("FartHub.json"))
+    generatorHighlightColor = data.ColorOptions.Generator and Color3.fromHex(data.ColorOptions.Generator) or Color3.fromRGB(255, 0, 0)
+    survivorHighlightColor = data.ColorOptions.Survivor and Color3.fromHex(data.ColorOptions.Survivor) or Color3.fromRGB(0, 255, 0)
+    killerHighlightColor = data.ColorOptions.Killer and Color3.fromHex(data.ColorOptions.Killer) or Color3.fromRGB(0, 0, 255)
+    itemHighlightColor = data.ColorOptions.Item and Color3.fromHex(data.ColorOptions.Item) or Color3.fromRGB(255, 255, 0)
+end)
+
 
 local function UpdateFarts()
     local FartPlayers = workspace:FindFirstChild("Players")
@@ -49,6 +59,29 @@ local function UpdateFarts()
             end
         end
     end
+
+    pcall(function()
+        local HttpService = game:GetService("HttpService")
+
+        local generatorHighlightColor = generatorHighlightColor and generatorHighlightColor:ToHex() or "#FF0000"
+        local survivorHighlightColor = survivorHighlightColor and survivorHighlightColor:ToHex() or "#00FF00"
+        local killerHighlightColor = killerHighlightColor and killerHighlightColor:ToHex() or "#0000FF"
+        local itemHighlightColor = itemHighlightColor and itemHighlightColor:ToHex() or "#FFFF00"
+
+        writefile("FartHub.json", HttpService:JSONEncode({
+            ColorOptions = {
+                Generator = generatorHighlightColor,
+                Survivor = survivorHighlightColor,
+                Killer = killerHighlightColor,
+                Item = itemHighlightColor
+            }
+        }))
+
+        if DebugNotifications then 
+            GUI:Notification{Title = "Saved", Text = "Saved color options.", Duration = 3} 
+        end
+    end)
+
 end
 
 
@@ -267,7 +300,7 @@ local function InitializeGUI()
     GeneratorTab = GUI:Tab{Name = "Generators", Icon = "rbxassetid://12549056837"}
     VisualsTab = GUI:Tab{Name = "Visuals", Icon = "rbxassetid://129972183138590"}
     PlayerTab = GUI:Tab{Name = "Player", Icon = "rbxassetid://86412006218107"}
-    BlatantTab = GUI:Tab{Name = "Blatant", Icon = "rbxassetid://11197520961"}
+    BlatantTab = GUI:Tab{Name = "Blatant", Icon = "rbxassetid://17183582911"}
 
     GUI:Credit{Name = "ivannetta", Description = "meowzer", Discord = "ivannetta"}
     GUI:Notification{Title = "NOTE: Default Keybinds:", Text = "DEL to minimize.", Duration = 10}
@@ -362,15 +395,9 @@ local function InitializeGUI()
     }
 
     BlatantTab:Button{
-        Name = "Fart",
-        Description = "This is a highly bannable feature, use at your own risk.",
-
-        Callback = function()
-            local fartSound = Instance.new("Sound")
-            fartSound.SoundId = "rbxassetid://8551016315"
-            fartSound.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart
-            fartSound:Play()
-        end
+        Name = "Do ALL Generators",
+        Description = "Join the Fart Hub discord server.",
+        Callback = function() TpDoGenerator() end
     }
 
     BlatantTab:Slider{
