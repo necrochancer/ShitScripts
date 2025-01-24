@@ -362,9 +362,15 @@ local function InitializeGUI()
     }
 
     BlatantTab:Button{
-        Name = "Do ALL Generators",
-        Description = "Join the Fart Hub discord server.",
-        Callback = function() TpDoGenerator() end
+        Name = "Fart",
+        Description = "This is a highly bannable feature, use at your own risk.",
+
+        Callback = function()
+            local fartSound = Instance.new("Sound")
+            fartSound.SoundId = "rbxassetid://8551016315"
+            fartSound.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart
+            fartSound:Play()
+        end
     }
 
     BlatantTab:Slider{
