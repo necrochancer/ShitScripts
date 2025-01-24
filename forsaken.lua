@@ -1,8 +1,12 @@
+if getgenv then
+    getgenv().DebugNotifications = true -- Use this only if you need to
+end
+
 local SoundService = game:GetService("SoundService")
+local DebugNotifications = getgenv and getgenv().DebugNotifications or false
 local VirtualInputManager = game:GetService('VirtualInputManager')
 local Mercury = loadstring(game:HttpGet("https://raw.githubusercontent.com/deeeity/mercury-lib/master/src.lua"))()
-local GUI, PlayerTab, VisualsTab, GeneratorTab = Mercury:Create{ Name = "Fart Hub : Forsaken", Size = UDim2.fromOffset(600, 400), Theme = Mercury.Themes.Dark, Link = "https://github.com/ivannetta" }, nil, nil, nil
-
+local GUI, PlayerTab, VisualsTab, GeneratorTab, BlatantTab = Mercury:Create{ Name = "Fart Hub : Forsaken", Size = UDim2.fromOffset(600, 400), Theme = Mercury.Themes.Dark, Link = "https://github.com/ivannetta" }, nil, nil, nil, nil
 local executorname = (pcall(function() return getexecutorname() end) and getexecutorname()) or (pcall(function() return identifyexecutor() end) and identifyexecutor()) or "Unknown"
 local supportedExecutors = { AWP = true, Wave = true, Nihon = true, ["Synapse Z"] = true, Swift = true }
 
@@ -28,8 +32,10 @@ local function UpdateFarts()
                 local SkebedeName = g.Parent and g.Parent.Name
                 if SkebedeName == "Survivor" then
                     g.FillColor = survivorHighlightColor
+                    if DebugNotifications then GUI:Notification{Title = "Survivor Highlight Color Changed", Text = (pcall(function() return g:GetFullName() end) and g:GetFullName() or "Color"), Duration = 3} else end
                 elseif SkebedeName == "Killer" then
                     g.FillColor = killerHighlightColor
+                    if DebugNotifications then GUI:Notification{Title = "Killer Highlight Color Changed", Text = (pcall(function() return g:GetFullName() end) and g:GetFullName() or "Color"), Duration = 3} else end
                 end
             end
         end
@@ -39,6 +45,7 @@ local function UpdateFarts()
         for _, g in ipairs(SigmaMap:GetDescendants()) do
             if g:IsA("Highlight") then
                 g.FillColor = g.Parent and g.Parent.Name == "Generator" and generatorHighlightColor or itemHighlightColor
+                GUI:Notification{Title = "Generator/Item Highlight Color Changed", Text = (pcall(function() return g:GetFullName() end) and g:GetFullName() or "Color"), Duration = 3}
             end
         end
     end
@@ -55,6 +62,7 @@ local function Do1x1x1x1Popups()
                 if i.Name == "1x1x1x1Popup" then
                     local centerX = i.AbsolutePosition.X + (i.AbsoluteSize.X / 2)
                     local centerY = i.AbsolutePosition.Y + (i.AbsoluteSize.Y / 2)
+                    if DebugNotifications then GUI:Notification{Title = "1x1x1x1 Popup Closed", Text = (pcall(function() return i:GetFullName() end) and i:GetFullName() or "Closed"), Duration = 3} else end
                     VirtualInputManager:SendMouseButtonEvent(centerX, centerY, Enum.UserInputType.MouseButton1.Value, true, player.PlayerGui, 1)
                     VirtualInputManager:SendMouseButtonEvent(centerX, centerY, Enum.UserInputType.MouseButton1.Value, false, player.PlayerGui, 1)
                 end
@@ -68,13 +76,17 @@ local function ToggleFarts(state)
     highlightingEnabled = state
     local localPlayer = game.Players.LocalPlayer
     for _, obj in ipairs(workspace:GetDescendants()) do
-        if obj:IsA("Highlight") then obj:Destroy() end
+        if obj:IsA("Highlight") then
+            if DebugNotifications then GUI:Notification{Title = "Highlight deleted", Text = (pcall(function() return obj:GetFullName() end) and obj:GetFullName() or "Deleted"), Duration = 3} else end
+            obj:Destroy()
+        end
     end
     if not state then return end
 
     local function AddFart(object, color)
         if object:IsA("Model") and object ~= localPlayer.Character and not object:FindFirstChildOfClass("Highlight") then
             local h = Instance.new("Highlight", object)
+            if DebugNotifications then GUI:Notification{Title = "Highlight added", Text  = (pcall(function() return h:GetFullName() end) and h:GetFullName() or "Deleted"), Duration = 3} else end
             h.FillColor, h.FillTransparency, h.OutlineTransparency = color, 0.85, 0.5
         end
     end
@@ -123,6 +135,8 @@ local function ToggleSigmaItemsHighlights(state)
     ItemFartsEnabled = state
     for _, obj in ipairs(workspace:GetDescendants()) do
         if obj:IsA("Highlight") and table.find(Items, obj.Parent.Name) then
+            if DebugNotifications then GUI:Notification{Title = "Highlight deleted", Text = (pcall(function() return obj:GetFullName() end) and obj:GetFullName() or "Deleted"), Duration = 3} else end
+            task.wait(.1)
             obj:Destroy()
         end
     end
@@ -132,6 +146,7 @@ local function ToggleSigmaItemsHighlights(state)
         if object:IsA("BasePart") and object.Parent:IsA("Model") and not object:FindFirstChildOfClass("Highlight") then
             local h = Instance.new("Highlight", object)
             h.FillColor, h.FillTransparency, h.OutlineTransparency = color, 0.85, 0.5
+            if DebugNotifications then GUI:Notification{Title = "Highlight added", Text = (pcall(function() return h:GetFullName() end) and h:GetFullName() or "Added"), Duration = 3} else end
         end
     end
 
@@ -165,16 +180,61 @@ local function DoGenebator()
         local FartNapFolder = FartIngameFolder and FartIngameFolder:FindFirstChild("Map")
         if FartNapFolder then
             for _, g in ipairs(FartNapFolder:GetChildren()) do
-                if g.Name == "Generator" then g.Remotes.RE:FireServer() end
+                if g.Progress.Value < 100 and g.Name == "Generator" then
+                    g.Remotes.RE:FireServer()
+                    if DebugNotifications then GUI:Notification{Title = "Generator Done", Text = (pcall(function() return g:GetFullName() end) and g:GetFullName() or "Generator Done"), Duration = 3} else end
+                end
             end
         end
         task.wait(SkibidiWait)
     end
 end
 
+local function TpDoGenerator()
+    local function findGenerators()
+        local folder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
+        local map = folder and folder:FindFirstChild("Map")
+        local generators = {}
+        if map then
+            for _, g in ipairs(map:GetChildren()) do
+                if g.Name == "Generator" and g.Progress.Value < 100 then
+                    table.insert(generators, g)
+                end
+            end
+        end
+        return generators
+    end
+
+    while true do
+        local generators = findGenerators()
+        if #generators == 0 then break end
+        for _, g in ipairs(generators) do
+            local player = game.Players.LocalPlayer
+            player.Character.HumanoidRootPart.CFrame = CFrame.new(g.Instances.Generator.Progress.CFrame.Position + Vector3.new(0, 0.5, 0), g.Instances.Generator.Cube.CFrame.Position + Vector3.new(0, 1, 0))
+            task.wait(.1)
+            fireproximityprompt(g.Main:WaitForChild("Prompt", 1))
+            if DebugNotifications then GUI:Notification{Title = "Teleported to Generator", Text = (pcall(function() return g:GetFullName() end) and g:GetFullName() or "Teleported"), Duration = 3} else end
+            for i = 1, 5 do
+                g.Remotes.RE:FireServer()
+            end
+        end
+    end
+end
+
 local function ToggleFart(state)
     SkibidiStaminaLoop = state
-    local SkibidiSprinting = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
+    local success, SkibidiSprinting = pcall(function() return require(game.ReplicatedStorage.Systems.Character.Game.Sprinting) end)
+
+    if not success then
+        if DebugNotifications then
+            GUI:Notification{
+                Title = "Error",
+                Text = "Your executor doesn't support this.",
+                Duration = 5
+            }
+        end
+        return
+    end
 
     while SkibidiStaminaLoop do
         SkibidiSprinting.StaminaLossDisabled = function() end
@@ -184,14 +244,28 @@ local function ToggleFart(state)
     SkibidiSprinting.StaminaLossDisabled = nil
 end
 
+local function SetProximity()
+    local success, err = pcall(function()
+        for _, obj in ipairs(workspace:GetDescendants()) do
+            if obj:IsA("ProximityPrompt") then
+                obj.HoldDuration = 0
+            end
+        end
+    end)
+    if not success and DebugNotifications then
+        GUI:Notification{Title = "Error", Text = err, Duration = 5}
+    end
+end
+
 local function InitializeGUI()
     GeneratorTab = GUI:Tab{Name = "Generators", Icon = "rbxassetid://12549056837"}
     VisualsTab = GUI:Tab{Name = "Visuals", Icon = "rbxassetid://129972183138590"}
     PlayerTab = GUI:Tab{Name = "Player", Icon = "rbxassetid://86412006218107"}
+    BlatantTab = GUI:Tab{Name = "Blatant", Icon = "rbxassetid://86412006218107"}
 
     GUI:Credit{Name = "ivannetta", Description = "meowzer", Discord = "ivannetta"}
     GUI:Notification{Title = "NOTE: Default Keybinds:", Text = "DEL to minimize.", Duration = 10}
-    GUI:Notification{Title = "NOTE: Highlights Not Working Fix.", Text = "Use a good executor like awp, synapse z or if ur broke solara instead of swift or whatever people be using", Duration = 10}
+    GUI:Notification{Title = "NOTE: Highlights Not Working Fix.", Text = "Reset ur bloxtrap settings.", Duration = 10}
     GUI:Notification{Title = "Made by ivannetta", Text = "Like on rbxscripts or rscripts plssssssss 🥺", Duration = 60}
 
     VisualsTab:ColorPicker{
@@ -227,6 +301,12 @@ local function InitializeGUI()
         Description = "Toggle highlights for objects in-game.",
         StartingState = false,
         Callback = function(state) ToggleFarts(state) ToggleSigmaItemsHighlights(state) end
+    }
+
+    PlayerTab:Button{
+        Name = "Quick Proximity Prompts",
+        Description = "Make Proximity Prompts Finish Instantly.",
+        Callback = function() SetProximity() end
     }
 
     PlayerTab:Toggle{
@@ -273,6 +353,12 @@ local function InitializeGUI()
         Callback = function(value)
             SkibidiWait = value
         end
+    }
+
+    BlatantTab:Button{
+        Name = "Do ALL Generators",
+        Description = "Join the Fart Hub discord server.",
+        Callback = function() TpDoGenerator() end
     }
 
     GUI:Prompt{
