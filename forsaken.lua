@@ -474,7 +474,7 @@ local function InitializeGUI()
 
     BlatantTab:Button{
         Name = "Do ALL Generators",
-        Description = "Join the Fart Hub discord server.",
+        Description = "Teleport to all generators and do them.",
         Callback = function() TpDoGenerator() end
     }
 
