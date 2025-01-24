@@ -1,6 +1,6 @@
-if getgenv then
-    getgenv().DebugNotifications = true -- Use this only if you need to
-end
+--if getgenv then
+--    getgenv().DebugNotifications = false -- Use this only if you need to
+--end
 
 local SoundService = game:GetService("SoundService")
 local DebugNotifications = getgenv and getgenv().DebugNotifications or false
@@ -16,7 +16,7 @@ GUI:Notification{
     Duration = 5
 }
 
-local highlightingEnabled, SkibidiStaminaLoop, running, ItemFartsEnabled, Do1x1PopupsLoop, SkibidiWait = false, false, false, false, false, 0.5
+local highlightingEnabled, SkibidiStaminaLoop, running, ItemFartsEnabled, Do1x1PopupsLoop, SkibidiWait, LopticaWaitTime = false, false, false, false, false, 0.5, 0.5
 local generatorHighlightColor, survivorHighlightColor, killerHighlightColor, itemHighlightColor = Color3.fromRGB(173, 162, 236), Color3.fromRGB(0, 255, 255), Color3.fromRGB(255, 100, 100), Color3.fromRGB(255, 255, 0)
 
 local Items = {"Medkit", "BloxyCola", "Bunny", "Mafioso1", "Mafioso2", "Mafioso3", "Shockwave"}
@@ -180,16 +180,17 @@ local function DoGenebator()
         local FartNapFolder = FartIngameFolder and FartIngameFolder:FindFirstChild("Map")
         if FartNapFolder then
             for _, g in ipairs(FartNapFolder:GetChildren()) do
-                if g.Progress.Value < 100 and g.Name == "Generator" then
-                    g.Remotes.RE:FireServer()
-                    if DebugNotifications then GUI:Notification{Title = "Generator Done", Text = (pcall(function() return g:GetFullName() end) and g:GetFullName() or "Generator Done"), Duration = 3} else end
+                if g.Name == "Generator" then
+                    if g.Progress.Value < 100 then
+                        g.Remotes.RE:FireServer()
+                        if DebugNotifications then GUI:Notification{Title = "Generator Done", Text = (pcall(function() return g:GetFullName() end) and g:GetFullName() or "Generator Done"), Duration = 3} else end
+                    end
                 end
             end
         end
         task.wait(SkibidiWait)
     end
 end
-
 local function TpDoGenerator()
     local function findGenerators()
         local folder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
@@ -210,16 +211,21 @@ local function TpDoGenerator()
         if #generators == 0 then break end
         for _, g in ipairs(generators) do
             local player = game.Players.LocalPlayer
-            player.Character.HumanoidRootPart.CFrame = CFrame.new(g.Instances.Generator.Progress.CFrame.Position + Vector3.new(0, 0.5, 0), g.Instances.Generator.Cube.CFrame.Position + Vector3.new(0, 1, 0))
-            task.wait(.1)
+            local generatorPosition = g.Instances.Generator.Progress.CFrame.Position
+            local generatorDirection = (g.Instances.Generator.Cube.CFrame.Position - generatorPosition).Unit
+            player.Character.HumanoidRootPart.CFrame = CFrame.new(generatorPosition + Vector3.new(0, 0.5, 0), generatorPosition + Vector3.new(generatorDirection.X, 0, generatorDirection.Z))
+            task.wait(LopticaWaitTime)
             fireproximityprompt(g.Main:WaitForChild("Prompt", 1))
-            if DebugNotifications then GUI:Notification{Title = "Teleported to Generator", Text = (pcall(function() return g:GetFullName() end) and g:GetFullName() or "Teleported"), Duration = 3} else end
-            for i = 1, 5 do
+            if DebugNotifications then
+                GUI:Notification{Title = "Teleported to Generator", Text = (pcall(function() return g:GetFullName() end) and g:GetFullName() or "Teleported"), Duration = 3}
+            end
+            for sigma = 1, 5 do
                 g.Remotes.RE:FireServer()
             end
         end
     end
 end
+
 
 local function ToggleFart(state)
     SkibidiStaminaLoop = state
@@ -261,7 +267,7 @@ local function InitializeGUI()
     GeneratorTab = GUI:Tab{Name = "Generators", Icon = "rbxassetid://12549056837"}
     VisualsTab = GUI:Tab{Name = "Visuals", Icon = "rbxassetid://129972183138590"}
     PlayerTab = GUI:Tab{Name = "Player", Icon = "rbxassetid://86412006218107"}
-    BlatantTab = GUI:Tab{Name = "Blatant", Icon = "rbxassetid://86412006218107"}
+    BlatantTab = GUI:Tab{Name = "Blatant", Icon = "rbxassetid://11197520961"}
 
     GUI:Credit{Name = "ivannetta", Description = "meowzer", Discord = "ivannetta"}
     GUI:Notification{Title = "NOTE: Default Keybinds:", Text = "DEL to minimize.", Duration = 10}
@@ -359,6 +365,18 @@ local function InitializeGUI()
         Name = "Do ALL Generators",
         Description = "Join the Fart Hub discord server.",
         Callback = function() TpDoGenerator() end
+    }
+
+    BlatantTab:Slider{
+        Name = "Do ALL Generators Speed",
+        Description = "Change the speed of how fast to teleport to the generator.",
+        Default = 0.5,
+        Min = 0.1,
+        Max = 10,
+        Value = 0.5,
+        Callback = function(value)
+            LopticaWaitTime = value
+        end
     }
 
     GUI:Prompt{
