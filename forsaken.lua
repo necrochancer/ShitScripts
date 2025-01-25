@@ -2,12 +2,16 @@
 --    getgenv().DebugNotifications = false -- Use this only if you need to
 --end
 
+local Players = game:GetService("Players")
 local SoundService = game:GetService("SoundService")
 local DebugNotifications = getgenv and getgenv().DebugNotifications or false
-local VirtualInputManager = game:GetService('VirtualInputManager')
+local VirtualBallsManager = game:GetService('VirtualInputManager')
 local BlockRemote = game:GetService("ReplicatedStorage").Modules.Network.RemoteEvent
 local RunService = game:GetService("RunService")
+local SigmaData, JoinedSigmaServer = {}, false
+local HttpService = game:GetService("HttpService")
 local Mercury = loadstring(game:HttpGet("https://raw.githubusercontent.com/deeeity/mercury-lib/master/src.lua"))()
+local Sense = loadstring(game:HttpGet('https://sirius.menu/sense'))()
 local GUI, PlayerTab, VisualsTab, GeneratorTab, BlatantTab, BabyShark, KillerFartPart, HRP, SkibidiDistance, BlockEnabled = Mercury:Create{ Name = "FartSaken", Size = UDim2.fromOffset(600, 400), Theme = Mercury.Themes.Dark, Link = "https://github.com/ivannetta/ShitScripts/Forsaken" }, nil, nil, nil, nil, nil, nil, nil, 6, false
 local executorname = (pcall(function() return getexecutorname() end) and getexecutorname()) or (pcall(function() return identifyexecutor() end) and identifyexecutor()) or "Unknown"
 local supportedExecutors = { AWP = true, Wave = true, Nihon = true, ["Synapse Z"] = true, Swift = true }
@@ -25,67 +29,141 @@ local generatorHighlightColor, survivorHighlightColor, killerHighlightColor, ite
 
 local Items = {"Medkit", "BloxyCola", "Bunny", "Mafioso1", "Mafioso2", "Mafioso3", "Shockwave"}
 
-pcall(function()
+local function LoadSigmaData()
+    pcall(function()
+        local HttpService = game:GetService("HttpService")
+        local data = HttpService:JSONDecode(readfile("FartHub.json"))
+        generatorHighlightColor = data.ColorOptions.Generator and Color3.fromHex(data.ColorOptions.Generator) or Color3.fromRGB(255, 0, 0)
+        survivorHighlightColor = data.ColorOptions.Survivor and Color3.fromHex(data.ColorOptions.Survivor) or Color3.fromRGB(0, 255, 0)
+        killerHighlightColor = data.ColorOptions.Killer and Color3.fromHex(data.ColorOptions.Killer) or Color3.fromRGB(0, 0, 255)
+        itemHighlightColor = data.ColorOptions.Item and Color3.fromHex(data.ColorOptions.Item) or Color3.fromRGB(255, 255, 0)
+        JoinedSigmaServer = data.Info.JoinedSigmaServer or false
+        SigmaData = data
+    end)
+end
+
+local function WriteSigmaData()
     local HttpService = game:GetService("HttpService")
-    local data = HttpService:JSONDecode(readfile("FartHub.json"))
-    generatorHighlightColor = data.ColorOptions.Generator and Color3.fromHex(data.ColorOptions.Generator) or Color3.fromRGB(255, 0, 0)
-    survivorHighlightColor = data.ColorOptions.Survivor and Color3.fromHex(data.ColorOptions.Survivor) or Color3.fromRGB(0, 255, 0)
-    killerHighlightColor = data.ColorOptions.Killer and Color3.fromHex(data.ColorOptions.Killer) or Color3.fromRGB(0, 0, 255)
-    itemHighlightColor = data.ColorOptions.Item and Color3.fromHex(data.ColorOptions.Item) or Color3.fromRGB(255, 255, 0)
-end)
+    SigmaData.ColorOptions = {
+        Generator = generatorHighlightColor:ToHex(),
+        Survivor = survivorHighlightColor:ToHex(),
+        Killer = killerHighlightColor:ToHex(),
+        Item = itemHighlightColor:ToHex()
+    }
+    SigmaData.Info = SigmaData.Info or {}
+    SigmaData.Info.JoinedSigmaServer = JoinedSigmaServer
 
+    writefile("FartHub.json", HttpService:JSONEncode(SigmaData))
+end
 
-local function UpdateFarts()
-    local FartPlayers = workspace:FindFirstChild("Players")
-    local SigmaGenerators = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
-    local SigmaMap = SigmaGenerators and SigmaGenerators:FindFirstChild("Map")
+LoadSigmaData()
 
-    if FartPlayers then
-        for _, g in ipairs(FartPlayers:GetDescendants()) do
-            if g:IsA("Highlight") then
-                local SkebedeName = g.Parent and g.Parent.Name
-                if SkebedeName == "Survivor" then
-                    g.FillColor = survivorHighlightColor
-                    if DebugNotifications then GUI:Notification{Title = "Survivor Highlight Color Changed", Text = (pcall(function() return g:GetFullName() end) and g:GetFullName() or "Color"), Duration = 3} else end
-                elseif SkebedeName == "Killer" then
-                    g.FillColor = killerHighlightColor
-                    if DebugNotifications then GUI:Notification{Title = "Killer Highlight Color Changed", Text = (pcall(function() return g:GetFullName() end) and g:GetFullName() or "Color"), Duration = 3} else end
+Sense.teamSettings.enemy.enabled = true
+Sense.teamSettings.enemy.box = true
+Sense.teamSettings.enemy.boxColor[1] = killerHighlightColor
+Sense.teamSettings.enemy.chamsFillColor = { killerHighlightColor, .5}
+Sense.teamSettings.enemy.chamsOutlineColor = {Color3.fromRGB(255, 255, 255), .5 }
+Sense.teamSettings.enemy.chams = true
+Sense.teamSettings.enemy.name = true
+Sense.teamSettings.enemy.healthBar = true
+Sense.teamSettings.enemy.healthText = true
+
+Sense.teamSettings.friendly.enabled = true
+Sense.teamSettings.friendly.box = true
+Sense.teamSettings.friendly.boxColor[1] = survivorHighlightColor
+Sense.teamSettings.friendly.chamsFillColor = { survivorHighlightColor, .5}
+Sense.teamSettings.friendly.chamsOutlineColor = {Color3.fromRGB(255, 255, 255), .5 }
+Sense.teamSettings.friendly.chams = true
+Sense.teamSettings.friendly.name = true
+Sense.teamSettings.friendly.healthBar = true
+Sense.teamSettings.friendly.healthText = true
+
+function Sense.isFriendly(player)
+    local localPlayer = Players.LocalPlayer
+    return player.Team and player.Team == localPlayer.Team or player.Character and player.Character.Parent == localPlayer.Character.Parent
+end
+
+-- Toggle ESP
+local function ToggleFarts(state)
+    if state then Sense.Load() else Sense.Unload() return end
+    local ingameFolder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
+    local SigmaGenerators = ingameFolder and ingameFolder:FindFirstChild("Map")
+
+    local function enableESP()
+        if SigmaGenerators then
+            for _, g in ipairs(SigmaGenerators:GetChildren()) do
+                if g.Name == "Generator" then
+                    local object = Sense.AddInstance(g, {
+                        text = "{name} {distance}",
+                        textColor = { generatorHighlightColor, 1},
+                        limitDistance = false,
+                        maxDistance = 150
+                    })
+                    object.options.enabled = state
+                end
+            end
+        end
+        if ingameFolder then
+            for _, i in ipairs(ingameFolder:GetChildren()) do
+                if table.find(Items, i.Name) then
+                    local object = Sense.AddInstance(i.ItemRoot, {
+                        text = "{name} {distance}",
+                        textColor = { itemHighlightColor, 1},
+                        limitDistance = false,
+                        maxDistance = 150
+                    })
+                    object.options.enabled = state
                 end
             end
         end
     end
 
-    if SigmaMap then
-        for _, g in ipairs(SigmaMap:GetDescendants()) do
-            if g:IsA("Highlight") then
-                g.FillColor = g.Parent and g.Parent.Name == "Generator" and generatorHighlightColor or itemHighlightColor
-                GUI:Notification{Title = "Generator/Item Highlight Color Changed", Text = (pcall(function() return g:GetFullName() end) and g:GetFullName() or "Color"), Duration = 3}
-            end
-        end
-    end
+    enableESP()
 
-    pcall(function()
-        local HttpService = game:GetService("HttpService")
-
-        local generatorHighlightColor = generatorHighlightColor and generatorHighlightColor:ToHex() or "#FF0000"
-        local survivorHighlightColor = survivorHighlightColor and survivorHighlightColor:ToHex() or "#00FF00"
-        local killerHighlightColor = killerHighlightColor and killerHighlightColor:ToHex() or "#0000FF"
-        local itemHighlightColor = itemHighlightColor and itemHighlightColor:ToHex() or "#FFFF00"
-
-        writefile("FartHub.json", HttpService:JSONEncode({
-            ColorOptions = {
-                Generator = generatorHighlightColor,
-                Survivor = survivorHighlightColor,
-                Killer = killerHighlightColor,
-                Item = itemHighlightColor
-            }
-        }))
-
-        if DebugNotifications then 
-            GUI:Notification{Title = "Saved", Text = "Saved color options.", Duration = 3} 
+    workspace.ChildAdded:Connect(function(child)
+        if child.Name == "Map" then
+            child.ChildAdded:Connect(function(subChild)
+                if subChild.Name == "Ingame" then
+                    ingameFolder = subChild
+                    SigmaGenerators = ingameFolder:FindFirstChild("Map")
+                    enableESP()
+                end
+            end)
         end
     end)
 
+    if ingameFolder then
+        ingameFolder.ChildAdded:Connect(function(child)
+            if child.Name == "Map" then
+                SigmaGenerators = child
+                enableESP()
+            end
+        end)
+    end
+end
+-- change esp colors
+local function UpdateFarts()
+    ToggleFarts(false)
+    Sense.teamSettings.enemy.boxColor[1] = killerHighlightColor
+    Sense.teamSettings.enemy.chamsFillColor = { killerHighlightColor, .5}
+    Sense.teamSettings.enemy.chamsOutlineColor = {Color3.fromRGB(255, 255, 255), .5 }
+    Sense.teamSettings.friendly.boxColor[1] = survivorHighlightColor
+    Sense.teamSettings.friendly.chamsFillColor = { survivorHighlightColor, .5}
+    Sense.teamSettings.friendly.chamsOutlineColor = {Color3.fromRGB(255, 255, 255), .5 }
+    Sense.teamSettings.friendly.box = true
+    Sense.teamSettings.friendly.chams = true
+    Sense.teamSettings.friendly.name = true
+    Sense.teamSettings.friendly.healthBar = true
+    Sense.teamSettings.friendly.healthText = true
+    ToggleFarts(true)
+
+    pcall(function()
+        WriteSigmaData()
+
+        if DebugNotifications then
+            GUI:Notification{Title = "Saved", Text = "Saved color options.", Duration = 3}
+        end
+    end)
 end
 
 
@@ -100,8 +178,8 @@ local function Do1x1x1x1Popups()
                     local centerX = i.AbsolutePosition.X + (i.AbsoluteSize.X / 2)
                     local centerY = i.AbsolutePosition.Y + (i.AbsoluteSize.Y / 2)
                     if DebugNotifications then GUI:Notification{Title = "1x1x1x1 Popup Closed", Text = (pcall(function() return i:GetFullName() end) and i:GetFullName() or "Closed"), Duration = 3} else end
-                    VirtualInputManager:SendMouseButtonEvent(centerX, centerY, Enum.UserInputType.MouseButton1.Value, true, player.PlayerGui, 1)
-                    VirtualInputManager:SendMouseButtonEvent(centerX, centerY, Enum.UserInputType.MouseButton1.Value, false, player.PlayerGui, 1)
+                    VirtualBallsManager:SendMouseButtonEvent(centerX, centerY, Enum.UserInputType.MouseButton1.Value, true, player.PlayerGui, 1)
+                    VirtualBallsManager:SendMouseButtonEvent(centerX, centerY, Enum.UserInputType.MouseButton1.Value, false, player.PlayerGui, 1)
                 end
             end
         end
@@ -109,106 +187,6 @@ local function Do1x1x1x1Popups()
     end
 end
 
-local function ToggleFarts(state)
-    highlightingEnabled = state
-    local localPlayer = game.Players.LocalPlayer
-    for _, obj in ipairs(workspace:GetDescendants()) do
-        if obj:IsA("Highlight") then
-            if DebugNotifications then GUI:Notification{Title = "Highlight deleted", Text = (pcall(function() return obj:GetFullName() end) and obj:GetFullName() or "Deleted"), Duration = 3} else end
-            obj:Destroy()
-        end
-    end
-    if not state then return end
-
-    local function AddFart(object, color)
-        if object:IsA("Model") and object ~= localPlayer.Character and not object:FindFirstChildOfClass("Highlight") then
-            local h = Instance.new("Highlight", object)
-            if DebugNotifications then GUI:Notification{Title = "Highlight added", Text  = (pcall(function() return h:GetFullName() end) and h:GetFullName() or "Deleted"), Duration = 3} else end
-            h.FillColor, h.FillTransparency, h.OutlineTransparency = color, 0.85, 0.5
-        end
-    end
-
-    for _, folder in ipairs({workspace.Players.Survivors, workspace.Players.Killers}) do
-        for _, obj in ipairs(folder:GetChildren()) do
-            AddFart(obj, folder.Name == "Survivors" and survivorHighlightColor or killerHighlightColor)
-        end
-        folder.ChildAdded:Connect(function(child)
-            if highlightingEnabled then
-                AddFart(child, folder.Name == "Survivors" and survivorHighlightColor or killerHighlightColor)
-            end
-        end)
-    end
-
-    local function SetupSigmaListener()
-        local ingameFolder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
-        if not ingameFolder then return end
-        local mapFolder = ingameFolder:FindFirstChild("Map")
-        if not mapFolder then return end
-
-        for _, g in ipairs(mapFolder:GetChildren()) do
-            if g.Name == "Generator" then AddFart(g, generatorHighlightColor) end
-        end
-        mapFolder.ChildAdded:Connect(function(child)
-            if highlightingEnabled and child.Name == "Generator" then
-                AddFart(child, generatorHighlightColor)
-            end
-        end)
-    end
-
-    SetupSigmaListener()
-    workspace.Map.ChildAdded:Connect(function(child)
-        if highlightingEnabled then
-            SetupSigmaListener()
-        end
-    end)
-    workspace.Map.Ingame.ChildAdded:Connect(function(child)
-        if highlightingEnabled then
-            SetupSigmaListener()
-        end
-    end)
-end
-
-local function ToggleSigmaItemsHighlights(state)
-    ItemFartsEnabled = state
-    for _, obj in ipairs(workspace:GetDescendants()) do
-        if obj:IsA("Highlight") and table.find(Items, obj.Parent.Name) then
-            if DebugNotifications then GUI:Notification{Title = "Highlight deleted", Text = (pcall(function() return obj:GetFullName() end) and obj:GetFullName() or "Deleted"), Duration = 3} else end
-            task.wait(.1)
-            obj:Destroy()
-        end
-    end
-    if not state then return end
-
-    local function AddLopticaHighlight(object, color)
-        if object:IsA("BasePart") and object.Parent:IsA("Model") and not object:FindFirstChildOfClass("Highlight") then
-            local h = Instance.new("Highlight", object)
-            h.FillColor, h.FillTransparency, h.OutlineTransparency = color, 0.85, 0.5
-            if DebugNotifications then GUI:Notification{Title = "Highlight added", Text = (pcall(function() return h:GetFullName() end) and h:GetFullName() or "Added"), Duration = 3} else end
-        end
-    end
-
-    for _, item in ipairs(Items) do
-        for _, obj in ipairs(workspace:GetDescendants()) do
-            if obj:IsA("Model") and obj.Name == item then
-                for _, child in ipairs(obj:GetChildren()) do
-                    if child:IsA("BasePart") then
-                        AddLopticaHighlight(child, itemHighlightColor)
-                    end
-                end
-            end
-        end
-    end
-
-    workspace.DescendantAdded:Connect(function(descendant)
-        if ItemFartsEnabled and descendant:IsA("Model") and table.find(Items, descendant.Name) then
-            for _, child in ipairs(descendant:GetChildren()) do
-                if child:IsA("BasePart") then
-                    AddLopticaHighlight(child, itemHighlightColor)
-                end
-            end
-        end
-    end)
-end
 
 local function DoGenebator()
     running = true
@@ -229,6 +207,8 @@ local function DoGenebator()
     end
 end
 local function TpDoGenerator()
+    local lastPosition = player.Character.HumanoidRootPart.CFrame
+
     local function findGenerators()
         local folder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
         local map = folder and folder:FindFirstChild("Map")
@@ -251,15 +231,21 @@ local function TpDoGenerator()
             local generatorPosition = g.Instances.Generator.Progress.CFrame.Position
             local generatorDirection = (g.Instances.Generator.Cube.CFrame.Position - generatorPosition).Unit
             player.Character.HumanoidRootPart.CFrame = CFrame.new(generatorPosition + Vector3.new(0, 0.5, 0), generatorPosition + Vector3.new(generatorDirection.X, 0, generatorDirection.Z))
-            task.wait(LopticaWaitTime)
+            task.wait(LopticaWaitTime / 2)
             fireproximityprompt(g.Main:WaitForChild("Prompt", 1))
+            task.wait(LopticaWaitTime / 2)
             if DebugNotifications then
                 GUI:Notification{Title = "Teleported to Generator", Text = (pcall(function() return g:GetFullName() end) and g:GetFullName() or "Teleported"), Duration = 3}
             end
-            for sigma = 1, 5 do
+            for _ = 1, 5 do
                 g.Remotes.RE:FireServer()
             end
+            task.wait(LopticaWaitTime)
         end
+    end
+
+    if lastPosition then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = lastPosition
     end
 end
 
@@ -267,19 +253,29 @@ local function InjectRobux(sound)
     while sound.Parent and BlockEnabled do
         local success, err = pcall(function()
             HRP = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-            if HRP and KillerFartPart then
-                local distance = (KillerFartPart.Position - HRP.Position).Magnitude
-                if distance < SkibidiDistance then
-                    BlockRemote:FireServer("UseActorAbility", "Block")
-                    return
+            if HRP and KillerFartPart and KillerFartPart.Parent then
+                local killerHRP = KillerFartPart.Parent:FindFirstChild("HumanoidRootPart")
+                if killerHRP then
+                    local directionToPlayer = (HRP.Position - killerHRP.Position).Unit
+                    local killerLookVector = killerHRP.CFrame.LookVector
+                    local dotProduct = directionToPlayer:Dot(killerLookVector)
+                    
+                    if dotProduct > 0.5 then
+                        local distance = (KillerFartPart.Position - HRP.Position).Magnitude
+                        if distance < SkibidiDistance then
+                            BlockRemote:FireServer("UseActorAbility", "Block")
+                            return
+                        end
+                    end
                 end
             end
         end)
-        if not success then GUI:Notification{Title = "An error occured!", Text = err, Duration = 10} end
+        if not success then GUI:Notification{Title = "An error occurred!", Text = err, Duration = 10} end
         task.wait(0.1)
     end
     CurrentFartsActive[sound] = nil
 end
+
 
 local function HawkTuah()
     if not BlockEnabled then return end
@@ -402,7 +398,7 @@ local function InitializeGUI()
         Name = "Highlight Objects",
         Description = "Toggle highlights for objects in-game.",
         StartingState = false,
-        Callback = function(state) ToggleFarts(state) ToggleSigmaItemsHighlights(state) end
+        Callback = function(state) ToggleFarts(state) end
     }
 
     PlayerTab:Button{
@@ -484,7 +480,6 @@ local function InitializeGUI()
         Default = 0.5,
         Min = 0.1,
         Max = 10,
-        Value = 0.5,
         Callback = function(value)
             LopticaWaitTime = value
         end
@@ -496,23 +491,25 @@ local function InitializeGUI()
         Default = 6,
         Min = 1,
         Max = 20,
-        Value = 6,
         Callback = function(value)
             SkibidiDistance = value
         end
     }
-
-    GUI:Prompt{
-        Title = "Join Fart Hub discord server?",
-        Text = "w-would you like to join our discord server? it would be very nice and sigma",
-        Buttons = {
-            Yes = function()
-                setclipboard("https://discord.gg/AC4usvpwVY")
-                GUI:Notification{Title = "Copied!", Text = "Discord link copied.", Duration = 3}
-            end,
-            No = function() end
+    if not JoinedSigmaServer then
+        GUI:Prompt{
+            Title = "Join Fart Hub discord server?",
+            Text = "w-would you like to join our discord server? it would be very nice and sigma",
+            Buttons = {
+                Yes = function()
+                    setclipboard("https://discord.gg/AC4usvpwVY")
+                    GUI:Notification{Title = "Copied!", Text = "Discord link copied.", Duration = 3}
+                    JoinedSigmaServer = true
+                    WriteSigmaData()
+                end,
+                No = function() end
+            }
         }
-    }
+    end
 end
 
 InitializeGUI()
