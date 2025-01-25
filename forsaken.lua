@@ -693,6 +693,13 @@ local function InitializeGUI()
         end
     }
 
+    BlatantTab:Toggle{
+        Name = "Toggle FatMan",
+        Description = "Toggle FatMan, Very Blatant Feature, Use At Own Risk.",
+        StartingState = false,
+        Callback = function(state) ToggleFatMan(state) end
+    }
+
     BlatantTab:Button{
         Name = "Do ALL Generators",
         Description = "Teleport to all generators and do them.",
@@ -725,13 +732,6 @@ local function InitializeGUI()
         Name = "NameProtect",
         Description = "Replaces everyones names and images with pmoon.",
         Callback = function() NameProtect(true) end
-    }
-
-    BlatantTab:Toggle{
-        Name = "Toggle FatMan",
-        Description = "Toggle FatMan, Very Blatant Feature, Use At Own Risk.",
-        StartingState = false,
-        Callback = function(state) ToggleFatMan(state) end
     }
 
     if not JoinedSigmaServer then
