@@ -152,41 +152,7 @@ local function ToggleSigmaItemsHighlights(state)
 end
 
 -- change esp colors
-local function UpdateFarts()
-    local FartPlayers = workspace:FindFirstChild("Players")
-    local SigmaGenerators = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
-    local SigmaMap = SigmaGenerators and SigmaGenerators:FindFirstChild("Map")
-    if FartPlayers then
-        for _, g in ipairs(FartPlayers:GetDescendants()) do
-            if g:IsA("Highlight") then
-                local SkebedeName = g.Parent and g.Parent.Name
-                if SkebedeName == "Survivors" then
-                    g.FillColor = survivorHighlightColor
-                    if DebugNotifications then GUI:Notification{Title = "Survivor Highlight Color Changed", Text = (pcall(function() return g:GetFullName() end) and g:GetFullName() or "Color"), Duration = 3} else end
-                elseif SkebedeName == "Killers" then
-                    g.FillColor = killerHighlightColor
-                    if DebugNotifications then GUI:Notification{Title = "Killer Highlight Color Changed", Text = (pcall(function() return g:GetFullName() end) and g:GetFullName() or "Color"), Duration = 3} else end
-                end
-            end
-        end
-    end
 
-    if SigmaMap then
-        for _, g in ipairs(SigmaMap:GetDescendants()) do
-            if g:IsA("Highlight") then
-                g.FillColor = g.Parent and g.Parent.Name == "Generator" and generatorHighlightColor or itemHighlightColor
-                GUI:Notification{Title = "Generator/Item Highlight Color Changed", Text = (pcall(function() return g:GetFullName() end) and g:GetFullName() or "Color"), Duration = 3}
-            end
-        end
-    end
-
-    pcall(function()
-        WriteSigmaData()
-        if DebugNotifications then
-            GUI:Notification{Title = "Saved", Text = "Saved color options.", Duration = 3} 
-        end
-    end)
-end
 
 
 local function Do1x1x1x1Popups()
@@ -375,6 +341,52 @@ local function SetProximity()
     if not success and DebugNotifications then
         GUI:Notification{Title = "Error", Text = err, Duration = 5}
     end
+end
+
+local function ToggleSigmaItemsHighlights(state)
+    ItemFartsEnabled = state
+    for _, obj in ipairs(workspace:GetDescendants()) do
+        if obj:IsA("Highlight") and table.find(Items, obj.Parent.Name) then
+            if DebugNotifications then GUI:Notification{Title = "Highlight deleted", Text = (pcall(function() return obj:GetFullName() end) and obj:GetFullName() or "Deleted"), Duration = 3} else end
+            task.wait(.1)
+            obj:Destroy()
+        end
+    end
+    if not state then return end
+    local function AddLopticaHighlight(object, color)
+        if object:IsA("BasePart") and object.Parent:IsA("Model") and not object:FindFirstChildOfClass("Highlight") then
+            local h = Instance.new("Highlight", object)
+            h.FillColor, h.FillTransparency, h.OutlineTransparency = color, 0.7, 0.6
+            if DebugNotifications then GUI:Notification{Title = "Highlight added", Text = (pcall(function() return h:GetFullName() end) and h:GetFullName() or "Added"), Duration = 3} else end
+        end
+    end
+    for _, item in ipairs(Items) do
+        for _, obj in ipairs(workspace:GetDescendants()) do
+            if obj:IsA("Model") and obj.Name == item then
+                for _, child in ipairs(obj:GetChildren()) do
+                    if child:IsA("BasePart") then
+                        AddLopticaHighlight(child, itemHighlightColor)
+                    end
+                end
+            end
+        end
+    end
+    workspace.DescendantAdded:Connect(function(descendant)
+        if ItemFartsEnabled and descendant:IsA("Model") and table.find(Items, descendant.Name) then
+            for _, child in ipairs(descendant:GetChildren()) do
+                if child:IsA("BasePart") then
+                    AddLopticaHighlight(child, itemHighlightColor)
+                end
+            end
+        end
+    end)
+end
+
+local function UpdateFarts()
+    ToggleFarts(false)
+    ToggleFarts(true)
+    ToggleSigmaItemsHighlights(false)
+    ToggleSigmaItemsHighlights(true)
 end
 
 local function InitializeGUI()
