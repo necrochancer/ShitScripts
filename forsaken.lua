@@ -160,10 +160,10 @@ local function UpdateFarts()
         for _, g in ipairs(FartPlayers:GetDescendants()) do
             if g:IsA("Highlight") then
                 local SkebedeName = g.Parent and g.Parent.Name
-                if SkebedeName == "Survivor" then
+                if SkebedeName == "Survivors" then
                     g.FillColor = survivorHighlightColor
                     if DebugNotifications then GUI:Notification{Title = "Survivor Highlight Color Changed", Text = (pcall(function() return g:GetFullName() end) and g:GetFullName() or "Color"), Duration = 3} else end
-                elseif SkebedeName == "Killer" then
+                elseif SkebedeName == "Killers" then
                     g.FillColor = killerHighlightColor
                     if DebugNotifications then GUI:Notification{Title = "Killer Highlight Color Changed", Text = (pcall(function() return g:GetFullName() end) and g:GetFullName() or "Color"), Duration = 3} else end
                 end
