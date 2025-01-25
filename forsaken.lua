@@ -16,7 +16,7 @@ local GUI, PlayerTab, VisualsTab, GeneratorTab, BlatantTab, BabyShark, KillerFar
 local executorname = (pcall(function() return getexecutorname() end) and getexecutorname()) or (pcall(function() return identifyexecutor() end) and identifyexecutor()) or "Unknown"
 local supportedExecutors = { AWP = true, Wave = true, Nihon = true, ["Synapse Z"] = true, Swift = true }
 local SoundList = {"rbxassetid://112809109188560", "rbxassetid://101199185291628", "rbxassetid://102228729296384", "rbxassetid://140242176732868"}
-local CurrentFartsActive, processedGenerators =  {}, {}
+local CurrentFartsActive = {}
 
 GUI:Notification{
     Title = supportedExecutors[executorname] and "Executor Supported" or "Executor Not Supported",
@@ -24,7 +24,7 @@ GUI:Notification{
     Duration = 5
 }
 
-local highlightingEnabled, SkibidiStaminaLoop, running, ItemFartsEnabled, Do1x1PopupsLoop, SkibidiWait, LopticaWaitTime = false, false, false, false, false, 0.5, 0.5
+local highlightingEnabled, SkibidiStaminaLoop, running, ItemFartsEnabled, Do1x1PopupsLoop, SkibidiWait, LopticaWaitTime = false, false, false, false, false, 0.1, 0.5
 local generatorHighlightColor, survivorHighlightColor, killerHighlightColor, itemHighlightColor = Color3.fromRGB(173, 162, 236), Color3.fromRGB(0, 255, 255), Color3.fromRGB(255, 100, 100), Color3.fromRGB(255, 255, 0)
 
 local Items = {"Medkit", "BloxyCola", "Bunny", "Mafioso1", "Mafioso2", "Mafioso3", "Shockwave"}
@@ -227,10 +227,11 @@ local function TpDoGenerator()
                 GUI:Notification{Title = "Teleported to Generator", Text = (pcall(function() return g:GetFullName() end) and g:GetFullName() or "Teleported"), Duration = 3}
             end
             for _ = 1, 6 do
-                fireproximityprompt(g.Main:WaitForChild("Prompt", 1))
+                task.wait(LopticaWaitTime / 5)
                 g.Remotes.RE:FireServer()
             end
-            task.wait(LopticaWaitTime)
+            task.wait(LopticaWaitTime / 5)
+            g.Remotes.RF:InvokeServer("leave")
         end
     end
 
@@ -519,7 +520,7 @@ local function InitializeGUI()
     BlatantTab:Slider{
         Name = "Do ALL Generators Speed",
         Description = "Change the speed of how fast to teleport to the generator.",
-        Default = 0.5,
+        Default = 0.1,
         Min = 0.1,
         Max = 10,
         Callback = function(value)
