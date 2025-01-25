@@ -207,7 +207,7 @@ local function DoGenebator()
     end
 end
 local function TpDoGenerator()
-    local lastPosition = player.Character.HumanoidRootPart.CFrame
+    local lastPosition = Players.LocalPlayer.Character.HumanoidRootPart.CFrame
 
     local function findGenerators()
         local folder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
