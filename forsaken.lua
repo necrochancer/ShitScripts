@@ -63,7 +63,7 @@ local function ToggleFarts(state)
     highlightingEnabled = state
     local localPlayer = game.Players.LocalPlayer
     for _, obj in ipairs(workspace:GetDescendants()) do
-        if obj:IsA("Highlight") then
+        if obj:IsA("Highlight") or obj:IsA("BillboardGui") then
             if DebugNotifications then GUI:Notification{Title = "Highlight deleted", Text = (pcall(function() return obj:GetFullName() end) and obj:GetFullName() or "Deleted"), Duration = 3} else end
             obj:Destroy()
         end
@@ -79,10 +79,35 @@ local function ToggleFarts(state)
     for _, folder in ipairs({workspace.Players.Survivors, workspace.Players.Killers}) do
         for _, obj in ipairs(folder:GetChildren()) do
             AddFart(obj, folder.Name == "Survivors" and survivorHighlightColor or killerHighlightColor)
+            local billboard = Instance.new("BillboardGui", obj.Head)
+            billboard.Name = "FartHubBillboard"
+            billboard.Size = UDim2.new(0, 100, 0, 50)
+            billboard.StudsOffset = Vector3.new(0, 2, 0)
+            local textLabel = Instance.new("TextLabel", billboard)
+            textLabel.Size = UDim2.new(1, 0, 1, 0)
+            textLabel.Text = obj:GetAttribute("Username") and (obj:GetAttribute("Username") .. " : " .. obj.Name) or obj.Name
+            textLabel.TextColor3 = Color3.new(1, 1, 1)
+            textLabel.TextStrokeTransparency = 0
+            textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+            billboard.AlwaysOnTop = true
+            textLabel.BackgroundTransparency = 1
+
         end
         folder.ChildAdded:Connect(function(child)
             if highlightingEnabled then
                 AddFart(child, folder.Name == "Survivors" and survivorHighlightColor or killerHighlightColor)
+                local billboard = Instance.new("BillboardGui", child.Head)
+                billboard.Name = "FartHubBillboard"
+                billboard.Size = UDim2.new(0, 100, 0, 50)
+                billboard.StudsOffset = Vector3.new(0, 2, 0)
+                local textLabel = Instance.new("TextLabel", billboard)
+                textLabel.TextColor3 = Color3.new(1, 1, 1)
+                textLabel.TextStrokeTransparency = 0
+                textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+                textLabel.Size = UDim2.new(1, 0, 1, 0)
+                textLabel.Text = child:GetAttribute("Username") and (child:GetAttribute("Username") .. " : " ..  child.Name) or child.Name
+                billboard.AlwaysOnTop = true
+                textLabel.BackgroundTransparency = 1
             end
         end)
     end
