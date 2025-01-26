@@ -150,7 +150,12 @@ local function NameProtect(state)
                 if People:IsA("Frame") then
                     local randomIndex = indices[math.random(#indices)]
                     local name = NameProtectNames[randomIndex]
-                    People.Icon.Image = getcustomasset("/FartHub/Assets/" .. name .. ".png")
+                    local success, err = pcall(function()
+                        People.Icon.Image = getcustomasset("FartHub/Assets/" .. name .. ".png")
+                    end)
+                    if not success then
+                        GUI:Notification{Title = "Error", Text = err, Duration = 5}
+                    end
                     People.Username.Text = name
                 end
             end
