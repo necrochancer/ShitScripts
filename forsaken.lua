@@ -164,9 +164,12 @@ local function NameProtect(state)
             PlayerGui.ChildRemoved:Connect(function(child) if child.Name == "TemporaryUI" then setupConnections() end end)
             TemporaryUI.ChildRemoved:Connect(function(child) if child.Name == "PlayerInfo" then setupConnections() end end)
             PlayerInfo.ChildRemoved:Connect(function(child) if child.Name == "CurrentSurvivors" then setupConnections() end end)
+            game:GetService("Players").LocalPlayer.PlayerGui.ChildAdded:Connect(function(child) if child.Name == "EndScreen" then child.Main.PlayerStats.Header.PlayerDropdown:Destroy() end end)
         end
         setupConnections()
         updateNames()
+        if game:GetService("Players").LocalPlayer.PlayerGui.MainUI.PlayerListHolder then game:GetService("Players").LocalPlayer.PlayerGui.MainUI.PlayerListHolder:Destroy() end
+        if game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Spectate.Username then game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Spectate.Username.Visible = false end
     end
 end
 
