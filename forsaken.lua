@@ -71,8 +71,9 @@ local function GetBigBallsList()
                             local rawUrl = "https://raw.githubusercontent.com/ivannetta/ShitScripts/main/" .. item.path
                             table.insert(assetList, rawUrl)
 
-                            local name = item.path:match("Assets/(.+)%.(png|mp4)$")
+                            local name = item.path:match("Assets/(.+)%.png$")
                             if name then
+                                if debug then GUI:Notification{Title = "Added", Text = name, Duration = 3} end
                                 table.insert(NameProtectNames, name)
                             end
                         end
@@ -118,19 +119,20 @@ local function CheckIfFartsDownloaded()
 
         if not isfile(filePath) then
             DownloadBallers(url, filePath)
-            task.wait(1)
+            task.wait(.3)
             GUI:Notification{Title = "Downloaded", Text = filePath, Duration = 3}
         end
     end
 end
 
+CheckIfFartsDownloaded()
+
 local function NameProtect(state)
-    local function GRRRRRRRR()
-        local CurrentLoptici = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("TemporaryUI")
+    local function updateNames()
+        local CurrentSurvivors = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("TemporaryUI")
             and game:GetService("Players").LocalPlayer.PlayerGui.TemporaryUI:FindFirstChild("PlayerInfo")
             and game:GetService("Players").LocalPlayer.PlayerGui.TemporaryUI.PlayerInfo:FindFirstChild("CurrentSurvivors")
-
-        if CurrentLoptici then
+        if CurrentSurvivors then
             local indices = {}
             for index in pairs(NameProtectNames) do
                 table.insert(indices, index)
@@ -139,40 +141,32 @@ local function NameProtect(state)
                 local j = math.random(i)
                 indices[i], indices[j] = indices[j], indices[i]
             end
-            for _, blackpeople in pairs(CurrentLoptici:GetChildren()) do
-                if blackpeople:IsA("Frame") then
-                    local randomIndex
-                    local imagePath
-                    local name
-
-                    repeat
-                        randomIndex = indices[math.random(#indices)]
-                        name = NameProtectNames[randomIndex]
-                        imagePath = "/FartHub/Assets/" .. name .. ".png"
-                    until imagePath:match("%.png$")
-
-                    blackpeople.Icon.Image = getcustomasset(imagePath)
-                    blackpeople.Username.Text = name
+            for _, People in pairs(CurrentSurvivors:GetChildren()) do
+                if People:IsA("Frame") then
+                    local randomIndex = indices[math.random(#indices)]
+                    local name = NameProtectNames[randomIndex]
+                    People.Icon.Image = getcustomasset("/FartHub/Assets/" .. name .. ".png")
+                    People.Username.Text = name
                 end
             end
         end
     end
 
     if state then
-        local MAFIABOSSSSS = game:GetService("Players").LocalPlayer.PlayerGui
-        local function KLDHBJQWKLHBJDQW()
-            local BLACKUI = MAFIABOSSSSS:WaitForChild("TemporaryUI", math.huge)
-            local PLAYERINFORMATIONSIGMAMOMENTRESPECT = BLACKUI:WaitForChild("PlayerInfo", math.huge)
-            local CurrentSurvivors = PLAYERINFORMATIONSIGMAMOMENTRESPECT:WaitForChild("CurrentSurvivors", math.huge)
-            MAFIABOSSSSS.ChildAdded:Connect(function(child) if child.Name == "TemporaryUI" then GRRRRRRRR() end end)
-            BLACKUI.ChildAdded:Connect(function(child) if child.Name == "PlayerInfo" then GRRRRRRRR() end end)
-            PLAYERINFORMATIONSIGMAMOMENTRESPECT.ChildAdded:Connect(function(child) if child.Name == "CurrentSurvivors" then GRRRRRRRR() end end)
-            MAFIABOSSSSS.ChildRemoved:Connect(function(child) if child.Name == "TemporaryUI" then KLDHBJQWKLHBJDQW() end end)
-            BLACKUI.ChildRemoved:Connect(function(child) if child.Name == "PlayerInfo" then KLDHBJQWKLHBJDQW() end end)
-            PLAYERINFORMATIONSIGMAMOMENTRESPECT.ChildRemoved:Connect(function(child) if child.Name == "CurrentSurvivors" then KLDHBJQWKLHBJDQW() end end)
+        local PlayerGui = game:GetService("Players").LocalPlayer.PlayerGui
+        local function setupConnections()
+            local TemporaryUI = PlayerGui:WaitForChild("TemporaryUI", math.huge)
+            local PlayerInfo = TemporaryUI:WaitForChild("PlayerInfo", math.huge)
+            local CurrentSurvivors = PlayerInfo:WaitForChild("CurrentSurvivors", math.huge)
+            PlayerGui.ChildAdded:Connect(function(child) if child.Name == "TemporaryUI" then updateNames() end end)
+            TemporaryUI.ChildAdded:Connect(function(child) if child.Name == "PlayerInfo" then updateNames() end end)
+            PlayerInfo.ChildAdded:Connect(function(child) if child.Name == "CurrentSurvivors" then updateNames() end end)
+            PlayerGui.ChildRemoved:Connect(function(child) if child.Name == "TemporaryUI" then setupConnections() end end)
+            TemporaryUI.ChildRemoved:Connect(function(child) if child.Name == "PlayerInfo" then setupConnections() end end)
+            PlayerInfo.ChildRemoved:Connect(function(child) if child.Name == "CurrentSurvivors" then setupConnections() end end)
         end
-        KLDHBJQWKLHBJDQW()
-        GRRRRRRRR()
+        setupConnections()
+        updateNames()
     end
 end
 
@@ -214,7 +208,7 @@ local function WriteSigmaData()
     writefile("FartHub.json", HttpService:JSONEncode(SigmaData))
 end
 
-CheckIfFartsDownloaded()
+
 LoadSigmaData()
 
 -- Toggle ESP
