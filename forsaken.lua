@@ -4,6 +4,7 @@
 
 local Players = game:GetService("Players")
 local SoundService = game:GetService("SoundService")
+local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
 local DebugNotifications = getgenv and getgenv().DebugNotifications or false
 local VirtualBallsManager = game:GetService('VirtualInputManager')
 local BlockRemote = game:GetService("ReplicatedStorage").Modules.Network.RemoteEvent
@@ -12,13 +13,18 @@ local SigmaData, JoinedSigmaServer = {}, false
 local HttpService = game:GetService("HttpService")
 local Mercury = loadstring(game:HttpGet("https://raw.githubusercontent.com/deeeity/mercury-lib/master/src.lua"))()
 local Sense = loadstring(game:HttpGet('https://sirius.menu/sense'))()
-local GUI, PlayerTab, VisualsTab, GeneratorTab, BlatantTab, BabyShark, KillerFartPart, HRP, SkibidiDistance, BlockEnabled = Mercury:Create{ Name = "FartSaken", Size = UDim2.fromOffset(600, 400), Theme = Mercury.Themes.Dark, Link = "https://github.com/ivannetta/ShitScripts/Forsaken" }, nil, nil, nil, nil, nil, nil, nil, 6, false
+local GUI = Mercury:Create{ Name = "FartSaken", Size = UDim2.fromOffset(600, 400), Theme = Mercury.Themes.Dark, Link = "https://github.com/ivannetta/ShitScripts/Forsaken" }
+local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab = nil, nil, nil, nil, nil
+local BabyShark, KillerFartPart, HRP = nil, nil, nil
+local SkibidiDistance, BlockEnabled = 6, false
 local executorname = (pcall(function() return getexecutorname() end) and getexecutorname()) or (pcall(function() return identifyexecutor() end) and identifyexecutor()) or "Unknown"
 local supportedExecutors = { AWP = true, Wave = true, Nihon = true, ["Synapse Z"] = true, Swift = true }
 local SoundList = {"rbxassetid://112809109188560", "rbxassetid://101199185291628", "rbxassetid://102228729296384", "rbxassetid://140242176732868"}
 local CurrentFartsActive = {}
 local NameProtectNames = {}
+local aimbotActive = false
 local skibussy
+
 
 local function ToggleFatMan(state)
     if state then
@@ -240,7 +246,7 @@ local function ToggleFarts(state)
             billboard.StudsOffset = Vector3.new(0, 2, 0)
             local textLabel = Instance.new("TextLabel", billboard)
             textLabel.Size = UDim2.new(1, 0, 1, 0)
-            textLabel.Text = obj:GetAttribute("Username") and (obj:GetAttribute("Username") .. " : " .. obj.Name) or obj.Name
+            textLabel.Text = obj:GetAttribute("Username") and obj.Name
             textLabel.TextColor3 = Color3.new(1, 1, 1)
             textLabel.TextStrokeTransparency = 0
             textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
@@ -259,7 +265,7 @@ local function ToggleFarts(state)
                 textLabel.TextStrokeTransparency = 0
                 textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
                 textLabel.Size = UDim2.new(1, 0, 1, 0)
-                textLabel.Text = child:GetAttribute("Username") and (child:GetAttribute("Username") .. " : " ..  child.Name) or child.Name
+                textLabel.Text = child:GetAttribute("Username") and child.Name
                 billboard.AlwaysOnTop = true
                 textLabel.BackgroundTransparency = 1
             end
@@ -351,6 +357,26 @@ local function Do1x1x1x1Popups()
         end
         task.wait(0.1)
     end
+end
+
+local function SetupSurfers(PuzzlesUi)
+    task.wait(.5)
+    local Container = PuzzlesUi:WaitForChild("Container")
+    local GridHolder = Container:WaitForChild("GridHolder")
+    Container:WaitForChild("UIAspectRatioConstraint"):Destroy()
+    Container.Size = UDim2.new(1, 0, 1, 0)
+    GridHolder.Size = UDim2.new(0.625, 0, 0.625, 0)
+    GridHolder.Position = UDim2.new(0.25, 0, 0.5, 0)
+
+    local Surfers = Instance.new("VideoFrame", Container)
+    Surfers.Size = UDim2.new(0.625, 0, 0.625, 0)
+    Surfers.Position = UDim2.new(0.75, 0, 0.5, 0)
+    Surfers.AnchorPoint = Vector2.new(0.5, 0.5)
+    Surfers.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    Surfers.SizeConstraint = Enum.SizeConstraint.RelativeYY
+    Surfers.Video = getcustomasset("FartHub/Assets/SubwaySurfers.mp4")
+    Surfers.Looped = true
+    Surfers.Playing = true
 end
 
 local function SkibidiGenerator(shouldLoop)
@@ -573,12 +599,13 @@ local function InitializeGUI()
     VisualsTab = GUI:Tab{Name = "Visuals", Icon = "rbxassetid://129972183138590"}
     PlayerTab = GUI:Tab{Name = "Player", Icon = "rbxassetid://86412006218107"}
     BlatantTab = GUI:Tab{Name = "Blatant", Icon = "rbxassetid://17183582911"}
+    MiscTab = GUI:Tab{Name = "Misc", Icon = "rbxassetid://17183582911"}
 
     GUI:Credit{Name = "ivannetta", Description = "meowzer", Discord = "ivannetta"}
     GUI:Notification{Title = "NOTE: Default Keybinds:", Text = "DEL to minimize.", Duration = 10}
     GUI:Notification{Title = "NOTE: Auto Block Is In BETA!!!:", Text = "This has NOT been tested much so DONT rely on it.", Duration = 10}
     GUI:Notification{Title = "NOTE: Highlights Not Working Fix.", Text = "Reset ur bloxtrap settings.", Duration = 10}
-    GUI:Notification{Title = "Made by ivannetta", Text = "Like on rbxscripts or rscripts plssssssss 🥺", Duration = 60}
+    GUI:Notification{Title = "Made by ivannetta", Text = "If you did a key system for this script, its not the original and stolen. 🥺", Duration = 60}
 
     VisualsTab:ColorPicker{
         Style = Mercury.ColorPickerStyles.Legacy,
@@ -674,6 +701,63 @@ local function InitializeGUI()
         end
     }
 
+    BlatantTab:Toggle{ -- Credit to R3mii cuz i was lazy to make this 🤣
+    Name = "Aimbot for Killer",
+    Description = "Automatically aims towards the killer, toggles upon key press",
+    StartingState = false,
+    Callback = function(state)
+        aimbotActive = state
+        if aimbotActive then
+            local function activateAimbot()
+                local killersFolder = workspace.Players:FindFirstChild("Killers")
+                if killersFolder then
+                    local killer = nil
+                    for _, model in pairs(killersFolder:GetChildren()) do
+                        if model:IsA("Model") then
+                            killer = model
+                            break
+                        end
+                    end
+
+                    if killer then
+                        local torso = killer:FindFirstChild("Torso")
+                        if torso then
+                            local character = game.Players.LocalPlayer.Character
+                            if character and character:FindFirstChild("HumanoidRootPart") then
+                                local humanoidRootPart = character.HumanoidRootPart
+                                local connection
+                                connection = game:GetService("RunService").RenderStepped:Connect(function()
+                                    if not aimbotActive then
+                                        connection:Disconnect()
+                                        return
+                                    end
+                                    local torsoPosition = torso.Position
+                                    local horizontalDirection = Vector3.new(torsoPosition.X, humanoidRootPart.Position.Y, torsoPosition.Z)
+                                    humanoidRootPart.CFrame = CFrame.lookAt(humanoidRootPart.Position, horizontalDirection)
+                                    local camera = game.Workspace.CurrentCamera
+                                    camera.CFrame = CFrame.lookAt(camera.CFrame.Position, horizontalDirection)
+                                end)
+                                task.delay(3, function()
+                                    connection:Disconnect()
+                                end)
+                            end
+                        end
+                    end
+                end
+            end
+
+            game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
+                if not gameProcessed and input.KeyCode == Enum.KeyCode[game:GetService("Players").LocalPlayer.PlayerData.Settings.Keybinds.AltAbility2.Value] then
+                    task.spawn(activateAimbot)
+                end
+            end)
+        else
+            local camera = game.Workspace.CurrentCamera
+            camera.CameraType = Enum.CameraType.Custom
+        end
+    end
+    }
+
     BlatantTab:Toggle{
         Name = "Auto Block",
         Description = "Automatically Use Block On Guest 1337, Currently only working on M1",
@@ -689,7 +773,7 @@ local function InitializeGUI()
         end
     }
 
-    BlatantTab:Toggle{
+    MiscTab:Toggle{
         Name = "Toggle FatMan",
         Description = "Toggle FatMan, Very Blatant Feature, Use At Own Risk.",
         StartingState = false,
@@ -724,10 +808,27 @@ local function InitializeGUI()
         end
     }
 
-    PlayerTab:Button{
+    MiscTab:Button{
         Name = "NameProtect",
         Description = "Replaces everyones names and images with pmoon.",
         Callback = function() NameProtect(true) end
+    }
+
+    MiscTab:Button{
+        Name = "Low Attention Span Mode",
+        Description = "Activate Low Attention Span Mode",
+        Callback = function()
+            if not _G.LowAttentionSpanModeActivated then
+                _G.LowAttentionSpanModeActivated = true
+                PlayerGui.ChildAdded:Connect(function(child)
+                    if child.Name == "PuzzleUI" then
+                        SetupSurfers(child)
+                    end
+                end)
+            else
+                GUI:Notification{Title = "Already Activated", Text = "Low Attention Span Mode is already activated.", Duration = 3}
+            end
+        end
     }
 
     if not JoinedSigmaServer then
