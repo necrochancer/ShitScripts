@@ -67,13 +67,12 @@ local function GetBigBallsList()
                 if response and response.Body then
                     local data = game:GetService("HttpService"):JSONDecode(response.Body)
                     for _, item in ipairs(data.tree) do
-                        if item.path:match("^Assets/.+%.png$") then
+                        if item.path:match("^Assets/.+%.png$") or item.path:match("^Assets/.+%.mp4$") then
                             local rawUrl = "https://raw.githubusercontent.com/ivannetta/ShitScripts/main/" .. item.path
                             table.insert(assetList, rawUrl)
 
                             local name = item.path:match("Assets/(.+)%.png$")
                             if name then
-                                if debug then GUI:Notification{Title = "Added", Text = name, Duration = 3} end
                                 table.insert(NameProtectNames, name)
                             end
                         end
