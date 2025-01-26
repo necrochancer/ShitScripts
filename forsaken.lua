@@ -17,6 +17,161 @@ local executorname = (pcall(function() return getexecutorname() end) and getexec
 local supportedExecutors = { AWP = true, Wave = true, Nihon = true, ["Synapse Z"] = true, Swift = true }
 local SoundList = {"rbxassetid://112809109188560", "rbxassetid://101199185291628", "rbxassetid://102228729296384", "rbxassetid://140242176732868"}
 local CurrentFartsActive = {}
+local NameProtectNames = {}
+local skibussy
+
+local function ToggleFatMan(state)
+    if state then
+        skibussy = game:GetService("Players").LocalPlayer.PlayerGui
+        skibussy = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer.PlayerGui)
+        skibussy.Name = "FatMan"
+        skibussy.ResetOnSpawn = false
+        skibussy.DisplayOrder = 999999999
+
+        local Frame = Instance.new("Frame", skibussy)
+        Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        Frame.BackgroundTransparency = 1.000
+        Frame.AnchorPoint = Vector2.new(1, 0.5)
+        Frame.Name = "YAPPING"
+        Frame.Position = UDim2.new(1, 0, 0.5, 0)
+        Frame.Size = UDim2.new(0, 150, 0, 150)
+
+        local VideoFrame = Instance.new("VideoFrame", Frame)
+        VideoFrame.Size = UDim2.new(1, 0, 1, 0)
+        VideoFrame.Video = getcustomasset("FartHub/Assets/FatMan.mp4")
+        VideoFrame.Looped = true
+        VideoFrame.Playing = true
+    else
+        skibussy:Destroy()
+    end
+end
+
+local function GetBigBallsList()
+    local url = "https://api.github.com/repos/ivannetta/ShitScripts/git/trees/main?recursive=1"
+    local assetList = {}
+
+    local success, errorMessage =
+        pcall(
+        function()
+            local Request = http_request or syn.request or request
+            if Request then
+                local response =
+                    Request(
+                    {
+                        Url = url,
+                        Method = "GET",
+                        Headers = {["Content-Type"] = "application/json"}
+                    }
+                )
+
+                if response and response.Body then
+                    local data = game:GetService("HttpService"):JSONDecode(response.Body)
+                    for _, item in ipairs(data.tree) do
+                        if item.path:match("^Assets/.+%.png$") then
+                            local rawUrl = "https://raw.githubusercontent.com/ivannetta/ShitScripts/main/" .. item.path
+                            table.insert(assetList, rawUrl)
+
+                            local name = item.path:match("Assets/(.+)%.png$")
+                            if name then
+                                if debug then GUI:Notification{Title = "Added", Text = name, Duration = 3} end
+                                table.insert(NameProtectNames, name)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    )
+
+    if not success then
+        GUI:Notification{Title = "An error occurred", Text = errorMessage, Duration = 5}
+    end
+    return assetList
+end
+
+local function DownloadBallers(url, path)
+    if not isfile(path) then
+        local suc, res = pcall(function()
+            return game:HttpGet(url, true)
+        end)
+        if not suc or res == '404: Not Found' then
+            GUI:Notification{Title = "Error", Text = res, Duration = 5}
+        end
+        writefile(path, res)
+    end
+end
+
+local function CheckIfFartsDownloaded()
+    local assetList = GetBigBallsList()
+    local basePath = "FartHub/Assets/"
+
+    if not isfolder("FartHub") then
+        makefolder("FartHub")
+    end
+
+    if not isfolder(basePath) then
+        makefolder(basePath)
+    end
+
+    for _, url in ipairs(assetList) do
+        local filePath = basePath .. url:match("Assets/(.+)")
+        filePath = filePath
+
+        if not isfile(filePath) then
+            DownloadBallers(url, filePath)
+            task.wait(.3)
+            GUI:Notification{Title = "Downloaded", Text = filePath, Duration = 3}
+        end
+    end
+end
+
+CheckIfFartsDownloaded()
+
+local function NameProtect(state)
+    local function updateNames()
+        local CurrentSurvivors = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("TemporaryUI")
+            and game:GetService("Players").LocalPlayer.PlayerGui.TemporaryUI:FindFirstChild("PlayerInfo")
+            and game:GetService("Players").LocalPlayer.PlayerGui.TemporaryUI.PlayerInfo:FindFirstChild("CurrentSurvivors")
+        if CurrentSurvivors then
+            local indices = {}
+            for index in pairs(NameProtectNames) do
+                table.insert(indices, index)
+            end
+            for i = #indices, 2, -1 do
+                local j = math.random(i)
+                indices[i], indices[j] = indices[j], indices[i]
+            end
+            for _, People in pairs(CurrentSurvivors:GetChildren()) do
+                if People:IsA("Frame") then
+                    local randomIndex = indices[math.random(#indices)]
+                    local name = NameProtectNames[randomIndex]
+                    People.Icon.Image = getcustomasset("/FartHub/Assets/" .. name .. ".png")
+                    People.Username.Text = name
+                end
+            end
+        end
+    end
+
+    if state then
+        local PlayerGui = game:GetService("Players").LocalPlayer.PlayerGui
+        local function setupConnections()
+            local TemporaryUI = PlayerGui:WaitForChild("TemporaryUI", math.huge)
+            local PlayerInfo = TemporaryUI:WaitForChild("PlayerInfo", math.huge)
+            local CurrentSurvivors = PlayerInfo:WaitForChild("CurrentSurvivors", math.huge)
+            PlayerGui.ChildAdded:Connect(function(child) if child.Name == "TemporaryUI" then updateNames() end end)
+            TemporaryUI.ChildAdded:Connect(function(child) if child.Name == "PlayerInfo" then updateNames() end end)
+            PlayerInfo.ChildAdded:Connect(function(child) if child.Name == "CurrentSurvivors" then updateNames() end end)
+            PlayerGui.ChildRemoved:Connect(function(child) if child.Name == "TemporaryUI" then setupConnections() end end)
+            TemporaryUI.ChildRemoved:Connect(function(child) if child.Name == "PlayerInfo" then setupConnections() end end)
+            PlayerInfo.ChildRemoved:Connect(function(child) if child.Name == "CurrentSurvivors" then setupConnections() end end)
+            game:GetService("Players").LocalPlayer.PlayerGui.ChildAdded:Connect(function(child) if child.Name == "EndScreen" then child.Main.PlayerStats.Header.PlayerDropdown:Destroy() end end)
+        end
+        setupConnections()
+        updateNames()
+        if game:GetService("Players").LocalPlayer.PlayerGui.MainUI.PlayerListHolder then game:GetService("Players").LocalPlayer.PlayerGui.MainUI.PlayerListHolder:Destroy() end
+        if game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Spectate.Username then game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Spectate.Username.Visible = false end
+    end
+end
 
 GUI:Notification{
     Title = supportedExecutors[executorname] and "Executor Supported" or "Executor Not Supported",
@@ -56,6 +211,7 @@ local function WriteSigmaData()
     writefile("FartHub.json", HttpService:JSONEncode(SigmaData))
 end
 
+
 LoadSigmaData()
 
 -- Toggle ESP
@@ -91,7 +247,6 @@ local function ToggleFarts(state)
             textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
             billboard.AlwaysOnTop = true
             textLabel.BackgroundTransparency = 1
-
         end
         folder.ChildAdded:Connect(function(child)
             if highlightingEnabled then
@@ -137,6 +292,7 @@ local function ToggleFarts(state)
         end
     end)
 end
+
 local function ToggleSigmaItemsHighlights(state)
     ItemFartsEnabled = state
     for _, obj in ipairs(workspace:GetDescendants()) do
@@ -175,8 +331,6 @@ local function ToggleSigmaItemsHighlights(state)
         end
     end)
 end
-
--- change esp colors
 
 
 
@@ -536,6 +690,13 @@ local function InitializeGUI()
         end
     }
 
+    BlatantTab:Toggle{
+        Name = "Toggle FatMan",
+        Description = "Toggle FatMan, Very Blatant Feature, Use At Own Risk.",
+        StartingState = false,
+        Callback = function(state) ToggleFatMan(state) end
+    }
+
     BlatantTab:Button{
         Name = "Do ALL Generators",
         Description = "Teleport to all generators and do them.",
@@ -563,6 +724,13 @@ local function InitializeGUI()
             SkibidiDistance = value
         end
     }
+
+    PlayerTab:Button{
+        Name = "NameProtect",
+        Description = "Replaces everyones names and images with pmoon.",
+        Callback = function() NameProtect(true) end
+    }
+
     if not JoinedSigmaServer then
         GUI:Prompt{
             Title = "Join Fart Hub discord server?",
