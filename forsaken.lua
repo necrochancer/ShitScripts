@@ -16,7 +16,7 @@ local Sense = loadstring(game:HttpGet('https://sirius.menu/sense'))()
 local GUI = Mercury:Create{ Name = "FartSaken", Size = UDim2.fromOffset(600, 400), Theme = Mercury.Themes.Dark, Link = "https://github.com/ivannetta/ShitScripts/Forsaken" }
 local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab = nil, nil, nil, nil, nil
 local BabyShark, KillerFartPart, HRP = nil, nil, nil
-local SkibidiDistance, BlockEnabled = 6, false
+local SkibidiDistance, BlockEnabled, AimLockTimer = 6, false, 2
 local executorname = (pcall(function() return getexecutorname() end) and getexecutorname()) or (pcall(function() return identifyexecutor() end) and identifyexecutor()) or "Unknown"
 local supportedExecutors = { AWP = true, Wave = true, Nihon = true, ["Synapse Z"] = true, Swift = true }
 local SoundList = {"rbxassetid://112809109188560", "rbxassetid://101199185291628", "rbxassetid://102228729296384", "rbxassetid://140242176732868"}
@@ -742,7 +742,7 @@ local function InitializeGUI()
                                     local camera = game.Workspace.CurrentCamera
                                     camera.CFrame = CFrame.lookAt(camera.CFrame.Position, horizontalDirection)
                                 end)
-                                task.delay(3, function()
+                                task.delay(AimLockTimer, function()
                                     connection:Disconnect()
                                 end)
                             end
@@ -833,6 +833,17 @@ local function InitializeGUI()
             else
                 GUI:Notification{Title = "Already Activated", Text = "Low Attention Span Mode is already activated.", Duration = 3}
             end
+        end
+    }
+
+    MiscTab:Slider{
+        Name = "Aimbot Lock Time",
+        Description = "Change the time the aimbot locks onto the killer.",
+        Default = 2,
+        Min = 1,
+        Max = 10,
+        Callback = function(value)
+            AimLockTimer = value
         end
     }
 
