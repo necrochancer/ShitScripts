@@ -73,7 +73,6 @@ local function GetBigBallsList()
 
                             local name = item.path:match("Assets/(.+)%.png$")
                             if name then
-                                if debug then GUI:Notification{Title = "Added", Text = name, Duration = 3} end
                                 table.insert(NameProtectNames, name)
                             end
                         end
