@@ -599,13 +599,13 @@ local function InitializeGUI()
     VisualsTab = GUI:Tab{Name = "Visuals", Icon = "rbxassetid://129972183138590"}
     PlayerTab = GUI:Tab{Name = "Player", Icon = "rbxassetid://86412006218107"}
     BlatantTab = GUI:Tab{Name = "Blatant", Icon = "rbxassetid://17183582911"}
-    MiscTab = GUI:Tab{Name = "Misc", Icon = "rbxassetid://17183582911"}
+    MiscTab = GUI:Tab{Name = "Misc", Icon = "rbxassetid://17106470268"}
 
     GUI:Credit{Name = "ivannetta", Description = "meowzer", Discord = "ivannetta"}
     GUI:Notification{Title = "NOTE: Default Keybinds:", Text = "DEL to minimize.", Duration = 10}
     GUI:Notification{Title = "NOTE: Auto Block Is In BETA!!!:", Text = "This has NOT been tested much so DONT rely on it.", Duration = 10}
     GUI:Notification{Title = "NOTE: Highlights Not Working Fix.", Text = "Reset ur bloxtrap settings.", Duration = 10}
-    GUI:Notification{Title = "Made by ivannetta", Text = "If you did a key system for this script, its not the original and stolen. 🥺", Duration = 60}
+    GUI:Notification{Title = "Made by ivannetta", Text = "Like on rbxscripts or rscripts plssssssss 🥺", Duration = 60}
 
     VisualsTab:ColorPicker{
         Style = Mercury.ColorPickerStyles.Legacy,
