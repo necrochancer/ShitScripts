@@ -717,7 +717,7 @@ local function InitializeGUI()
 
     BlatantTab:Toggle{ -- ty loptica r3mii for amongus
         Name = "Aimbot",
-        Description = "Aimbot for 1x1x1x1, John Doe, Chance.",
+        Description = "Aimbot for 1x1x1x1, John Doe, Chance. ONLY FOR PC!!!",
         StartingState = false,
         Callback = function(state)
             aimbotActive = state
