@@ -705,62 +705,98 @@ local function InitializeGUI()
             SkibidiWait = value
         end
     }
+    local AllowedThingies = {
+        Killers = {
+            ["1x1x1x1"] = {"AltAbility1", "AltAbility2"},
+            ["JohnDoe"] = {"AltAbility1"}
+        },
+        Survivors = {
+            ["Chance"] = {"AltAbility2"}
+        }
+    }
 
-    BlatantTab:Toggle{ -- Credit to R3mii cuz i was lazy to make this 🤣
-    Name = "Aimbot for Killer",
-    Description = "Automatically aims towards the killer, toggles upon key press",
-    StartingState = false,
-    Callback = function(state)
-        aimbotActive = state
-        if aimbotActive then
-            local function activateAimbot()
-                local killersFolder = workspace.Players:FindFirstChild("Killers")
-                if killersFolder then
-                    local killer = nil
-                    for _, model in pairs(killersFolder:GetChildren()) do
-                        if model:IsA("Model") then
-                            killer = model
-                            break
-                        end
+    BlatantTab:Toggle{ -- ty loptica r3mii for amongus
+        Name = "Aimbot",
+        Description = "Aimbot for 1x1x1x1, John Doe, Chance.",
+        StartingState = false,
+        Callback = function(state)
+            aimbotActive = state
+            if aimbotActive then
+                local function activateAimbot()
+                    local localPlayer = game.Players.LocalPlayer
+                    local character = localPlayer.Character
+                    if not character then
+                        return
                     end
 
-                    if killer then
-                        local torso = killer:FindFirstChild("Torso")
-                        if torso then
-                            local character = game.Players.LocalPlayer.Character
-                            if character and character:FindFirstChild("HumanoidRootPart") then
-                                local humanoidRootPart = character.HumanoidRootPart
-                                local connection
-                                connection = game:GetService("RunService").RenderStepped:Connect(function()
-                                    if not aimbotActive then
-                                        connection:Disconnect()
-                                        return
+                    local target = nil
+                    if character.Parent == workspace.Players.Survivors then
+                        local killersFolder = workspace.Players:FindFirstChild("Killers")
+                        if killersFolder then
+                            for _, model in pairs(killersFolder:GetChildren()) do
+                                if model:IsA("Model") then
+                                    target = model
+                                    break
+                                end
+                            end
+                        end
+                    elseif character.Parent == workspace.Players.Killers then
+                        local survivorsFolder = workspace.Players:FindFirstChild("Survivors")
+                        if survivorsFolder then
+                            local closestDistance = math.huge
+                            for _, model in pairs(survivorsFolder:GetChildren()) do
+                                if model:IsA("Model") then
+                                    local distance = (model.HumanoidRootPart.Position - character.HumanoidRootPart.Position).Magnitude
+                                    if distance < closestDistance then
+                                        closestDistance = distance
+                                        target = model
                                     end
-                                    local torsoPosition = torso.Position
-                                    local horizontalDirection = Vector3.new(torsoPosition.X, humanoidRootPart.Position.Y, torsoPosition.Z)
-                                    humanoidRootPart.CFrame = CFrame.lookAt(humanoidRootPart.Position, horizontalDirection)
-                                    local camera = game.Workspace.CurrentCamera
-                                    camera.CFrame = CFrame.lookAt(camera.CFrame.Position, horizontalDirection)
-                                end)
-                                task.delay(AimLockTimer, function()
-                                    connection:Disconnect()
-                                end)
+                                end
                             end
                         end
                     end
+                    if target and target:FindFirstChild("HumanoidRootPart") then
+                        local targetHRP = target.HumanoidRootPart
+                        local connection
+                        connection = game:GetService("RunService").RenderStepped:Connect(function()
+                            if not aimbotActive then
+                                connection:Disconnect()
+                                return
+                            end
+                            local targetPosition = targetHRP.Position
+                            local horizontalDirection = Vector3.new(targetPosition.X, character.HumanoidRootPart.Position.Y, targetPosition.Z)
+                            character.HumanoidRootPart.CFrame = CFrame.lookAt(character.HumanoidRootPart.Position, horizontalDirection)
+                            local camera = game.Workspace.CurrentCamera
+                            camera.CFrame = CFrame.lookAt(camera.CFrame.Position, horizontalDirection)
+                        end)
+                        task.delay(AimLockTimer, function()
+                            connection:Disconnect()
+                        end)
+                    end
                 end
+    
+                game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
+                    if not gameProcessed then
+                        local character = game.Players.LocalPlayer.Character
+                        local role = character.Parent == workspace.Players.Survivors and "Survivors" or "Killers"
+                        local characterName = character.Name
+                        local allowedAbilities = AllowedThingies[role] and AllowedThingies[role][characterName]
+                        if allowedAbilities then
+                            for _, ability in ipairs(allowedAbilities) do
+                                local keybind = game:GetService("Players").LocalPlayer.PlayerData.Settings.Keybinds:FindFirstChild(ability)
+                                if keybind and input.KeyCode == Enum.KeyCode[keybind.Value] then
+                                    task.spawn(activateAimbot)
+                                    break
+                                end
+                            end
+                        end
+                    end
+                end)
+            else
+                local camera = game.Workspace.CurrentCamera
+                camera.CameraType = Enum.CameraType.Custom
             end
-
-            game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
-                if not gameProcessed and input.KeyCode == Enum.KeyCode[game:GetService("Players").LocalPlayer.PlayerData.Settings.Keybinds.AltAbility2.Value] then
-                    task.spawn(activateAimbot)
-                end
-            end)
-        else
-            local camera = game.Workspace.CurrentCamera
-            camera.CameraType = Enum.CameraType.Custom
         end
-    end
     }
 
     BlatantTab:Toggle{
@@ -813,6 +849,17 @@ local function InitializeGUI()
         end
     }
 
+    BlatantTab:Slider{
+        Name = "Aimbot Lock Time",
+        Description = "Change the time the aimbot locks onto the killer.",
+        Default = 2,
+        Min = 1,
+        Max = 10,
+        Callback = function(value)
+            AimLockTimer = value
+        end
+    }
+
     MiscTab:Button{
         Name = "NameProtect",
         Description = "Replaces everyones names and images with pmoon.",
@@ -833,17 +880,6 @@ local function InitializeGUI()
             else
                 GUI:Notification{Title = "Already Activated", Text = "Low Attention Span Mode is already activated.", Duration = 3}
             end
-        end
-    }
-
-    MiscTab:Slider{
-        Name = "Aimbot Lock Time",
-        Description = "Change the time the aimbot locks onto the killer.",
-        Default = 2,
-        Min = 1,
-        Max = 10,
-        Callback = function(value)
-            AimLockTimer = value
         end
     }
 
