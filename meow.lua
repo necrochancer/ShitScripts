@@ -16,7 +16,6 @@ local function findGenerators()
             end
         end
     end
-    NotificationLibrary:SendNotification("Info", "i found " .. #generators .. " generators", 2)
     return generators
 end
 
@@ -35,7 +34,6 @@ local function TpDoGenerator()
         end
 
         for _, g in ipairs(generators) do
-            NotificationLibrary:SendNotification("Info", "I teleport to generator ok??", 3)
             local player = game.Players.LocalPlayer
             if player.character.Parent == "Spectating" or player.character.Parent == "Killers"  then return true end
             local generatorPosition = g.Instances.Generator.Progress.CFrame.Position
@@ -113,7 +111,9 @@ local function Main()
                 queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/meow.lua', true))()")
         end
         task.wait(5)
-        teleportToRandomServer()
+        while task.wait(5) do
+            teleportToRandomServer()
+        end
 
     elseif title.Text == "Waiting for more players." then
         NotificationLibrary:SendNotification("Error", "RAHHHHHHHHHHHHHHHHHHHHHHHHHHHH WHERE ALL THE PLAYERS AT 😡😡😡", 5)
@@ -122,7 +122,9 @@ local function Main()
                 queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/meow.lua', true))()")
         end
         task.wait(5)
-        teleportToRandomServer()
+        while task.wait(5) do
+            teleportToRandomServer()
+        end
 
     else
         NotificationLibrary:SendNotification("Info", "im farting so hard rn", 5)
@@ -134,7 +136,9 @@ local function Main()
                     queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/meow.lua', true))()")
             end
             task.wait(1)
-            teleportToRandomServer()
+            while task.wait(5) do
+                teleportToRandomServer()
+            end
         end
     end
 end
