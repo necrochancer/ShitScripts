@@ -12,7 +12,6 @@ local RunService = game:GetService("RunService")
 local SigmaData, JoinedSigmaServer = {}, false
 local HttpService = game:GetService("HttpService")
 local Mercury = loadstring(game:HttpGet("https://raw.githubusercontent.com/deeeity/mercury-lib/master/src.lua"))()
-local Sense = loadstring(game:HttpGet('https://sirius.menu/sense'))()
 local GUI = Mercury:Create{ Name = "FartSaken", Size = UDim2.fromOffset(600, 400), Theme = Mercury.Themes.Dark, Link = "https://github.com/ivannetta/ShitScripts/Forsaken" }
 local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab = nil, nil, nil, nil, nil
 local BabyShark, KillerFartPart, HRP = nil, nil, nil
