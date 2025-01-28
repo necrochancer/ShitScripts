@@ -4,7 +4,7 @@ local TeleportService = game:GetService("TeleportService")
 local Players = game:GetService("Players")
 
 local function findGenerators()
-    print("Finding generators...")
+    print("i look for generators")
     local folder = workspace:WaitForChild("Map") and workspace.Map:WaitForChild("Ingame")
     local map = folder and folder:WaitForChild("Map")
     local generators = {}
@@ -15,7 +15,7 @@ local function findGenerators()
             end
         end
     end
-    print("Generators found:", #generators)
+    print("i found", #generators, "generators")
     return generators
 end
 
@@ -60,45 +60,56 @@ local function TpDoGenerator()
 end
 
 local function teleportToRandomServer()
-    print("Fetching server list...")
+    local retryCount = 0
+    local maxRetries = 10
+    local retryDelay = 10
+
+    print("i get servers")
     local Request = http_request or syn.request or request
     if Request then
         local url = "https://games.roblox.com/v1/games/18687417158/servers/Public?sortOrder=Asc&limit=100"
-        local success, response = pcall(function()
-            return Request({
-                Url = url,
-                Method = "GET",
-                Headers = { ["Content-Type"] = "application/json" }
-            })
-        end)
-        if success and response and response.Body then
-            local data = HttpService:JSONDecode(response.Body)
-            if data and data.data and #data.data > 0 then
-                local server = data.data[math.random(1, #data.data)]
-                if server.id then
-                    print("Teleporting to new server...")
-                    TeleportService:TeleportToPlaceInstance(18687417158, server.id, Players.LocalPlayer)
+
+        while retryCount < maxRetries do
+            local success, response = pcall(function()
+                return Request({
+                    Url = url,
+                    Method = "GET",
+                    Headers = { ["Content-Type"] = "application/json" }
+                })
+            end)
+
+            if success and response and response.Body then
+                local data = HttpService:JSONDecode(response.Body)
+                if data and data.data and #data.data > 0 then
+                    local server = data.data[math.random(1, #data.data)]
+                    if server.id then
+                        print("i teleport :shy:")
+                        TeleportService:TeleportToPlaceInstance(18687417158, server.id, Players.LocalPlayer)
+                        return
+                    end
                 end
             end
+
+            retryCount = retryCount + 1
+            print("omg it fail, i retry (" .. retryCount .. "/" .. maxRetries .. ")...")
+            task.wait(retryDelay)
         end
+
+        print("grrrrrrrrr")
     end
 end
 
+
 local function Main()
-    print("Checking game state...")
-    local playerGui = Players.LocalPlayer:FindFirstChild("PlayerGui")
-    local roundTimer = playerGui and playerGui:FindFirstChild("RoundTimer")
-    local main = roundTimer and roundTimer:FindFirstChild("Main")
-    local title = main and main:FindFirstChild("Title")
+    print("hmmmmmmm")
+    local playerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
+    local roundTimer = playerGui and playerGui:WaitForChild("RoundTimer")
+    local main = roundTimer and roundTimer:WaitForChild("Main")
+    local title = main and main:WaitForChild("Title")
 
-    if not title then
-        print("Game UI not found, exiting...")
-        return
-    end
-
-    print("Game status:", title.Text)
+    print("game is", title.Text)
     if title.Text == "Round ends in:" then
-        print("Round ending, queueing teleport...")
+        print("its ongoing so i leave")
 
 
     elseif title.Text == "Waiting for more players." then
@@ -110,10 +121,10 @@ local function Main()
         teleportToRandomServer()
 
     else
-        print("Starting generator tasks...")
+        print("i do generators")
         local generatorsDone = TpDoGenerator()
         if generatorsDone then
-            print("All generators done, teleporting...")
+            print("yay i did the generators!")
             local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
             if queueteleport then
                     queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/autofarm.lua', true))()")
