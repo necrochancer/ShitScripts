@@ -91,7 +91,7 @@ local function Main()
     local main = roundTimer and roundTimer:FindFirstChild("Main")
     local title = main and main:FindFirstChild("Title")
 
-    if not title then 
+    if not title then
         print("Game UI not found, exiting...")
         return
     end
@@ -99,12 +99,16 @@ local function Main()
     print("Game status:", title.Text)
     if title.Text == "Round ends in:" then
         print("Round ending, queueing teleport...")
+
+
+    elseif title.Text == "Waiting for more players." then
         local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
         if queueteleport then
                 queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/autofarm.lua', true))()")
         end
         task.wait(1)
         teleportToRandomServer()
+
     else
         print("Starting generator tasks...")
         local generatorsDone = TpDoGenerator()
