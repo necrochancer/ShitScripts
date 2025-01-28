@@ -96,7 +96,7 @@ local function Main()
         print("Round ending, queueing teleport...")
         local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
         if queueteleport then
-                queueteleport(loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/autofarm.lua'))())
+                queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/autofarm.lua', true))()")
         end
         task.wait(1)
         teleportToRandomServer()
@@ -107,7 +107,7 @@ local function Main()
             print("All generators done, teleporting...")
             local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
             if queueteleport then
-                    queueteleport(loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/autofarm.lua'))())
+                    queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/autofarm.lua', true))()")
             end
             task.wait(1)
             teleportToRandomServer()
