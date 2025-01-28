@@ -110,7 +110,12 @@ local function Main()
     print("game is", title.Text)
     if title.Text == "Round ends in:" then
         print("its ongoing so i leave")
-
+        local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
+        if queueteleport then
+                queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/autofarm.lua', true))()")
+        end
+        task.wait(1)
+        teleportToRandomServer()
 
     elseif title.Text == "Waiting for more players." then
         local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
