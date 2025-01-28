@@ -67,7 +67,7 @@ local function teleportToRandomServer()
     NotificationLibrary:SendNotification("Info", "I get servers", 5)
     local Request = http_request or syn.request or request
     if Request then
-        local url = "https://games.roblox.com/v1/games/18687417158/servers/Public?sortOrder=Desc&limit=100"
+        local url = "https://games.roblox.com/v1/games/18687417158/servers/Public?sortOrder=Asc&limit=100"
 
         while retryCount < maxRetries do
             local success, response = pcall(function()
@@ -107,7 +107,7 @@ local function Main()
     local title = main and main:WaitForChild("Title")
 
     if title.Text == "Round ends in:" then
-        NotificationLibrary:SendNotification("Enfo", "TS ONGOING 😭😭😭", 5)
+        NotificationLibrary:SendNotification("Info", "TS ONGOING 😭😭😭", 5)
         local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
         if queueteleport then
                 queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/meow.lua', true))()")
