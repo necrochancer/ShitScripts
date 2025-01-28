@@ -21,13 +21,18 @@ end
 
 local function TpDoGenerator()
     print("Starting generator tasks...")
-    local lastPosition = Players.LocalPlayer.Character and Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+    local lastPosition = Players.LocalPlayer.Character and Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart") and Players.LocalPlayer.Character.HumanoidRootPart.CFrame
     while true do
         local generators = findGenerators()
         if #generators == 0 then
             print("All generators completed.")
-            return true
+            task.wait(3)
+            if #findGenerators() == 0 then
+                print("Confirmed: All generators completed.")
+                return true
+            end
         end
+
         for _, g in ipairs(generators) do
             print("Teleporting to generator...")
             local player = game.Players.LocalPlayer
