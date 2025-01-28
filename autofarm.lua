@@ -4,9 +4,10 @@ local Players = game:GetService("Players")
 
 local function findGenerators()
     print("Finding generators...")
-    local folder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
-    local map = folder and folder:FindFirstChild("Map")
+    local folder = workspace:WaitForChild("Map") and workspace.Map:WaitForChild("Ingame")
+    local map = folder and folder:WaitForChild("Map")
     local generators = {}
+    task.wait(3)
     if map then
         for _, g in ipairs(map:GetChildren()) do
             if g.Name == "Generator" and g.Progress.Value < 100 then
@@ -93,14 +94,22 @@ local function Main()
     print("Game status:", title.Text)
     if title.Text == "Round ends in:" then
         print("Round ending, queueing teleport...")
-        queue_on_teleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/autofarm.lua'))()")
+        local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
+        if queueteleport then
+                queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/autofarm.lua'))()")
+        end
+        task.wait(1)
         teleportToRandomServer()
     else
         print("Starting generator tasks...")
         local generatorsDone = TpDoGenerator()
         if generatorsDone then
             print("All generators done, teleporting...")
-            queue_on_teleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/autofarm.lua'))()")
+            local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
+            if queueteleport then
+                    queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/autofarm.lua'))()")
+            end
+            task.wait(1)
             teleportToRandomServer()
         end
     end
