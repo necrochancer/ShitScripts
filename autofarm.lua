@@ -1,26 +1,24 @@
-local Players = game:GetService("Players")
+task.wait(5)
 local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
-local LopticaWaitTime = 0.1
+local Players = game:GetService("Players")
 
-
-local function TpDoGenerator()
-    local Geneators = workspace:WaitForChild("Map") and workspace.Map:WaitForChild("Ingame") and workspace.Map.Ingame:WaitForChild("Map")
-    local lastPosition = Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-    local function findGenerators()
-        local folder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
-        local map = folder and folder:FindFirstChild("Map")
-        local generators = {}
-        if map then
-            for _, g in ipairs(map:GetChildren()) do
-                if g.Name == "Generator" and g.Progress.Value < 100 then
-                    table.insert(generators, g)
-                end
+local function findGenerators()
+    local folder = workspace:WaitForChild("Map") and workspace.Map:WaitForChild("Ingame")
+    local map = folder and folder:WaitForChild("Map")
+    local generators = {}
+    if map then
+        for _, g in ipairs(map:GetChildren()) do
+            if g.Name == "Generator" and g.Progress.Value < 100 then
+                table.insert(generators, g)
             end
         end
-        return generators
     end
+    return generators
+end
 
+local function TpDoGenerator()
+    local lastPosition = Players.LocalPlayer.Character.HumanoidRootPart.CFrame
     while true do
         local generators = findGenerators()
         if #generators == 0 then break end
@@ -29,20 +27,19 @@ local function TpDoGenerator()
             local generatorPosition = g.Instances.Generator.Progress.CFrame.Position
             local generatorDirection = (g.Instances.Generator.Cube.CFrame.Position - generatorPosition).Unit
             player.Character.HumanoidRootPart.CFrame = CFrame.new(generatorPosition + Vector3.new(0, 0.5, 0), generatorPosition + Vector3.new(generatorDirection.X, 0, generatorDirection.Z))
-            task.wait(LopticaWaitTime / 2)
+            task.wait(0.1)
             fireproximityprompt(g.Main:WaitForChild("Prompt", 1))
-            task.wait(LopticaWaitTime / 2)
+            task.wait(0.1)
             for _ = 1, 6 do
-                task.wait(LopticaWaitTime / 5)
+                task.wait(0.1)
                 g.Remotes.RE:FireServer()
             end
-            task.wait(LopticaWaitTime / 5)
+            task.wait(0.1)
             g.Remotes.RF:InvokeServer("leave")
         end
     end
-
     if lastPosition then
-        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = lastPosition
+        Players.LocalPlayer.Character.HumanoidRootPart.CFrame = lastPosition
     end
 end
 
@@ -70,14 +67,29 @@ local function teleportToRandomServer()
 end
 
 local function Main()
-    if Players.LocalPlayer.PlayerGui:WaitForChild("RoundTimer"):WaitForChild("Main"):WaitForChild("Title").Text == "Round ends in:" then
+    local localPlayer = Players.LocalPlayer
+    if not localPlayer then return end
+
+    local playerGui = localPlayer:FindFirstChild("PlayerGui") or localPlayer:WaitForChild("PlayerGui", 5)
+    if not playerGui then return end
+
+    local roundTimer = playerGui:FindFirstChild("RoundTimer")
+    local main = roundTimer and roundTimer:FindFirstChild("Main")
+    local title = main and main:FindFirstChild("Title")
+
+    if not title or not title:IsA("TextLabel") then return end
+
+    if title.Text == "Round ends in:" then
         queue_on_teleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/autofarm.lua'))()")
         teleportToRandomServer()
-    else
-        TpDoGenerator()
-        queue_on_teleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/autofarm.lua'))()")
-        teleportToRandomServer()
+    elseif title.Text == "Round begins in:" then
+        local generatorsDone = TpDoGenerator()
+        if generatorsDone then
+            queue_on_teleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/autofarm.lua'))()")
+            teleportToRandomServer()
+        end
     end
 end
+
 
 Main()
