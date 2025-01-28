@@ -1,3 +1,4 @@
+task.wait(5)
 local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
 local Players = game:GetService("Players")
@@ -7,7 +8,6 @@ local function findGenerators()
     local folder = workspace:WaitForChild("Map") and workspace.Map:WaitForChild("Ingame")
     local map = folder and folder:WaitForChild("Map")
     local generators = {}
-    task.wait(3)
     if map then
         for _, g in ipairs(map:GetChildren()) do
             if g.Name == "Generator" and g.Progress.Value < 100 then
@@ -24,9 +24,9 @@ local function TpDoGenerator()
     local lastPosition = Players.LocalPlayer.Character and Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and Players.LocalPlayer.Character.HumanoidRootPart.CFrame
     while true do
         local generators = findGenerators()
-        if #generators == 0 then 
+        if #generators == 0 then
             print("All generators completed.")
-            return true 
+            return true
         end
         for _, g in ipairs(generators) do
             print("Teleporting to generator...")
@@ -34,15 +34,15 @@ local function TpDoGenerator()
             local generatorPosition = g.Instances.Generator.Progress.CFrame.Position
             local generatorDirection = (g.Instances.Generator.Cube.CFrame.Position - generatorPosition).Unit
             player.Character.HumanoidRootPart.CFrame = CFrame.new(generatorPosition + Vector3.new(0, 0.5, 0), generatorPosition + Vector3.new(generatorDirection.X, 0, generatorDirection.Z))
-            task.wait(0.5)
+            task.wait(0.3)
             print("Activating proximity prompt...")
             fireproximityprompt(g.Main:WaitForChild("Prompt", 1))
-            task.wait(0.5)
+            task.wait((0.1))
             for _ = 1, 6 do
-                task.wait(0.2)
+                task.wait(0.1)
                 g.Remotes.RE:FireServer()
             end
-            task.wait(0.2)
+            task.wait(0.1)
             g.Remotes.RF:InvokeServer("leave")
             print("Generator task completed.")
         end
@@ -85,18 +85,18 @@ local function Main()
     local roundTimer = playerGui and playerGui:FindFirstChild("RoundTimer")
     local main = roundTimer and roundTimer:FindFirstChild("Main")
     local title = main and main:FindFirstChild("Title")
-    
+
     if not title then 
         print("Game UI not found, exiting...")
-        return 
+        return
     end
-    
+
     print("Game status:", title.Text)
     if title.Text == "Round ends in:" then
         print("Round ending, queueing teleport...")
         local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
         if queueteleport then
-                queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/autofarm.lua'))()")
+                queueteleport(loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/autofarm.lua'))())
         end
         task.wait(1)
         teleportToRandomServer()
@@ -107,7 +107,7 @@ local function Main()
             print("All generators done, teleporting...")
             local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
             if queueteleport then
-                    queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/autofarm.lua'))()")
+                    queueteleport(loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/autofarm.lua'))())
             end
             task.wait(1)
             teleportToRandomServer()
