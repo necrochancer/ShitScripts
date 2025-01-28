@@ -16,7 +16,7 @@ local function findGenerators()
             end
         end
     end
-    NotificationLibrary:SendNotification("Info", "i found", #generators "generators", 2)
+    NotificationLibrary:SendNotification("Info", "i found " .. #generators .. " generators", 2)
     return generators
 end
 
@@ -125,7 +125,7 @@ local function Main()
         teleportToRandomServer()
 
     else
-        NotificationLibrary:SendNotification("Info", "I start doing generators cuz im so smart uwuwuwuwu", 5)
+        NotificationLibrary:SendNotification("Info", "im farting so hard rn", 5)
         local generatorsDone = TpDoGenerator()
         if generatorsDone then
             NotificationLibrary:SendNotification("Success", "I did the generators :3", 5)
@@ -133,6 +133,7 @@ local function Main()
             if queueteleport then
                     queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/meow.lua', true))()")
             end
+            task.wait(1)
             teleportToRandomServer()
         end
     end
