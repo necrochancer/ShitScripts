@@ -41,7 +41,7 @@ local SkibidiPomniOhioList = {
     },
     Survivors = {
         ["Guest1337"] = {Duration2 = 2},
-        ["Chance"] = {Duration2 = 2}
+        ["Chance"] = {Duration2 = 2},
     }
 }
 
@@ -138,6 +138,31 @@ local function HandleFartSexContainer(LKFVJNWEFLKJWNEFLKJWNEF)
             end)
             table.insert(fart.abilities, CONNECTOR)
         end
+
+        local function onNoChargesAdded()
+            local NoCharges = lol:FindFirstChild("NoCharges")
+            if NoCharges then
+                local IsAimbotActive = false
+                task.spawn(function()
+                    while NoCharges.Parent do
+                        if not IsAimbotActive then
+                            IsAimbotActive = true
+                            task.spawn(Aimbot, VeryLongDuration)
+                        end
+                        task.wait(0.1)
+                    end
+                    if IsAimbotActive then
+                        IsAimbotActive = false
+                    end
+                end)
+            end
+        end
+
+        lol.ChildAdded:Connect(function(child)
+            if child.Name == "NoCharges" then
+                onNoChargesAdded()
+            end
+        end)
     end
 
     for _, blahblahblah in ipairs(AbilityContainer:GetChildren()) do
