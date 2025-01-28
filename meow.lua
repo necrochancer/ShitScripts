@@ -20,41 +20,41 @@ local function findGenerators()
 end
 
 local function TpDoGenerator()
-    print("Starting generator tasks...")
+    print("i start doing my fav generators")
     local lastPosition = Players.LocalPlayer.Character and Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart") and Players.LocalPlayer.Character.HumanoidRootPart.CFrame
     while true do
         local generators = findGenerators()
         if #generators == 0 then
-            print("All generators completed.")
+            print("they all done i think")
             task.wait(3)
             if #findGenerators() == 0 then
-                print("Confirmed: All generators completed.")
+                print("i double checked and they all done")
                 return true
             end
         end
 
         for _, g in ipairs(generators) do
-            print("Teleporting to generator...")
+            print("i teleport ya")
             local player = game.Players.LocalPlayer
-            if player.Parent == "Spectators" then return true end
+            if player.Parent == "Spectating" then return true end
             local generatorPosition = g.Instances.Generator.Progress.CFrame.Position
             local generatorDirection = (g.Instances.Generator.Cube.CFrame.Position - generatorPosition).Unit
             player.Character.HumanoidRootPart.CFrame = CFrame.new(generatorPosition + Vector3.new(0, 0.5, 0), generatorPosition + Vector3.new(generatorDirection.X, 0, generatorDirection.Z))
             task.wait(0.3)
-            print("Activating proximity prompt...")
+            print("press proximity")
             fireproximityprompt(g.Main:WaitForChild("Prompt", 1))
             task.wait((0.1))
             for _ = 1, 6 do
-                task.wait(0.1)
+                task.wait(0.05)
                 g.Remotes.RE:FireServer()
             end
             task.wait(0.1)
             g.Remotes.RF:InvokeServer("leave")
-            print("Generator task completed.")
+            print("i done this generator")
         end
     end
     if lastPosition then
-        print("Returning to last position...")
+        print("i go back pls")
         Players.LocalPlayer.Character.HumanoidRootPart.CFrame = lastPosition
     end
     return true
@@ -115,7 +115,7 @@ local function Main()
         if queueteleport then
                 queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/meow.lua', true))()")
         end
-        task.wait(1)
+        task.wait(5)
         teleportToRandomServer()
 
     elseif title.Text == "Waiting for more players." then
@@ -123,7 +123,7 @@ local function Main()
         if queueteleport then
                 queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/meow.lua', true))()")
         end
-        task.wait(1)
+        task.wait(5)
         teleportToRandomServer()
 
     else
@@ -135,7 +135,6 @@ local function Main()
             if queueteleport then
                     queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/meow.lua', true))()")
             end
-            task.wait(1)
             teleportToRandomServer()
         end
     end
