@@ -939,7 +939,7 @@ local function InitializeGUI()
         Description = "Serverhops, Does Generators, Forever and ever.",
         Callback = function()
             GUI:Notification{Title = "Loading", Text = "pls wait stinky boy", Duration = 10}
-            loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/meow.lua', true))()
+            loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/AutoSigma.lua', true))()
         end
     }
 
