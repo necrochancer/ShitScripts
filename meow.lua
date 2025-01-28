@@ -36,7 +36,7 @@ local function TpDoGenerator()
         for _, g in ipairs(generators) do
             print("i teleport ya")
             local player = game.Players.LocalPlayer
-            if player.Parent == "Spectating" then return true end
+            if player.character.Parent == "Spectating" or player.character.Parent == "Killers"  then return true end
             local generatorPosition = g.Instances.Generator.Progress.CFrame.Position
             local generatorDirection = (g.Instances.Generator.Cube.CFrame.Position - generatorPosition).Unit
             player.Character.HumanoidRootPart.CFrame = CFrame.new(generatorPosition + Vector3.new(0, 0.5, 0), generatorPosition + Vector3.new(generatorDirection.X, 0, generatorDirection.Z))
