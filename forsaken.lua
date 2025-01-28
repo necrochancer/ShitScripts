@@ -24,6 +24,162 @@ local NameProtectNames = {}
 local aimbotActive = false
 local skibussy
 
+local RunService = game:GetService("RunService")
+
+local fart = {
+    aimbot = {},
+    abilities = {},
+    characterChange = nil
+}
+
+local SkibidiPomniOhioList = {
+    Killers = {
+        ["Jason"] = {Duration1 = 0.5},
+        ["1x1x1x1"] = {Duration1 = 0.5, Duration2 = 2.5, Duration3 = 1},
+        ["JohnDoe"] = {Duration1 = 0.5, Duration2 = 5},
+        ["C00lkidd"] = {Duration1 = 0.5},
+    },
+    Survivors = {
+        ["Guest1337"] = {Duration2 = 2},
+        ["Chance"] = {Duration2 = 2}
+    }
+}
+
+local function GetCharacterGenderAndSex()
+    local Me = game.Players.LocalPlayer
+    if not Me or not Me.Character then return nil, nil end
+    return Me.Character.Name, Me.Character.Parent.Name
+end
+
+local function JanitorModeEnabled(oklolloolloololololol)
+    for _, connection in pairs(oklolloolloololololol) do
+        if connection and connection.Connected then
+            connection:Disconnect()
+        end
+    end
+    table.clear(oklolloolloololololol)
+end
+
+local function Aimbot(Dur)
+    local CharacterSex, CharacterGender = GetCharacterGenderAndSex()
+    if not CharacterSex or not CharacterGender then return end
+
+    local Me = game.Players.LocalPlayer
+    local MeButCharacter = Me.Character
+    if not MeButCharacter or not MeButCharacter:FindFirstChild("HumanoidRootPart") then return end
+
+    local HornyFolder = workspace:FindFirstChild("Players") and 
+        workspace.Players:FindFirstChild(CharacterGender == "Killers" and "Survivors" or "Killers")
+    if not HornyFolder then return end
+
+    local function FindClosestBlackPerson()
+        local ClosestTarget, ClosestDistance = nil, math.huge
+        local MyPosition = MeButCharacter.HumanoidRootPart.Position
+
+        for _, v in pairs(HornyFolder:GetChildren()) do
+            if v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and v:FindFirstChild("HumanoidRootPart") then
+                local distance = (v.HumanoidRootPart.Position - MyPosition).Magnitude
+                if distance < ClosestDistance then
+                    ClosestDistance = distance
+                    ClosestTarget = v
+                end
+            end
+        end
+        return ClosestTarget
+    end
+
+    task.spawn(function()
+        local startTime = tick()
+        while tick() - startTime < Dur do
+            local target = FindClosestBlackPerson()
+            if target and target:FindFirstChild("HumanoidRootPart") then
+                local Rootsex = MeButCharacter.HumanoidRootPart
+                local TartgetSex = target.HumanoidRootPart.Position
+                local MathematicalCalculations = (TartgetSex - Rootsex.Position).unit
+                Rootsex.CFrame = CFrame.new(Rootsex.Position, Rootsex.Position + Vector3.new(MathematicalCalculations.X, 0, MathematicalCalculations.Z))
+                local Cumera = game.Workspace.CurrentCamera
+                Cumera.CFrame = CFrame.lookAt(Cumera.CFrame.Position, Cumera.CFrame.Position + Vector3.new(MathematicalCalculations.X, MathematicalCalculations.Y, MathematicalCalculations.Z))
+            end
+            task.wait()
+        end
+    end)
+end
+
+local function HandleFartSexContainer(LKFVJNWEFLKJWNEFLKJWNEF)
+    if not LKFVJNWEFLKJWNEFLKJWNEF then
+        JanitorModeEnabled(fart.abilities)
+        return
+    end
+
+    local AbilityContainer = game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild("MainUI"):WaitForChild("AbilityContainer")
+
+    local function EvilEmoji(lol)
+        local CharacterGender, CharacterSex = GetCharacterGenderAndSex()
+        if not SkibidiPomniOhioList[CharacterSex] or not SkibidiPomniOhioList[CharacterSex][CharacterGender] then return end
+
+        local sigmaboy = lol.LayoutOrder
+        local DDDDDDDurationm = "Duration" .. sigmaboy
+        local VeryLongDuration = SkibidiPomniOhioList[CharacterSex][CharacterGender][DDDDDDDurationm]
+
+        if VeryLongDuration then
+            local IsSkibidiToiletMode = false
+            local CONNECTOR
+            CONNECTOR = lol.CooldownTime:GetPropertyChangedSignal("Text"):Connect(function()
+                if not IsSkibidiToiletMode and lol.CooldownTime.Text ~= "" then
+                    IsSkibidiToiletMode = true
+                    task.spawn(Aimbot, VeryLongDuration)
+
+                    task.spawn(function()
+                        repeat task.wait() until lol.CooldownTime.Text == ""
+                        task.wait(0.1)
+                        IsSkibidiToiletMode = false
+                    end)
+                end
+            end)
+            table.insert(fart.abilities, CONNECTOR)
+        end
+    end
+
+    for _, blahblahblah in ipairs(AbilityContainer:GetChildren()) do
+        if blahblahblah:IsA("Frame") and blahblahblah:FindFirstChild("CooldownTime") then
+            EvilEmoji(blahblahblah)
+        end
+    end
+
+    for _, grrrrrr in pairs(AbilityContainer:GetChildren()) do
+        if (grrrrrr:IsA("TextButton") or grrrrrr:IsA("ImageButton")) and grrrrrr:FindFirstChild("CooldownTime") then
+            EvilEmoji(grrrrrr)
+        end
+    end
+
+    table.insert(fart.abilities, AbilityContainer.ChildAdded:Connect(function(child)
+        if (child:IsA("TextButton") or child:IsA("ImageButton")) and child:FindFirstChild("CooldownTime") then
+            EvilEmoji(child)
+        end
+    end))
+end
+
+local function IDONTREMEMEBRWHATTHISIS()
+    local Me = game.Players.LocalPlayer
+    local LastSkibidi, LastSkebede = GetCharacterGenderAndSex()
+
+    if fart.characterChange then
+        fart.characterChange:Disconnect()
+    end
+
+    fart.characterChange = Me:GetPropertyChangedSignal("Character"):Connect(function()
+        task.wait(0.1)
+        local newCharacter, newTeam = GetCharacterGenderAndSex()
+
+        if newCharacter ~= LastSkibidi or newTeam ~= LastSkebede then
+            LastSkibidi, LastSkebede = newCharacter, newTeam
+
+            JanitorModeEnabled(fart.abilities)
+            HandleFartSexContainer(true)
+        end
+    end)
+end
+
 
 local function ToggleFatMan(state)
     if state then
@@ -138,23 +294,17 @@ local function NameProtect(state)
             and game:GetService("Players").LocalPlayer.PlayerGui.TemporaryUI.PlayerInfo:FindFirstChild("CurrentSurvivors")
         if CurrentSurvivors then
             local indices = {}
-            for index in pairs(NameProtectNames) do
-                table.insert(indices, index)
-            end
+            for index in pairs(NameProtectNames) do table.insert(indices, index) end
             for i = #indices, 2, -1 do
                 local j = math.random(i)
                 indices[i], indices[j] = indices[j], indices[i]
             end
             for _, People in pairs(CurrentSurvivors:GetChildren()) do
                 if People:IsA("Frame") then
-                    local randomIndex = indices[math.random(#indices)]
-                    local name = NameProtectNames[randomIndex]
-                    local success, err = pcall(function()
+                    local name = NameProtectNames[indices[math.random(#indices)]]
+                    pcall(function()
                         People.Icon.Image = getcustomasset("FartHub/Assets/" .. name .. ".png")
                     end)
-                    if not success then
-                        GUI:Notification{Title = "Error", Text = err, Duration = 5}
-                    end
                     People.Username.Text = name
                 end
             end
@@ -167,20 +317,27 @@ local function NameProtect(state)
             local TemporaryUI = PlayerGui:WaitForChild("TemporaryUI", math.huge)
             local PlayerInfo = TemporaryUI:WaitForChild("PlayerInfo", math.huge)
             local CurrentSurvivors = PlayerInfo:WaitForChild("CurrentSurvivors", math.huge)
-            PlayerGui.ChildAdded:Connect(function(child) if child.Name == "TemporaryUI" then updateNames() end end)
-            TemporaryUI.ChildAdded:Connect(function(child) if child.Name == "PlayerInfo" then updateNames() end end)
-            PlayerInfo.ChildAdded:Connect(function(child) if child.Name == "CurrentSurvivors" then updateNames() end end)
-            PlayerGui.ChildRemoved:Connect(function(child) if child.Name == "TemporaryUI" then setupConnections() end end)
-            TemporaryUI.ChildRemoved:Connect(function(child) if child.Name == "PlayerInfo" then setupConnections() end end)
-            PlayerInfo.ChildRemoved:Connect(function(child) if child.Name == "CurrentSurvivors" then setupConnections() end end)
-            game:GetService("Players").LocalPlayer.PlayerGui.ChildAdded:Connect(function(child) if child.Name == "EndScreen" then child.Main.PlayerStats.Header.PlayerDropdown:Destroy() end end)
+
+            PlayerGui.ChildAdded:Connect(function(child)
+                if child.Name == "TemporaryUI" then updateNames() end
+            end)
+            TemporaryUI.ChildAdded:Connect(function(child)
+                if child.Name == "PlayerInfo" then updateNames() end
+            end)
+            PlayerInfo.ChildAdded:Connect(function(child)
+                if child.Name == "CurrentSurvivors" then updateNames() end
+            end)
         end
+
         setupConnections()
         updateNames()
-        if game:GetService("Players").LocalPlayer.PlayerGui.MainUI.PlayerListHolder then game:GetService("Players").LocalPlayer.PlayerGui.MainUI.PlayerListHolder:Destroy() end
-        if game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Spectate.Username then game:GetService("Players").LocalPlayer.PlayerGui.MainUI.Spectate.Username.Visible = false end
+
+        if PlayerGui.MainUI.PlayerListHolder then PlayerGui.MainUI.PlayerListHolder:Destroy() end
+        if PlayerGui.MainUI.Spectate.Username then PlayerGui.MainUI.Spectate.Username.Visible = false end
     end
 end
+
+
 
 GUI:Notification{
     Title = supportedExecutors[executorname] and "Executor Supported" or "Executor Not Supported",
@@ -404,8 +561,8 @@ end
 
 
 local function TpDoGenerator()
+    local Geneators = workspace:WaitForChild("Map") and workspace.Map:WaitForChild("Ingame") and workspace.Map.Ingame:WaitForChild("Map")
     local lastPosition = Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-
     local function findGenerators()
         local folder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
         local map = folder and folder:FindFirstChild("Map")
@@ -591,6 +748,8 @@ local function ToggleSigmaItemsHighlights(state)
     end)
 end
 
+IDONTREMEMEBRWHATTHISIS()
+
 local function UpdateFarts()
     ToggleFarts(false)
     ToggleFarts(true)
@@ -704,97 +863,13 @@ local function InitializeGUI()
             SkibidiWait = value
         end
     }
-    local AllowedThingies = {
-        Killers = {
-            ["1x1x1x1"] = {"AltAbility1", "AltAbility2"},
-            ["JohnDoe"] = {"AltAbility1"}
-        },
-        Survivors = {
-            ["Chance"] = {"AltAbility2"}
-        }
-    }
 
     BlatantTab:Toggle{ -- ty loptica r3mii for amongus
         Name = "Aimbot",
         Description = "Aimbot for 1x1x1x1, John Doe, Chance. ONLY FOR PC!!!",
         StartingState = false,
         Callback = function(state)
-            aimbotActive = state
-            if aimbotActive then
-                local function activateAimbot()
-                    local localPlayer = game.Players.LocalPlayer
-                    local character = localPlayer.Character
-                    if not character then
-                        return
-                    end
-
-                    local target = nil
-                    if character.Parent == workspace.Players.Survivors then
-                        local killersFolder = workspace.Players:FindFirstChild("Killers")
-                        if killersFolder then
-                            for _, model in pairs(killersFolder:GetChildren()) do
-                                if model:IsA("Model") then
-                                    target = model
-                                    break
-                                end
-                            end
-                        end
-                    elseif character.Parent == workspace.Players.Killers then
-                        local survivorsFolder = workspace.Players:FindFirstChild("Survivors")
-                        if survivorsFolder then
-                            local closestDistance = math.huge
-                            for _, model in pairs(survivorsFolder:GetChildren()) do
-                                if model:IsA("Model") then
-                                    local distance = (model.HumanoidRootPart.Position - character.HumanoidRootPart.Position).Magnitude
-                                    if distance < closestDistance then
-                                        closestDistance = distance
-                                        target = model
-                                    end
-                                end
-                            end
-                        end
-                    end
-                    if target and target:FindFirstChild("HumanoidRootPart") then
-                        local targetHRP = target.HumanoidRootPart
-                        local connection
-                        connection = game:GetService("RunService").RenderStepped:Connect(function()
-                            if not aimbotActive then
-                                connection:Disconnect()
-                                return
-                            end
-                            local targetPosition = targetHRP.Position
-                            local horizontalDirection = Vector3.new(targetPosition.X, character.HumanoidRootPart.Position.Y, targetPosition.Z)
-                            character.HumanoidRootPart.CFrame = CFrame.lookAt(character.HumanoidRootPart.Position, horizontalDirection)
-                            local camera = game.Workspace.CurrentCamera
-                            camera.CFrame = CFrame.lookAt(camera.CFrame.Position, horizontalDirection)
-                        end)
-                        task.delay(AimLockTimer, function()
-                            connection:Disconnect()
-                        end)
-                    end
-                end
-    
-                game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
-                    if not gameProcessed then
-                        local character = game.Players.LocalPlayer.Character
-                        local role = character.Parent == workspace.Players.Survivors and "Survivors" or "Killers"
-                        local characterName = character.Name
-                        local allowedAbilities = AllowedThingies[role] and AllowedThingies[role][characterName]
-                        if allowedAbilities then
-                            for _, ability in ipairs(allowedAbilities) do
-                                local keybind = game:GetService("Players").LocalPlayer.PlayerData.Settings.Keybinds:FindFirstChild(ability)
-                                if keybind and input.KeyCode == Enum.KeyCode[keybind.Value] then
-                                    task.spawn(activateAimbot)
-                                    break
-                                end
-                            end
-                        end
-                    end
-                end)
-            else
-                local camera = game.Workspace.CurrentCamera
-                camera.CameraType = Enum.CameraType.Custom
-            end
+            HandleFartSexContainer(state)
         end
     }
 
@@ -856,6 +931,15 @@ local function InitializeGUI()
         Max = 10,
         Callback = function(value)
             AimLockTimer = value
+        end
+    }
+
+    BlatantTab:Button{
+        Name = "AutoFarm Generators",
+        Description = "Serverhops, Does Generators, Forever and ever.",
+        Callback = function()
+            GUI:Notification{Title = "Loading", Text = "pls wait stinky boy", Duration = 10}
+            loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/meow.lua', true))()
         end
     }
 
