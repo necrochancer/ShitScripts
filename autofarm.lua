@@ -1,4 +1,4 @@
-task.wait(5)
+task.wait(3)
 local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
 local Players = game:GetService("Players")
@@ -27,7 +27,7 @@ local function TpDoGenerator()
             local generatorPosition = g.Instances.Generator.Progress.CFrame.Position
             local generatorDirection = (g.Instances.Generator.Cube.CFrame.Position - generatorPosition).Unit
             player.Character.HumanoidRootPart.CFrame = CFrame.new(generatorPosition + Vector3.new(0, 0.5, 0), generatorPosition + Vector3.new(generatorDirection.X, 0, generatorDirection.Z))
-            task.wait(0.1)
+            task.wait(0.5)
             fireproximityprompt(g.Main:WaitForChild("Prompt", 1))
             task.wait(0.1)
             for _ = 1, 6 do
