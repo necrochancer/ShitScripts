@@ -68,7 +68,7 @@ local function teleportToRandomServer()
     print("i get servers")
     local Request = http_request or syn.request or request
     if Request then
-        local url = "https://games.roblox.com/v1/games/18687417158/servers/Public?sortOrder=Desc&limit=100"
+        local url = "https://games.roblox.com/v1/games/18687417158/servers/Public?sortOrder=Asc&limit=100"
 
         while retryCount < maxRetries do
             local success, response = pcall(function()
