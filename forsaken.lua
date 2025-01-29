@@ -294,13 +294,11 @@ local function CheckIfFartsDownloaded()
 
         if not isfile(filePath) then
             DownloadBallers(url, filePath)
-            task.wait(.3)
+            task.wait(.1)
             GUI:Notification{Title = "Downloaded", Text = filePath, Duration = 3}
         end
     end
 end
-
-CheckIfFartsDownloaded()
 
 local function NameProtect(state)
     local function updateNames()
@@ -363,7 +361,7 @@ GUI:Notification{
 local highlightingEnabled, SkibidiStaminaLoop, running, ItemFartsEnabled, Do1x1PopupsLoop, SkibidiWait, LopticaWaitTime = false, false, false, false, false, 0.1, 0.5
 local generatorHighlightColor, survivorHighlightColor, killerHighlightColor, itemHighlightColor = Color3.fromRGB(173, 162, 236), Color3.fromRGB(0, 255, 255), Color3.fromRGB(255, 100, 100), Color3.fromRGB(255, 255, 0)
 
-local Items = {"Medkit", "BloxyCola", "Bunny", "Mafioso1", "Mafioso2", "Mafioso3", "Shockwave"}
+local Items = {"Medkit", "BloxyCola"}
 
 local function LoadSigmaData()
     pcall(function()
@@ -473,47 +471,6 @@ local function ToggleFarts(state)
         end
     end)
 end
-
-local function ToggleSigmaItemsHighlights(state)
-    ItemFartsEnabled = state
-    for _, obj in ipairs(workspace:GetDescendants()) do
-        if obj:IsA("Highlight") and table.find(Items, obj.Parent.Name) then
-            if DebugNotifications then GUI:Notification{Title = "Highlight deleted", Text = (pcall(function() return obj:GetFullName() end) and obj:GetFullName() or "Deleted"), Duration = 3} else end
-            task.wait(.1)
-            obj:Destroy()
-        end
-    end
-    if not state then return end
-    local function AddLopticaHighlight(object, color)
-        if object:IsA("BasePart") and object.Parent:IsA("Model") and not object:FindFirstChildOfClass("Highlight") then
-            local h = Instance.new("Highlight", object)
-            h.FillColor, h.FillTransparency, h.OutlineTransparency = color, 0.7, 0.6
-            if DebugNotifications then GUI:Notification{Title = "Highlight added", Text = (pcall(function() return h:GetFullName() end) and h:GetFullName() or "Added"), Duration = 3} else end
-        end
-    end
-    for _, item in ipairs(Items) do
-        for _, obj in ipairs(workspace:GetDescendants()) do
-            if obj:IsA("Model") and obj.Name == item then
-                for _, child in ipairs(obj:GetChildren()) do
-                    if child:IsA("BasePart") then
-                        AddLopticaHighlight(child, itemHighlightColor)
-                    end
-                end
-            end
-        end
-    end
-    workspace.DescendantAdded:Connect(function(descendant)
-        if ItemFartsEnabled and descendant:IsA("Model") and table.find(Items, descendant.Name) then
-            for _, child in ipairs(descendant:GetChildren()) do
-                if child:IsA("BasePart") then
-                    AddLopticaHighlight(child, itemHighlightColor)
-                end
-            end
-        end
-    end)
-end
-
-
 
 local function Do1x1x1x1Popups()
     while true do
@@ -742,7 +699,7 @@ local function ToggleSigmaItemsHighlights(state)
         end
     end
     for _, item in ipairs(Items) do
-        for _, obj in ipairs(workspace:GetDescendants()) do
+        for _, obj in ipairs(workspace.Map.Ingame:GetDescendants()) do
             if obj:IsA("Model") and obj.Name == item then
                 for _, child in ipairs(obj:GetChildren()) do
                     if child:IsA("BasePart") then
@@ -752,7 +709,7 @@ local function ToggleSigmaItemsHighlights(state)
             end
         end
     end
-    workspace.DescendantAdded:Connect(function(descendant)
+    workspace.Map.Ingame.DescendantAdded:Connect(function(descendant)
         if ItemFartsEnabled and descendant:IsA("Model") and table.find(Items, descendant.Name) then
             for _, child in ipairs(descendant:GetChildren()) do
                 if child:IsA("BasePart") then
@@ -804,10 +761,8 @@ local function InitializeGUI()
     MiscTab = GUI:Tab{Name = "Misc", Icon = "rbxassetid://17106470268"}
 
     GUI:Credit{Name = "ivannetta", Description = "meowzer", Discord = "ivannetta"}
-    GUI:Notification{Title = "NOTE: Default Keybinds:", Text = "DEL to minimize.", Duration = 10}
-    GUI:Notification{Title = "NOTE: Auto Block Is In BETA!!!:", Text = "This has NOT been tested much so DONT rely on it.", Duration = 10}
-    GUI:Notification{Title = "NOTE: Highlights Not Working Fix.", Text = "Reset ur bloxtrap settings.", Duration = 10}
-    GUI:Notification{Title = "Made by ivannetta", Text = "Like on rbxscripts or rscripts plssssssss 🥺", Duration = 60}
+    GUI:Notification{Title = "NOTE: Highlights Not Working Fix.", Text = "Reset Your Bloxtrap Settings.", Duration = 10}
+    GUI:Notification{Title = "Made by ivannetta", Text = "Pls Join DC Server 😼", Duration = 20}
 
     VisualsTab:ColorPicker{
         Style = Mercury.ColorPickerStyles.Legacy,
@@ -1011,5 +966,6 @@ local function InitializeGUI()
     end
 end
 
-InitializeGUI()
 InitializeButtonGUI()
+CheckIfFartsDownloaded()
+InitializeGUI()
