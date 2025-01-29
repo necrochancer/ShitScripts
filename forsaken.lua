@@ -160,7 +160,7 @@ local function HandleFartSexContainer(LKFVJNWEFLKJWNEFLKJWNEF)
         end
 
         local function onFlintlockTransparencyChange()
-            local Flintlock = workspace.Players.Survivors.Chance:FindFirstChild("FlintlockGun") or workspace.Players.Survivors.Chance:FindFirstChild("Flintlock")
+            local Flintlock = Players.LocalPlayer.Character:FindFirstChild("FlintlockGun") or Players.LocalPlayer.Character:FindFirstChild("Flintlock")
             if Flintlock then
                 local function checkTransparency()
                     if Flintlock.Transparency == 0 then
@@ -415,7 +415,7 @@ local function ToggleFarts(state)
     for _, folder in ipairs({workspace.Players.Survivors, workspace.Players.Killers}) do
         for _, obj in ipairs(folder:GetChildren()) do
             AddFart(obj, folder.Name == "Survivors" and survivorHighlightColor or killerHighlightColor)
-            local billboard = Instance.new("BillboardGui", obj.Head)
+            local billboard = Instance.new("BillboardGui", obj:WaitForChild("Head"))
             billboard.Name = "FartHubBillboard"
             billboard.Size = UDim2.new(0, 100, 0, 50)
             billboard.StudsOffset = Vector3.new(0, 2, 0)
@@ -431,7 +431,7 @@ local function ToggleFarts(state)
         folder.ChildAdded:Connect(function(child)
             if highlightingEnabled then
                 AddFart(child, folder.Name == "Survivors" and survivorHighlightColor or killerHighlightColor)
-                local billboard = Instance.new("BillboardGui", child.Head)
+                local billboard = Instance.new("BillboardGui", child:WaitForChild("Head"))
                 billboard.Name = "FartHubBillboard"
                 billboard.Size = UDim2.new(0, 100, 0, 50)
                 billboard.StudsOffset = Vector3.new(0, 2, 0)
@@ -908,6 +908,15 @@ local function InitializeGUI()
     }
 
     BlatantTab:Button{
+        Name = "AutoFarm Generators",
+        Description = "Serverhops, Does Generators, Forever and ever.",
+        Callback = function()
+            GUI:Notification{Title = "Loading", Text = "pls wait stinky boy", Duration = 20}
+            loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/AutoSigma.lua', true))()
+        end
+    }
+
+    BlatantTab:Button{
         Name = "Do ALL Generators",
         Description = "Teleport to all generators and do them.",
         Callback = function() TpDoGenerator() end
@@ -932,15 +941,6 @@ local function InitializeGUI()
         Max = 20,
         Callback = function(value)
             SkibidiDistance = value
-        end
-    }
-
-    BlatantTab:Button{
-        Name = "AutoFarm Generators",
-        Description = "Serverhops, Does Generators, Forever and ever.",
-        Callback = function()
-            GUI:Notification{Title = "Loading", Text = "pls wait stinky boy", Duration = 10}
-            loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/AutoSigma.lua', true))()
         end
     }
 
