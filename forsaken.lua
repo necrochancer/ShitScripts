@@ -61,6 +61,7 @@ local function JanitorModeEnabled(oklolloolloololololol)
 end
 
 local function Aimbot(Dur)
+    if not Dur then return end
     local CharacterSex, CharacterGender = GetCharacterGenderAndSex()
     if not CharacterSex or not CharacterGender then return end
 
@@ -767,6 +768,33 @@ local function UpdateFarts()
     ToggleFarts(true)
     ToggleSigmaItemsHighlights(false)
     ToggleSigmaItemsHighlights(true)
+    WriteSigmaData()
+end
+
+local function InitializeButtonGUI()
+    local visible = true
+    local sausageHolder = game:GetService("CoreGui").TopBarApp.UnibarLeftFrame.UnibarMenu["2"]
+    sausageHolder.Size = UDim2.new(0, 185, 0, 44)
+
+    local buttonFrame = Instance.new("Frame", sausageHolder)
+    buttonFrame.Size = UDim2.new(0, 44, 0, 44)
+    buttonFrame.BackgroundTransparency = 1
+    buttonFrame.BorderSizePixel = 0
+    buttonFrame.Position = UDim2.new(0, 136, 0, 0)
+
+    local imageButton = Instance.new("ImageButton", buttonFrame)
+    imageButton.BackgroundTransparency = 1
+    imageButton.BorderSizePixel = 0
+    imageButton.Size = UDim2.new(0, 36, 0, 36)
+    imageButton.AnchorPoint = Vector2.new(0.5, 0.5)
+    imageButton.Position = UDim2.new(0.5, 0, 0.5, 0)
+    imageButton.Image = "http://www.roblox.com/asset/?id=131523679474566"
+    local function toggleGUI()
+        visible = not visible
+        GUI:show(visible)
+    end
+    imageButton.MouseButton1Click:Connect(toggleGUI)
+    imageButton.TouchTap:Connect(toggleGUI)
 end
 
 local function InitializeGUI()
@@ -878,7 +906,7 @@ local function InitializeGUI()
 
     BlatantTab:Toggle{ -- ty loptica r3mii for amongus
         Name = "Aimbot",
-        Description = "Aimbot for 1x1x1x1, John Doe, Chance. ONLY FOR PC!!!",
+        Description = "Aimbot for some characters.",
         StartingState = false,
         Callback = function(state)
             HandleFartSexContainer(state)
@@ -985,3 +1013,4 @@ local function InitializeGUI()
 end
 
 InitializeGUI()
+InitializeButtonGUI()
