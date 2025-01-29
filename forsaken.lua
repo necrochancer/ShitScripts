@@ -793,8 +793,7 @@ local function InitializeButtonGUI()
         visible = not visible
         GUI:show(visible)
     end
-    imageButton.MouseButton1Click:Connect(toggleGUI)
-    imageButton.TouchTap:Connect(toggleGUI)
+    imageButton.Activated:Connect(toggleGUI)
 end
 
 local function InitializeGUI()
