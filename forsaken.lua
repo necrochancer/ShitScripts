@@ -99,7 +99,7 @@ local function Aimbot(Dur)
                 local MathematicalCalculations = (TartgetSex - Rootsex.Position).unit
                 Rootsex.CFrame = CFrame.new(Rootsex.Position, Rootsex.Position + Vector3.new(MathematicalCalculations.X, 0, MathematicalCalculations.Z))
                 local Cumera = game.Workspace.CurrentCamera
-                Cumera.CFrame = CFrame.lookAt(Cumera.CFrame.Position, Cumera.CFrame.Position + Vector3.new(MathematicalCalculations.X, MathematicalCalculations.Y, MathematicalCalculations.Z))
+                --Cumera.CFrame = CFrame.lookAt(Cumera.CFrame.Position, Cumera.CFrame.Position + Vector3.new(MathematicalCalculations.X, MathematicalCalculations.Y, MathematicalCalculations.Z))
             end
             task.wait()
         end
