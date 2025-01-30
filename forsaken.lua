@@ -73,7 +73,7 @@ local function Aimbot(Dur)
         workspace.Players:FindFirstChild(CharacterGender == "Killers" and "Survivors" or "Killers")
     if not HornyFolder then return end
 
-    local function FindClosestBlackPerson()
+    local function FindClosestPerson()
         local ClosestTarget, ClosestDistance = nil, math.huge
         local MyPosition = MeButCharacter.HumanoidRootPart.Position
 
@@ -92,7 +92,7 @@ local function Aimbot(Dur)
     task.spawn(function()
         local startTime = tick()
         while tick() - startTime < Dur do
-            local target = FindClosestBlackPerson()
+            local target = FindClosestPerson()
             if target and target:FindFirstChild("HumanoidRootPart") then
                 local Rootsex = MeButCharacter.HumanoidRootPart
                 local TartgetSex = target.HumanoidRootPart.Position
