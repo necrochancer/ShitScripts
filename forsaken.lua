@@ -42,6 +42,7 @@ local SkibidiPomniOhioList = {
     Survivors = {
         ["Guest1337"] = {Duration2 = 2},
         ["Chance"] = {Duration2 = 2},
+        ["Shedletsky"] = {Duration2 = 1.5},
     }
 }
 
@@ -207,9 +208,9 @@ local function ToggleFatMan(state)
         local Frame = Instance.new("Frame", skibussy)
         Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         Frame.BackgroundTransparency = 1.000
-        Frame.AnchorPoint = Vector2.new(1, 0.5)
+        Frame.AnchorPoint = Vector2.new(1, .5)
         Frame.Name = "YAPPING"
-        Frame.Position = UDim2.new(1, 0, 0.5, 0)
+        Frame.Position = UDim2.new(1, 0, .5, 0)
         Frame.Size = UDim2.new(0, 150, 0, 150)
 
         local VideoFrame = Instance.new("VideoFrame", Frame)
@@ -753,6 +754,49 @@ local function InitializeButtonGUI()
     imageButton.Activated:Connect(toggleGUI)
 end
 
+local function CreateSigmaFrame()
+    local visible = true
+    local topBarApp = game:GetService("CoreGui"):WaitForChild("TopBarApp")
+    local leftFrame = topBarApp:WaitForChild("TopBarFrame"):WaitForChild("LeftFrame")
+
+    local sigmaFrame = Instance.new("Frame", leftFrame)
+    sigmaFrame.Name = "SigmaFrame"
+    sigmaFrame.Size = UDim2.new(0, 32, 0, 32)
+    sigmaFrame.Position = UDim2.new(0, 0, 1, 0)
+    sigmaFrame.BackgroundTransparency = 1
+    sigmaFrame.LayoutOrder = 5
+
+    local background = Instance.new("ImageLabel", sigmaFrame)
+    background.Name = "Background"
+    background.Size = UDim2.new(0, 32, 0, 32)
+    background.Position = UDim2.new(0, 0, 0, 0)
+    background.Image = "rbxasset://textures/ui/TopBar/iconBase.png"
+    background.BackgroundTransparency = 1
+
+    local icon = Instance.new("ImageButton", background)
+    icon.Name = "Icon"
+    icon.Size = UDim2.new(0, 36, 0, 36)
+    icon.Position = UDim2.new(0.5, 0, 0.5, 0)
+    icon.AnchorPoint = Vector2.new(0.5, 0.5)
+    icon.Image = "http://www.roblox.com/asset/?id=131523679474566"
+    icon.BackgroundTransparency = 1
+
+    local function toggleGUI()
+        visible = not visible
+        GUI:show(visible)
+    end
+    icon.Activated:Connect(toggleGUI)
+end
+
+local function MakeButton()
+    if game:GetService("CoreGui"):FindFirstChild("TopBarApp"):FindFirstChild("UnibarLeftFrame") then
+        InitializeButtonGUI()
+    else
+        CreateSigmaFrame()
+    end
+end
+
+
 local function InitializeGUI()
     GeneratorTab = GUI:Tab{Name = "Generators", Icon = "rbxassetid://12549056837"}
     VisualsTab = GUI:Tab{Name = "Visuals", Icon = "rbxassetid://129972183138590"}
@@ -968,4 +1012,4 @@ end
 
 CheckIfFartsDownloaded()
 InitializeGUI()
-InitializeButtonGUI()
+MakeButton()
