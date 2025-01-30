@@ -966,6 +966,6 @@ local function InitializeGUI()
     end
 end
 
-InitializeButtonGUI()
 CheckIfFartsDownloaded()
 InitializeGUI()
+InitializeButtonGUI()
