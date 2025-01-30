@@ -105,7 +105,7 @@ local function Main()
     local title = main and main:WaitForChild("Title")
 
     if title.Text == "Round ends in:" then
-        NotificationLibrary:SendNotification("Info", "THIS SHIT IS  😭😭😭", 5)
+        NotificationLibrary:SendNotification("Error", "this server sucks", 5)
         local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
         if queueteleport then
                 queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/AutoSigma.lua', true))()")
@@ -127,7 +127,7 @@ local function Main()
         end
 
     else
-        NotificationLibrary:SendNotification("Info", "im farting so hard rn", 3)
+        NotificationLibrary:SendNotification("Info", "hi", 3)
         local generatorsDone = TpDoGenerator()
         if generatorsDone then
             NotificationLibrary:SendNotification("Success", "I did the generators :3", 3)
