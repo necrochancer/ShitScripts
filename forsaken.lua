@@ -42,7 +42,7 @@ local SkibidiPomniOhioList = {
     Survivors = {
         ["Guest1337"] = {Duration2 = 2},
         ["Chance"] = {Duration2 = 2},
-        ["Shedletsky"] = {Duration2 = 1.5},
+        --["Shedletsky"] = {Duration2 = 1.5},
     }
 }
 
