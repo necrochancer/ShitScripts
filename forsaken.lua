@@ -6,7 +6,7 @@ local Players = game:GetService("Players")
 local SoundService = game:GetService("SoundService")
 local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
 local DebugNotifications = getgenv and getgenv().DebugNotifications or false
-local VirtualBallsManager = game:GetService('VirtualInputManager')
+local VIM = game:GetService('VirtualInputManager')
 local BlockRemote = game:GetService("ReplicatedStorage").Modules.Network.RemoteEvent
 local RunService = game:GetService("RunService")
 local SigmaData, JoinedSigmaServer = {}, false
@@ -22,7 +22,7 @@ local SoundList = {"rbxassetid://112809109188560", "rbxassetid://101199185291628
 local CurrentFartsActive = {}
 local NameProtectNames = {}
 local aimbotActive = false
-local skibussy
+local WowWhatTheZestIsThis
 
 local RunService = game:GetService("RunService")
 
@@ -42,11 +42,11 @@ local SkibidiPomniOhioList = {
     Survivors = {
         ["Guest1337"] = {Duration2 = 2},
         ["Chance"] = {Duration2 = 2},
-        --["Shedletsky"] = {Duration2 = 1.5},
+        --["Shedletsky"] = {Duration1 = 1.5},
     }
 }
 
-local function GetCharacterGenderAndSex()
+local function GetCharAndFold()
     local Me = game.Players.LocalPlayer
     if not Me or not Me.Character then return nil, nil end
     return Me.Character.Name, Me.Character.Parent.Name
@@ -63,8 +63,8 @@ end
 
 local function Aimbot(Dur)
     if not Dur then return end
-    local CharacterSex, CharacterGender = GetCharacterGenderAndSex()
-    if not CharacterSex or not CharacterGender then return end
+    local Char, CharacterGender = GetCharAndFold()
+    if not Char or not CharacterGender then return end
 
     local Me = game.Players.LocalPlayer
     local MeButCharacter = Me.Character
@@ -95,10 +95,10 @@ local function Aimbot(Dur)
         while tick() - startTime < Dur do
             local target = FindClosestPerson()
             if target and target:FindFirstChild("HumanoidRootPart") then
-                local Rootsex = MeButCharacter.HumanoidRootPart
-                local TartgetSex = target.HumanoidRootPart.Position
-                local MathematicalCalculations = (TartgetSex - Rootsex.Position).unit
-                Rootsex.CFrame = CFrame.new(Rootsex.Position, Rootsex.Position + Vector3.new(MathematicalCalculations.X, 0, MathematicalCalculations.Z))
+                local wawa = MeButCharacter.HumanoidRootPart
+                local wawaza= target.HumanoidRootPart.Position
+                local MathematicalCalculations = (wawaza - wawa.Position).unit
+                wawa.CFrame = CFrame.new(wawa.Position, wawa.Position + Vector3.new(MathematicalCalculations.X, 0, MathematicalCalculations.Z))
                 --local Cumera = game.Workspace.CurrentCamera
                 --Cumera.CFrame = CFrame.lookAt(Cumera.CFrame.Position, Cumera.CFrame.Position + Vector3.new(MathematicalCalculations.X, MathematicalCalculations.Y, MathematicalCalculations.Z))
             end
@@ -107,9 +107,9 @@ local function Aimbot(Dur)
     end)
 end
 
-local function HandleFartSexContainer(LKFVJNWEFLKJWNEFLKJWNEF)
+local function HandleFartContainer(LKFVJNWEFLKJWNEFLKJWNEF)
     local Me = game.Players.LocalPlayer
-    local LastSkibidi, LastSkebede = GetCharacterGenderAndSex()
+    local LastSkibidi, LastSkebede = GetCharAndFold()
 
     if fart.characterChange then
         fart.characterChange:Disconnect()
@@ -117,12 +117,12 @@ local function HandleFartSexContainer(LKFVJNWEFLKJWNEFLKJWNEF)
 
     fart.characterChange = Me:GetPropertyChangedSignal("Character"):Connect(function()
         task.wait(0.1)
-        local newCharacter, newTeam = GetCharacterGenderAndSex()
+        local newCharacter, newTeam = GetCharAndFold()
 
         if newCharacter ~= LastSkibidi or newTeam ~= LastSkebede then
             LastSkibidi, LastSkebede = newCharacter, newTeam
             JanitorModeEnabled(fart.abilities)
-            HandleFartSexContainer(true)
+            HandleFartContainer(true)
         end
     end)
 
@@ -134,12 +134,12 @@ local function HandleFartSexContainer(LKFVJNWEFLKJWNEFLKJWNEF)
     local AbilityContainer = game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild("MainUI"):WaitForChild("AbilityContainer")
 
     local function EvilEmoji(lol)
-        local CharacterGender, CharacterSex = GetCharacterGenderAndSex()
-        if not SkibidiPomniOhioList[CharacterSex] or not SkibidiPomniOhioList[CharacterSex][CharacterGender] then return end
+        local CharacterGender, Wowzaer = GetCharAndFold()
+        if not SkibidiPomniOhioList[Wowzaer] or not SkibidiPomniOhioList[Wowzaer][CharacterGender] then return end
 
         local sigmaboy = lol.LayoutOrder
         local DDDDDDDurationm = "Duration" .. sigmaboy
-        local VeryLongDuration = SkibidiPomniOhioList[CharacterSex][CharacterGender][DDDDDDDurationm]
+        local VeryLongDuration = SkibidiPomniOhioList[Wowzaer][CharacterGender][DDDDDDDurationm]
 
         if VeryLongDuration then
             local IsSkibidiToiletMode = false
@@ -199,13 +199,13 @@ end
 
 local function ToggleFatMan(state)
     if state then
-        skibussy = game:GetService("Players").LocalPlayer.PlayerGui
-        skibussy = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer.PlayerGui)
-        skibussy.Name = "FatMan"
-        skibussy.ResetOnSpawn = false
-        skibussy.DisplayOrder = 999999999
+        WowWhatTheZestIsThis = game:GetService("Players").LocalPlayer.PlayerGui
+        WowWhatTheZestIsThis = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer.PlayerGui)
+        WowWhatTheZestIsThis.Name = "FatMan"
+        WowWhatTheZestIsThis.ResetOnSpawn = false
+        WowWhatTheZestIsThis.DisplayOrder = 999999999
 
-        local Frame = Instance.new("Frame", skibussy)
+        local Frame = Instance.new("Frame", WowWhatTheZestIsThis)
         Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         Frame.BackgroundTransparency = 1.000
         Frame.AnchorPoint = Vector2.new(1, .5)
@@ -219,11 +219,11 @@ local function ToggleFatMan(state)
         VideoFrame.Looped = true
         VideoFrame.Playing = true
     else
-        skibussy:Destroy()
+        WowWhatTheZestIsThis:Destroy()
     end
 end
 
-local function GetBigBallsList()
+local function GetAssetList()
     local url = "https://api.github.com/repos/ivannetta/ShitScripts/git/trees/main?recursive=1"
     local assetList = {}
 
@@ -278,7 +278,7 @@ local function DownloadBallers(url, path)
 end
 
 local function CheckIfFartsDownloaded()
-    local assetList = GetBigBallsList()
+    local assetList = GetAssetList()
     local basePath = "FartHub/Assets/"
 
     if not isfolder("FartHub") then
@@ -484,8 +484,8 @@ local function Do1x1x1x1Popups()
                     local centerX = i.AbsolutePosition.X + (i.AbsoluteSize.X / 2)
                     local centerY = i.AbsolutePosition.Y + (i.AbsoluteSize.Y / 2)
                     if DebugNotifications then GUI:Notification{Title = "1x1x1x1 Popup Closed", Text = (pcall(function() return i:GetFullName() end) and i:GetFullName() or "Closed"), Duration = 3} else end
-                    VirtualBallsManager:SendMouseButtonEvent(centerX, centerY, Enum.UserInputType.MouseButton1.Value, true, player.PlayerGui, 1)
-                    VirtualBallsManager:SendMouseButtonEvent(centerX, centerY, Enum.UserInputType.MouseButton1.Value, false, player.PlayerGui, 1)
+                    VIM:SendMouseButtonEvent(centerX, centerY, Enum.UserInputType.MouseButton1.Value, true, player.PlayerGui, 1)
+                    VIM:SendMouseButtonEvent(centerX, centerY, Enum.UserInputType.MouseButton1.Value, false, player.PlayerGui, 1)
                 end
             end
         end
@@ -907,7 +907,7 @@ local function InitializeGUI()
         Description = "Aimbot for some characters.",
         StartingState = false,
         Callback = function(state)
-            HandleFartSexContainer(state)
+            HandleFartContainer(state)
         end
     }
 
