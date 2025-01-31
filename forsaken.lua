@@ -199,8 +199,7 @@ end
 
 local function ToggleFatMan(state)
     if state then
-        WowWhatTheZestIsThis = game:GetService("Players").LocalPlayer.PlayerGui
-        WowWhatTheZestIsThis = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer.PlayerGui)
+        WowWhatTheZestIsThis = Instance.new("ScreenGui", game:GetService("CoreGui"))
         WowWhatTheZestIsThis.Name = "FatMan"
         WowWhatTheZestIsThis.ResetOnSpawn = false
         WowWhatTheZestIsThis.DisplayOrder = 999999999
