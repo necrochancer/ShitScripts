@@ -1278,7 +1278,7 @@ local function FartHubLoad()
 			end,
 		})
 
-		if JoinedSigmaServer then
+		if not JoinedSigmaServer then
 			GUI:Prompt({
 				Title = "Join Fart Hub discord server?",
 				Text = "It would help alot, and you can get early access to features!!!",
@@ -1411,7 +1411,7 @@ else
 		FartHubLoad()
 	else
 		MakeKeySystem()
-		
+
 		CheckKeyButton.Activated:Connect(function()
 			local key = TextBox.Text -- this is the hardest to crack key system trust me
 			if key == "fart" then -- is it stinky tho
