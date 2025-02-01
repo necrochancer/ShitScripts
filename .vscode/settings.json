@@ -17,5 +17,9 @@
         "setclipboard",
         "getgenv"
     ],
-    "stylua.targetReleaseVersion": "latest"
+    "stylua.targetReleaseVersion": "latest",
+    "robloxLsp.diagnostics.disable": [
+        "unused-local",
+        "redefined-local"
+    ]
 }

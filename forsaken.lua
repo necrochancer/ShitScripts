@@ -1,43 +1,32 @@
---if getgenv then
---    getgenv().DebugNotifications = false -- Use this only if you need to
---end
-
 local Players = game:GetService("Players")
 local SoundService = game:GetService("SoundService")
 local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
-local DebugNotifications = getgenv and getgenv().DebugNotifications or false
 local VIM = game:GetService("VirtualInputManager")
 local BlockRemote = game:GetService("ReplicatedStorage").Modules.Network.RemoteEvent
 local RunService = game:GetService("RunService")
-local SigmaData, JoinedSigmaServer = {}, false
 local HttpService = game:GetService("HttpService")
 local Mercury = loadstring(game:HttpGet("https://raw.githubusercontent.com/deeeity/mercury-lib/master/src.lua"))()
-local GUI = Mercury:Create({
-	Name = "FartSaken",
-	Size = UDim2.fromOffset(600, 400),
-	Theme = Mercury.Themes.Dark,
-	Link = "https://github.com/ivannetta/ShitScripts/Forsaken",
-})
+
+local DebugNotifications = getgenv and getgenv().DebugNotifications or false
+local SigmaData, JoinedSigmaServer = {}, false
 local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab = nil, nil, nil, nil, nil
 local BabyShark, KillerFartPart, HRP = nil, nil, nil
 local SkibidiDistance, BlockEnabled, AimLockTimer = 6, false, 2
-local executorname = (pcall(function()
-	return getexecutorname()
-end) and getexecutorname()) or (pcall(function()
-	return identifyexecutor()
-end) and identifyexecutor()) or "Unknown"
+
+local executorname = (pcall(getexecutorname) and getexecutorname())
+	or (pcall(identifyexecutor) and identifyexecutor())
+	or "Unknown"
 local supportedExecutors = { AWP = true, Wave = true, Nihon = true, ["Synapse Z"] = true, Swift = true }
+
 local SoundList = {
 	"rbxassetid://112809109188560",
 	"rbxassetid://101199185291628",
 	"rbxassetid://102228729296384",
 	"rbxassetid://140242176732868",
 }
-local CurrentFartsActive = {}
-local NameProtectNames = {}
-local aimbotActive = false
+
+local CurrentFartsActive, NameProtectNames, aimbotActive = {}, {}, false
 local WowWhatTheZestIsThis
-local RunService = game:GetService("RunService")
 
 local fart = {
 	aimbot = {},
@@ -47,17 +36,23 @@ local fart = {
 
 local SkibidiPomniOhioList = {
 	Killers = {
-		["Jason"] = { Duration1 = 0.5 },
+		Jason = { Duration1 = 0.5 },
 		["1x1x1x1"] = { Duration1 = 0.5, Duration2 = 2.5, Duration3 = 1 },
-		["JohnDoe"] = { Duration1 = 0.5, Duration2 = 5 },
-		["C00lkidd"] = { Duration1 = 0.5 },
+		JohnDoe = { Duration1 = 0.5, Duration2 = 5 },
+		C00lkidd = { Duration1 = 0.5 },
 	},
 	Survivors = {
-		["Guest1337"] = { Duration2 = 2 },
-		["Chance"] = { Duration2 = 2 },
-		--["Shedletsky"] = {Duration1 = 1.5},
+		Guest1337 = { Duration2 = 2 },
+		Chance = { Duration2 = 2 },
 	},
 }
+
+local GUI = Mercury:Create({
+	Name = "FartSaken",
+	Size = UDim2.fromOffset(600, 400),
+	Theme = Mercury.Themes.Dark,
+	Link = "https://github.com/ivannetta/ShitScripts/Forsaken",
+})
 
 local function GetCharAndFold()
 	local Me = game.Players.LocalPlayer
@@ -612,7 +607,7 @@ local function Do1x1x1x1Popups()
 end
 
 local function SetupSurfers(PuzzlesUi)
-	task.wait(0.5)
+	task.wait(0.2)
 	local Container = PuzzlesUi:WaitForChild("Container")
 	local GridHolder = Container:WaitForChild("GridHolder")
 	Container:WaitForChild("UIAspectRatioConstraint"):Destroy()
