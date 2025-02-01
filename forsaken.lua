@@ -1261,19 +1261,20 @@ local function InitializeGUI()
 		end,
 	})
 
-	if not JoinedSigmaServer then
+	if JoinedSigmaServer then
 		GUI:Prompt({
 			Title = "Join Fart Hub discord server?",
-			Text = "Would you join my discord server? it would help alot.",
+			Text = "It would help alot, and you can get early access to features!!!",
 			Buttons = {
-				Yes = function()
+				["Ya :3"] = function()
 					setclipboard("https://discord.gg/AC4usvpwVY")
-					GUI:Notification({ Title = "Copied!", Text = "Discord link copied.", Duration = 3 })
+					GUI:Notification({ Title = "Discord Link Copied", Text = "i love you", Duration = 10 })
 					JoinedSigmaServer = true
 					WriteSigmaData()
 				end,
-				No = function()
-					GUI:Notification({ Title = "No Problem!", Text = "You dont have to.", Duration = 3 })
+				["No i hate you"] = function()
+					GUI:Notification({ Title = "Ok :(", Text = "I understand.", Duration = 10 })
+					WriteSigmaData()
 				end,
 			},
 		})
