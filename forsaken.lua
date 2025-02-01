@@ -70,8 +70,9 @@ local function FartHubLoad()
 	local function GetCharAndFold()
 		local Me = game.Players.LocalPlayer
 		if not Me or not Me.Character then
-			return Me.Character.Name, Me.Character.Parent.Name
+			return nil, nil
 		end
+		return Me.Character.Name, Me.Character.Parent.Name
 	end
 
 	local function JanitorModeEnabled(oklolloolloololololol)
@@ -508,42 +509,39 @@ local function FartHubLoad()
 				h.FillColor, h.FillTransparency, h.OutlineTransparency = color, 0.7, 0.6
 			end
 		end
-		for _, folderName in ipairs({ "Survivors", "Killers" }) do
-			local folder = workspace.Players:FindFirstChild(folderName)
-			if folder then
-				for _, obj in ipairs(folder:GetChildren()) do
-					AddFart(obj, folder.Name == "Survivors" and survivorHighlightColor or killerHighlightColor)
-					local billboard = Instance.new("BillboardGui", obj:WaitForChild("Head"))
+		for _, folder in ipairs({ workspace.Players.Survivors, workspace.Players.Killers }) do
+			for _, obj in ipairs(folder:GetChildren()) do
+				AddFart(obj, folder.Name == "Survivors" and survivorHighlightColor or killerHighlightColor)
+				local billboard = Instance.new("BillboardGui", obj:WaitForChild("Head"))
+				billboard.Name = "FartHubBillboard"
+				billboard.Size = UDim2.new(0, 100, 0, 50)
+				billboard.StudsOffset = Vector3.new(0, 2, 0)
+				local textLabel = Instance.new("TextLabel", billboard)
+				textLabel.Size = UDim2.new(1, 0, 1, 0)
+				textLabel.Text = obj:GetAttribute("Username") and obj.Name
+				textLabel.TextColor3 = Color3.new(1, 1, 1)
+				textLabel.TextStrokeTransparency = 0
+				textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+				billboard.AlwaysOnTop = true
+				textLabel.BackgroundTransparency = 1
+			end
+			folder.ChildAdded:Connect(function(child)
+				if highlightingEnabled then
+					AddFart(child, folder.Name == "Survivors" and survivorHighlightColor or killerHighlightColor)
+					local billboard = Instance.new("BillboardGui", child:WaitForChild("Head"))
 					billboard.Name = "FartHubBillboard"
 					billboard.Size = UDim2.new(0, 100, 0, 50)
 					billboard.StudsOffset = Vector3.new(0, 2, 0)
 					local textLabel = Instance.new("TextLabel", billboard)
-					textLabel.Size = UDim2.new(1, 0, 1, 0)
-					textLabel.Text = obj:GetAttribute("Username") and obj.Name
 					textLabel.TextColor3 = Color3.new(1, 1, 1)
 					textLabel.TextStrokeTransparency = 0
 					textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+					textLabel.Size = UDim2.new(1, 0, 1, 0)
+					textLabel.Text = child:GetAttribute("Username") and child.Name
 					billboard.AlwaysOnTop = true
 					textLabel.BackgroundTransparency = 1
 				end
-				folder.ChildAdded:Connect(function(child)
-					if highlightingEnabled then
-						AddFart(child, folder.Name == "Survivors" and survivorHighlightColor or killerHighlightColor)
-						local billboard = Instance.new("BillboardGui", child:WaitForChild("Head"))
-						billboard.Name = "FartHubBillboard"
-						billboard.Size = UDim2.new(0, 100, 0, 50)
-						billboard.StudsOffset = Vector3.new(0, 2, 0)
-						local textLabel = Instance.new("TextLabel", billboard)
-						textLabel.TextColor3 = Color3.new(1, 1, 1)
-						textLabel.TextStrokeTransparency = 0
-						textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
-						textLabel.Size = UDim2.new(1, 0, 1, 0)
-						textLabel.Text = child:GetAttribute("Username") and child.Name
-						billboard.AlwaysOnTop = true
-						textLabel.BackgroundTransparency = 1
-					end
-				end)
-			end
+			end)
 		end
 		local function SetupSigmaListener()
 			local ingameFolder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
@@ -622,7 +620,7 @@ local function FartHubLoad()
 	end
 
 	local function SetupSurfers(PuzzlesUi)
-		task.wait(0.5)
+		task.wait(0.2)
 		local Container = PuzzlesUi:WaitForChild("Container")
 		local GridHolder = Container:WaitForChild("GridHolder")
 		Container:WaitForChild("UIAspectRatioConstraint"):Destroy()
@@ -895,10 +893,9 @@ local function FartHubLoad()
 				obj:Destroy()
 			end
 		end
-	if not state then
-		return
-	end
-
+		if not state then
+			return
+		end
 		local function AddLopticaHighlight(object, color)
 			if
 				object:IsA("BasePart")
@@ -1043,8 +1040,8 @@ local function FartHubLoad()
 		GUI:Notification({ Title = "NOTE: Made by ivannetta", Text = "Pls Join DC Server 😼", Duration = 20 })
 		GUI:Notification({
 			Title = "NOTE: Some Issues",
-			Text = "Some new scripts poped up like Elysian hub, i dont recoment using it, it steals ur roblox username and some more stuff. can be reported to mods!",
-			Duration = 30,
+			Text = "hi",
+			Duration = 3,
 		})
 
 		VisualsTab:ColorPicker({
@@ -1281,19 +1278,20 @@ local function FartHubLoad()
 			end,
 		})
 
-		if not JoinedSigmaServer then
+		if JoinedSigmaServer then
 			GUI:Prompt({
 				Title = "Join Fart Hub discord server?",
-				Text = "Would you join my discord server? it would help alot.",
+				Text = "It would help alot, and you can get early access to features!!!",
 				Buttons = {
-					Yes = function()
+					["Ya :3"] = function()
 						setclipboard("https://discord.gg/AC4usvpwVY")
-						GUI:Notification({ Title = "Copied!", Text = "Discord link copied.", Duration = 3 })
+						GUI:Notification({ Title = "Discord Link Copied", Text = "i love you", Duration = 10 })
 						JoinedSigmaServer = true
 						WriteSigmaData()
 					end,
-					No = function()
-						GUI:Notification({ Title = "No Problem!", Text = "You dont have to.", Duration = 3 })
+					["No i hate you"] = function()
+						GUI:Notification({ Title = "Ok :(", Text = "I understand.", Duration = 10 })
+						WriteSigmaData()
 					end,
 				},
 			})
@@ -1427,7 +1425,7 @@ CheckKeyButton.Activated:Connect(function()
 		KeySystem:Destroy()
 		FartHubLoad()
 	else
-		TextLabel.Text = "Key is invalid!"
+		TextLabel.Text = "Key is invalid!" -- guys dont look at source code please
 		task.wait(1)
 		TextLabel.Text = "Fart Hub | Key System"
 	end
