@@ -1403,40 +1403,45 @@ local function MakeKeySystem()
 	UICorner_4.Parent = GetKey
 end
 
-if not isfile("FartHub/FartHubKey.json") then
-	MakeKeySystem()
-else
-	local key = readfile("FartHub/FartHubKey.json")
-	if key == "fart" then
-		FartHubLoad()
-	else
+local success, err = pcall(function()
+	if not isfile("FartHub/FartHubKey.json") then
 		MakeKeySystem()
+	else
+		local key = readfile("FartHub/FartHubKey.json")
+		if key == "fart" then
+			FartHubLoad()
+		else
+			MakeKeySystem()
 
-		CheckKeyButton.Activated:Connect(function()
-			local key = TextBox.Text -- this is the hardest to crack key system trust me
-			if key == "fart" then -- is it stinky tho
-				TextLabel.Text = "Key is valid!"
-				if not isfolder("FartHub") then
-					makefolder("FartHub")
+			CheckKeyButton.Activated:Connect(function()
+				local key = TextBox.Text -- this is the hardest to crack key system trust me
+				if key:lower() == "fart" then -- is it stinky tho
+					TextLabel.Text = "Key is valid!"
+					if not isfolder("FartHub") then
+						makefolder("FartHub")
+					end
+					writefile("FartHub/FartHubKey.json", key)
+					KeySystem:Destroy()
+					FartHubLoad()
+				else
+					TextLabel.Text = "Key is invalid!" -- guys dont look at source code please
+					task.wait(1)
+					TextLabel.Text = "Fart Hub | Key System"
 				end
-				writefile("FartHub/FartHubKey.json", key)
-				KeySystem:Destroy()
-				FartHubLoad()
-			else
-				TextLabel.Text = "Key is invalid!" -- guys dont look at source code please
-				task.wait(1)
-				TextLabel.Text = "Fart Hub | Key System"
-			end
-		end)
+			end)
 
-		GetKey.Activated:Connect(function()
-			local NotificationLibrary = loadstring(
-				game:HttpGet("https://raw.githubusercontent.com/IceMinisterq/Notification-Library/Main/Library.lua")
-			)()
-			NotificationLibrary:SendNotification("Info", "Copied discord link.", 5)
-			TextLabel.Text = "https://discord.gg/AC4usvpwVY"
-			setclipboard("https://discord.gg/AC4usvpwVY")
-		end)
+			GetKey.Activated:Connect(function()
+				local NotificationLibrary = loadstring(
+					game:HttpGet("https://raw.githubusercontent.com/IceMinisterq/Notification-Library/Main/Library.lua")
+				)()
+				NotificationLibrary:SendNotification("Info", "Copied discord link.", 5)
+				TextLabel.Text = "https://discord.gg/AC4usvpwVY"
+				setclipboard("https://discord.gg/AC4usvpwVY")
+			end)
+		end
 	end
-end
+end)
 
+if not success then
+	warn("An error occurred: " .. tostring(err))
+end
