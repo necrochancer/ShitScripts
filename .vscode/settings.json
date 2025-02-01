@@ -1,0 +1,19 @@
+{
+    "robloxLsp.diagnostics.globals": [
+        "getexecutorname",
+        "getexecutorname",
+        "identifyexecutor",
+        "getcustomasset",
+        "http_request",
+        "syn",
+        "request",
+        "isfile",
+        "writefile",
+        "isfolder",
+        "isfolder",
+        "makefolder",
+        "readfile",
+        "fireproximityprompt",
+        "setclipboard"
+    ]
+}

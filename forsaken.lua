@@ -531,6 +531,21 @@ local function SkibidiGenerator(shouldLoop)
     until not shouldLoop
 end
 
+local function GeneratorOnce()
+    local FartIngameFolder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
+    local FartNapFolder = FartIngameFolder and FartIngameFolder:FindFirstChild("Map")
+    if FartNapFolder then
+        for _, g in ipairs(FartNapFolder:GetChildren()) do
+            if g.Name == "Generator" and g.Progress.Value < 100 then
+                g.Remotes.RE:FireServer()
+                if DebugNotifications then
+                    GUI:Notification{Title = "Generator Done", Text = (pcall(function() return g:GetFullName() end) and g:GetFullName() or "Generator Done"), Duration = 3}
+                end
+            end
+        end
+    end
+end
+
 
 local function TpDoGenerator()
     local Geneators = workspace:WaitForChild("Map") and workspace.Map:WaitForChild("Ingame") and workspace.Map.Ingame:WaitForChild("Map")
@@ -731,13 +746,24 @@ end
 local function InitializeButtonGUI()
     local visible = true
     local sausageHolder = game:GetService("CoreGui").TopBarApp.UnibarLeftFrame.UnibarMenu["2"]
-    sausageHolder.Size = UDim2.new(0, 185, 0, 44)
+    local sausageHolderChildren = game:GetService("CoreGui").TopBarApp.UnibarLeftFrame.UnibarMenu["2"]["3"]
+    local highestOrder
+    local highestOrder = 0
+    local offset
+    for _, child in ipairs(sausageHolderChildren:GetChildren()) do
+        if child.LayoutOrder and child.LayoutOrder > highestOrder then
+            highestOrder = child.LayoutOrder
+            offset = child.Position.X.Offset
+        end
+    end
+
+    sausageHolder.Size = UDim2.new(0, offset + 96, 0, sausageHolder.Size.Y.Offset)
 
     local buttonFrame = Instance.new("Frame", sausageHolder)
     buttonFrame.Size = UDim2.new(0, 44, 0, 44)
     buttonFrame.BackgroundTransparency = 1
     buttonFrame.BorderSizePixel = 0
-    buttonFrame.Position = UDim2.new(0, 136, 0, 0)
+    buttonFrame.Position = UDim2.new(0, (offset + 48) - 2, 0, 0)
 
     local imageButton = Instance.new("ImageButton", buttonFrame)
     imageButton.BackgroundTransparency = 1
@@ -869,9 +895,9 @@ local function InitializeGUI()
 
     GeneratorTab:Keybind{
         Name = "Do Current Generator.",
-        Key = Enum.KeyCode.RightControl,
+        Keybind = Enum.KeyCode.K,
         Callback = function()
-            task.spawn(function() SkibidiGenerator(false) end)
+            GeneratorOnce()
         end
     }
 
