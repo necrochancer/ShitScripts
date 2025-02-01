@@ -14,6 +14,7 @@
         "makefolder",
         "readfile",
         "fireproximityprompt",
-        "setclipboard"
+        "setclipboard",
+        "getgenv"
     ]
 }

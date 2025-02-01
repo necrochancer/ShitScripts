@@ -196,32 +196,6 @@ local function HandleFartContainer(LKFVJNWEFLKJWNEFLKJWNEF)
     end))
 end
 
-
-local function ToggleFatMan(state)
-    if state then
-        WowWhatTheZestIsThis = Instance.new("ScreenGui", game:GetService("CoreGui"))
-        WowWhatTheZestIsThis.Name = "FatMan"
-        WowWhatTheZestIsThis.ResetOnSpawn = false
-        WowWhatTheZestIsThis.DisplayOrder = 999999999
-
-        local Frame = Instance.new("Frame", WowWhatTheZestIsThis)
-        Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        Frame.BackgroundTransparency = 1.000
-        Frame.AnchorPoint = Vector2.new(1, .5)
-        Frame.Name = "YAPPING"
-        Frame.Position = UDim2.new(1, 0, .5, 0)
-        Frame.Size = UDim2.new(0, 150, 0, 150)
-
-        local VideoFrame = Instance.new("VideoFrame", Frame)
-        VideoFrame.Size = UDim2.new(1, 0, 1, 0)
-        VideoFrame.Video = getcustomasset("FartHub/Assets/FatMan.mp4")
-        VideoFrame.Looped = true
-        VideoFrame.Playing = true
-    else
-        WowWhatTheZestIsThis:Destroy()
-    end
-end
-
 local function GetAssetList()
     local url = "https://api.github.com/repos/ivannetta/ShitScripts/git/trees/main?recursive=1"
     local assetList = {}
@@ -247,7 +221,7 @@ local function GetAssetList()
                             local rawUrl = "https://raw.githubusercontent.com/ivannetta/ShitScripts/main/" .. item.path
                             table.insert(assetList, rawUrl)
 
-                            local name = item.path:match("Assets/(.+)%.png$")
+                            local name = item.path:match("Assets/(.+)%.png$") or item.path:match("Assets/(.+)%.mp4$")
                             if name then
                                 table.insert(NameProtectNames, name)
                             end
@@ -290,13 +264,49 @@ local function CheckIfFartsDownloaded()
 
     for _, url in ipairs(assetList) do
         local filePath = basePath .. url:match("Assets/(.+)")
-        filePath = filePath
+        local newFilePath = filePath:gsub("%.png$", ".png.Fart"):gsub("%.mp4$", ".mp4.Fart4")
 
-        if not isfile(filePath) then
-            DownloadBallers(url, filePath)
+        if not isfile(newFilePath) then
+            DownloadBallers(url, newFilePath)
             task.wait(.1)
-            GUI:Notification{Title = "Downloaded", Text = filePath, Duration = 3}
+            GUI:Notification{Title = "Downloaded", Text = newFilePath, Duration = 3}
         end
+    end
+end
+
+local function LoadAsset(assetName)
+    local basePath = "FartHub/Assets/"
+    local assetPath = basePath .. assetName
+
+    if isfile(assetPath) then
+        return getcustomasset(assetPath)
+    else
+        return nil
+    end
+end
+
+local function ToggleFatMan(state)
+    if state then
+        WowWhatTheZestIsThis = Instance.new("ScreenGui", game:GetService("CoreGui"))
+        WowWhatTheZestIsThis.Name = "FatMan"
+        WowWhatTheZestIsThis.ResetOnSpawn = false
+        WowWhatTheZestIsThis.DisplayOrder = 999999999
+
+        local Frame = Instance.new("Frame", WowWhatTheZestIsThis)
+        Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        Frame.BackgroundTransparency = 1.000
+        Frame.AnchorPoint = Vector2.new(1, .5)
+        Frame.Name = "YAPPING"
+        Frame.Position = UDim2.new(1, 0, .5, 0)
+        Frame.Size = UDim2.new(0, 150, 0, 150)
+
+        local VideoFrame = Instance.new("VideoFrame", Frame)
+        VideoFrame.Size = UDim2.new(1, 0, 1, 0)
+        VideoFrame.Video = LoadAsset("FatMan.mp4.Fart4")
+        VideoFrame.Looped = true
+        VideoFrame.Playing = true
+    else
+        WowWhatTheZestIsThis:Destroy()
     end
 end
 
@@ -314,10 +324,16 @@ local function NameProtect(state)
             end
             for _, People in pairs(CurrentSurvivors:GetChildren()) do
                 if People:IsA("Frame") then
-                    local name = NameProtectNames[indices[math.random(#indices)]]
-                    pcall(function()
-                        People.Icon.Image = getcustomasset("FartHub/Assets/" .. name .. ".png")
-                    end)
+                    local name
+                    local success = false
+                    repeat
+                        name = NameProtectNames[indices[math.random(#indices)]]
+                        local asset = LoadAsset(name .. ".png.Fart")
+                        if asset then
+                            People.Icon.Image = asset
+                            success = true
+                        end
+                    until success
                     People.Username.Text = name
                 end
             end
@@ -329,7 +345,6 @@ local function NameProtect(state)
         local function setupConnections()
             local TemporaryUI = PlayerGui:WaitForChild("TemporaryUI", math.huge)
             local PlayerInfo = TemporaryUI:WaitForChild("PlayerInfo", math.huge)
-            local CurrentSurvivors = PlayerInfo:WaitForChild("CurrentSurvivors", math.huge)
 
             PlayerGui.ChildAdded:Connect(function(child)
                 if child.Name == "TemporaryUI" then updateNames() end
@@ -349,8 +364,6 @@ local function NameProtect(state)
         if PlayerGui.MainUI.Spectate.Username then PlayerGui.MainUI.Spectate.Username.Visible = false end
     end
 end
-
-
 
 GUI:Notification{
     Title = supportedExecutors[executorname] and "Executor Supported" or "Executor Not Supported",
@@ -831,7 +844,8 @@ local function InitializeGUI()
 
     GUI:Credit{Name = "ivannetta", Description = "meowzer", Discord = "ivannetta"}
     GUI:Notification{Title = "NOTE: Highlights Not Working Fix.", Text = "Reset Your Bloxtrap Settings.", Duration = 10}
-    GUI:Notification{Title = "Made by ivannetta", Text = "Pls Join DC Server 😼", Duration = 20}
+    GUI:Notification{Title = "NOTE: Made by ivannetta", Text = "Pls Join DC Server 😼", Duration = 20}
+    GUI:Notification{Title = "NOTE: Some Issues", Text = "Some new scripts poped up like Elysian hub, i dont recoment using it, it steals ur roblox username and some more stuff. can be reported to mods!", Duration = 30}
 
     VisualsTab:ColorPicker{
         Style = Mercury.ColorPickerStyles.Legacy,
@@ -1021,7 +1035,7 @@ local function InitializeGUI()
     if not JoinedSigmaServer then
         GUI:Prompt{
             Title = "Join Fart Hub discord server?",
-            Text = "w-would you like to join our discord server? it would be very nice and sigma",
+            Text = "Would you join my discord server? it would help alot.",
             Buttons = {
                 Yes = function()
                     setclipboard("https://discord.gg/AC4usvpwVY")
@@ -1029,7 +1043,9 @@ local function InitializeGUI()
                     JoinedSigmaServer = true
                     WriteSigmaData()
                 end,
-                No = function() end
+                No = function()
+                    GUI:Notification{Title = "No Problem!", Text = "You dont have to.", Duration = 3}
+                end
             }
         }
     end
