@@ -974,6 +974,12 @@ local function FartHubLoad()
 		end
 
 		imageButton.Activated:Connect(toggleGUI)
+
+		sausageHolder:GetPropertyChangedSignal("Size"):Connect(function()
+			if sausageHolder.Size.X.Offset == originalSize then
+				sausageHolder.Size = UDim2.new(0, originalSize + 48, 0, sausageHolder.Size.Y.Offset)
+			end
+		end)
 	end
 
 	local function CreateSigmaFrame()
