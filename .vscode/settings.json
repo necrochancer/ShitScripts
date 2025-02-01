@@ -16,5 +16,6 @@
         "fireproximityprompt",
         "setclipboard",
         "getgenv"
-    ]
+    ],
+    "stylua.targetReleaseVersion": "latest"
 }
