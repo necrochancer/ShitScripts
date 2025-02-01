@@ -949,24 +949,15 @@ local function FartHubLoad()
 	local function InitializeButtonGUI()
 		local visible = true
 		local sausageHolder = game:GetService("CoreGui").TopBarApp.UnibarLeftFrame.UnibarMenu["2"]
-		local sausageHolderChildren = game:GetService("CoreGui").TopBarApp.UnibarLeftFrame.UnibarMenu["2"]["3"]
-		local highestOrder
-		local highestOrder = 0
-		local offset
-		for _, child in ipairs(sausageHolderChildren:GetChildren()) do
-			if child.LayoutOrder and child.LayoutOrder > highestOrder then
-				highestOrder = child.LayoutOrder
-				offset = child.Position.X.Offset
-			end
-		end
+		local originalSize = sausageHolder.Size.X.Offset
 
-		sausageHolder.Size = UDim2.new(0, offset + 96, 0, sausageHolder.Size.Y.Offset)
+		sausageHolder.Size = UDim2.new(0, originalSize + 48, 0, sausageHolder.Size.Y.Offset)
 
 		local buttonFrame = Instance.new("Frame", sausageHolder)
 		buttonFrame.Size = UDim2.new(0, 44, 0, 44)
 		buttonFrame.BackgroundTransparency = 1
 		buttonFrame.BorderSizePixel = 0
-		buttonFrame.Position = UDim2.new(0, (offset + 48) - 2, 0, 0)
+		buttonFrame.Position = UDim2.new(0, sausageHolder.Size.X.Offset - 48, 0, 0)
 
 		local imageButton = Instance.new("ImageButton", buttonFrame)
 		imageButton.BackgroundTransparency = 1
@@ -975,10 +966,13 @@ local function FartHubLoad()
 		imageButton.AnchorPoint = Vector2.new(0.5, 0.5)
 		imageButton.Position = UDim2.new(0.5, 0, 0.5, 0)
 		imageButton.Image = "http://www.roblox.com/asset/?id=131523679474566"
+
 		local function toggleGUI()
 			visible = not visible
 			GUI:show(visible)
+			sausageHolder.Size = UDim2.new(0, originalSize + (visible and 48 or 0), 0, sausageHolder.Size.Y.Offset)
 		end
+
 		imageButton.Activated:Connect(toggleGUI)
 	end
 
