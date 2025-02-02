@@ -666,23 +666,24 @@ local function FartHubLoad()
 	end
 
 	local function SetupSurfers(PuzzlesUi)
-		task.wait(0.35)
 		local Container = PuzzlesUi:WaitForChild("Container")
 		local GridHolder = Container:WaitForChild("GridHolder")
-		Container:WaitForChild("UIAspectRatioConstraint"):Destroy()
-		Container.Size = UDim2.new(1, 0, 1, 0)
-		GridHolder.Size = UDim2.new(0.625, 0, 0.625, 0)
-		GridHolder.Position = UDim2.new(0.25, 0, 0.5, 0)
-
-		local Surfers = Instance.new("VideoFrame", Container)
-		Surfers.Size = UDim2.new(0.625, 0, 0.625, 0)
-		Surfers.Position = UDim2.new(0.75, 0, 0.5, 0)
+		local Surfers = Instance.new("VideoFrame", GridHolder)
+		Surfers.Size = UDim2.new(1, -20, 1, -20)
 		Surfers.AnchorPoint = Vector2.new(0.5, 0.5)
+		Surfers.Position = UDim2.new(0.5, 0, 0.5, 0)
+
 		Surfers.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-		Surfers.SizeConstraint = Enum.SizeConstraint.RelativeYY
-		Surfers.Video = getcustomasset("FartHub/Assets/SubwaySurfers.mp4")
+		Surfers.Video = LoadAsset("SubwaySurfers.mp4.Fart4")
 		Surfers.Looped = true
 		Surfers.Playing = true
+
+		for _, silly in ipairs(GridHolder.Grid:GetChildren()) do
+			if silly:IsA("Frame") then
+				silly.Transparency = 0.6
+				silly.Button.BackgroundTransparency = 0.6
+			end
+		end
 	end
 
 	local function SkibidiGenerator(shouldLoop)
