@@ -686,7 +686,8 @@ local function FartHubLoad()
 
 			task.wait(SkibidiWait)
 
-			local FartNapFolder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
+			local FartNapFolder = workspace:FindFirstChild("Map")
+				and workspace.Map:FindFirstChild("Ingame")
 				and workspace.Map.Ingame:FindFirstChild("Map")
 			if FartNapFolder then
 				local closestGenerator, closestDistance = nil, math.huge
@@ -1198,7 +1199,6 @@ local function FartHubLoad()
 				HandleFartContainer(state)
 			end,
 		})
-
 
 		local AutoBlockToggle = BlatantTab:CreateToggle({
 			Name = "Auto Block",
