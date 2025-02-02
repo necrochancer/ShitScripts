@@ -10,6 +10,9 @@ local UICorner_3
 local GetKey
 local UICorner_4
 
+-- this is like the worst script ever bro
+-- like allat needs to be deleted 🙏
+
 local function FartHubLoad()
 	local Players = game:GetService("Players")
 	local SoundService = game:GetService("SoundService")
@@ -681,9 +684,6 @@ local function FartHubLoad()
 	local function SkibidiGenerator(shouldLoop)
 		while shouldLoop and running do
 			local PuzzleUI = Players.LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("PuzzleUI", 9999)
-			if not shouldLoop then
-				break
-			end
 
 			task.wait(SkibidiWait)
 
@@ -1113,7 +1113,6 @@ local function FartHubLoad()
 			Name = "C00lkid Aimbot ( Tell the game ur on mobile. )",
 			CurrentValue = false,
 			Callback = function(state)
-				running = state
 				game:GetService("ReplicatedStorage").Modules.Network.RemoteEvent
 					:FireServer("SetDevice", state and "Mobile" or "PC")
 			end,
