@@ -1,24 +1,11 @@
-local KeySystem
-local Frame
-local TextBox
-local UICorner14
-local UIPadding
-local UICorner_2
-local TextLabel
-local CheckKeyButton
-local UICorner_3
-local GetKey
-local UICorner_4
-
-local function FartHubLoad()
-	local Players = game:GetService("Players")
-	local SoundService = game:GetService("SoundService")
-	local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
-	local VIM = game:GetService("VirtualInputManager")
-	local BlockRemote = game:GetService("ReplicatedStorage").Modules.Network.RemoteEvent
-	local RunService = game:GetService("RunService")
-	local HttpService = game:GetService("HttpService")
-	local Mercury = loadstring(game:HttpGet("https://raw.githubusercontent.com/deeeity/mercury-lib/master/src.lua"))()
+local Players = game:GetService("Players")
+local SoundService = game:GetService("SoundService")
+local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
+local VIM = game:GetService("VirtualInputManager")
+local BlockRemote = game:GetService("ReplicatedStorage").Modules.Network.RemoteEvent
+local RunService = game:GetService("RunService")
+local HttpService = game:GetService("HttpService")
+local Mercury = loadstring(game:HttpGet("https://raw.githubusercontent.com/deeeity/mercury-lib/master/src.lua"))()
 
 	local DebugNotifications = getgenv and getgenv().DebugNotifications or false
 	local SigmaData, JoinedSigmaServer = {}, false
