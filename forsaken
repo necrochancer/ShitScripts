@@ -160,7 +160,7 @@ local function FartHubLoad()
 		end)
 	end
 
-	local function WatchForPizza(state)
+	local function WatchPizzaTower(state)
 		if not state then
 			for _, connection in ipairs(pizzaConnections) do
 				connection:Disconnect()
@@ -678,23 +678,33 @@ local function FartHubLoad()
 	end
 
 	local function SkibidiGenerator(shouldLoop)
-		repeat
-			if not running then
+		while shouldLoop and running do
+			local PuzzleUI = Players.LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("PuzzleUI", 9999)
+			if not shouldLoop then
 				break
 			end
-			local FartIngameFolder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
-			local FartNapFolder = FartIngameFolder and FartIngameFolder:FindFirstChild("Map")
+
+			task.wait(SkibidiWait)
+
+			local FartNapFolder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
+				and workspace.Map.Ingame:FindFirstChild("Map")
 			if FartNapFolder then
+				local closestGenerator, closestDistance = nil, math.huge
+				local playerPosition = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
 				for _, g in ipairs(FartNapFolder:GetChildren()) do
 					if g.Name == "Generator" and g.Progress.Value < 100 then
-						g.Remotes.RE:FireServer()
+						local distance = (g.Main.Position - playerPosition).Magnitude
+						if distance < closestDistance then
+							closestDistance = distance
+							closestGenerator = g
+						end
 					end
 				end
+				if closestGenerator then
+					closestGenerator.Remotes.RE:FireServer()
+				end
 			end
-			if shouldLoop then
-				task.wait(SkibidiWait)
-			end
-		until not shouldLoop
+		end
 	end
 
 	local function GeneratorOnce()
@@ -1037,7 +1047,7 @@ local function FartHubLoad()
 		})
 
 		-- Visuals Tab
-		local VisualsSection = VisualsTab:CreateLabel("Highlights for things.")
+		local VisualsSection = VisualsTab:CreateSection("Highlights for things.")
 
 		local GeneratorColor = VisualsTab:CreateColorPicker({
 			Name = "Generator Color",
@@ -1075,6 +1085,8 @@ local function FartHubLoad()
 			end,
 		})
 
+		local VisuialsDivider = VisualsTab:CreateDivider()
+
 		local VisualsToggle = VisualsTab:CreateToggle({
 			Name = "Highlight Objects",
 			CurrentValue = false,
@@ -1085,7 +1097,7 @@ local function FartHubLoad()
 		})
 
 		-- Player Tab
-		local PlayerSection = PlayerTab:CreateLabel("Player Stuff.")
+		local PlayerSection = PlayerTab:CreateSection("Player related stuff.")
 
 		local QuickPromptsButton = PlayerTab:CreateButton({
 			Name = "Quick Proximity Prompts",
@@ -1096,7 +1108,7 @@ local function FartHubLoad()
 		})
 
 		local CoolKidAimbotToggle = PlayerTab:CreateToggle({
-			Name = "C00lkid Aimbot",
+			Name = "C00lkid Aimbot ( Tell the game ur on mobile. )",
 			CurrentValue = false,
 			Callback = function(state)
 				running = state
@@ -1110,17 +1122,7 @@ local function FartHubLoad()
 			CurrentValue = false,
 			Callback = function(state)
 				task.spawn(function()
-					WatchForPizza(state)
-				end)
-			end,
-		})
-
-		local DisableStaminaDrainSigmaToggle = PlayerTab:CreateToggle({
-			Name = "Disable Stamina Drain",
-			CurrentValue = false,
-			Callback = function(state)
-				task.spawn(function()
-					ToggleFart(state)
+					WatchPizzaTower(state)
 				end)
 			end,
 		})
@@ -1136,8 +1138,20 @@ local function FartHubLoad()
 			end,
 		})
 
+		PlayerTab:CreateSection("This might not work on free executors.")
+
+		local DisableStaminaDrainSigmaToggle = PlayerTab:CreateToggle({
+			Name = "Disable Stamina Drain",
+			CurrentValue = false,
+			Callback = function(state)
+				task.spawn(function()
+					ToggleFart(state)
+				end)
+			end,
+		})
+
 		-- Generator Tab
-		local GeneratorSection = GeneratorTab:CreateLabel("Uh stuff that does sm to generators.")
+		local GeneratorSection = GeneratorTab:CreateSection("Solves the puzzle for you.")
 
 		local QuickNewGens = GeneratorTab:CreateToggle({
 			Name = "Quick Generators",
@@ -1151,6 +1165,9 @@ local function FartHubLoad()
 				end
 			end,
 		})
+
+		GeneratorTab:CreateDivider()
+
 		local GeneratorKeybind = GeneratorTab:CreateKeybind({
 			Name = "Do Current Generator.",
 			CurrentKeybind = "H",
@@ -1172,7 +1189,7 @@ local function FartHubLoad()
 		})
 
 		-- Blatant Tab
-		local BlatantSection = BlatantTab:CreateLabel("Stuff that might get you banned if ur obvious")
+		BlatantTab:CreateSection("Aimbot and Auto Block.")
 
 		local AimbotToggle = BlatantTab:CreateToggle({
 			Name = "Aimbot",
@@ -1181,6 +1198,7 @@ local function FartHubLoad()
 				HandleFartContainer(state)
 			end,
 		})
+
 
 		local AutoBlockToggle = BlatantTab:CreateToggle({
 			Name = "Auto Block",
@@ -1197,6 +1215,20 @@ local function FartHubLoad()
 				end
 			end,
 		})
+
+		local DistanceSlider = BlatantTab:CreateSlider({
+			Name = "Auto Block Distance",
+			Range = { 1, 20 },
+			Increment = 1,
+			Suffix = "m",
+			CurrentValue = 6,
+			Flag = "AutoBlockDistance",
+			Callback = function(value)
+				SkibidiDistance = value
+			end,
+		})
+
+		BlatantTab:CreateSection("Generator Farms.")
 
 		local AutoFarmGeneratorsButton = BlatantTab:CreateButton({
 			Name = "AutoFarm Generators",
@@ -1232,45 +1264,14 @@ local function FartHubLoad()
 			end,
 		})
 
-		local DistanceSlider = BlatantTab:CreateSlider({
-			Name = "Auto Block Distance",
-			Range = { 1, 20 },
-			Increment = 1,
-			Suffix = "m",
-			CurrentValue = 6,
-			Flag = "AutoBlockDistance",
-			Callback = function(value)
-				SkibidiDistance = value
-			end,
-		})
-
 		-- Misc Tab
-		local MiscTitle = MiscTab:CreateLabel("Stuff that i didnt know where to put")
+		local MiscTitle = MiscTab:CreateSection("Funny Things")
 
 		local FatManToggle = MiscTab:CreateToggle({
 			Name = "Toggle FatMan",
 			CurrentValue = false,
 			Callback = function(state)
 				ToggleFatMan(state)
-			end,
-		})
-
-		local NameProtectActivated = false
-		local NameProtectButton = MiscTab:CreateButton({
-			Name = "NameProtect",
-			Description = "Replaces everyone's names and images with pmoon.",
-			Callback = function()
-				if not NameProtectActivated then
-					NameProtect(true)
-					NameProtectActivated = true
-				else
-					Rayfield:Notify({
-						Title = "Already Activated",
-						Content = "NameProtect is already activated.",
-						Duration = 5,
-						Image = "ban",
-					})
-				end
 			end,
 		})
 
@@ -1290,6 +1291,27 @@ local function FartHubLoad()
 						Title = "bro",
 						Content = "its already on",
 						Duration = 3,
+						Image = "ban",
+					})
+				end
+			end,
+		})
+
+		MiscTab:CreateSection("Useful things")
+
+		local NameProtectActivated = false
+		local NameProtectButton = MiscTab:CreateButton({
+			Name = "NameProtect",
+			Description = "Replaces everyone's names and images with pmoon.",
+			Callback = function()
+				if not NameProtectActivated then
+					NameProtect(true)
+					NameProtectActivated = true
+				else
+					Rayfield:Notify({
+						Title = "Already Activated",
+						Content = "NameProtect is already activated.",
+						Duration = 5,
 						Image = "ban",
 					})
 				end
