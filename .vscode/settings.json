@@ -15,7 +15,9 @@
         "readfile",
         "fireproximityprompt",
         "setclipboard",
-        "getgenv"
+        "getgenv",
+        "queue_on_teleport",
+        "fluxus"
     ],
     "stylua.targetReleaseVersion": "latest",
     "robloxLsp.diagnostics.disable": [
