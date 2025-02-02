@@ -666,7 +666,7 @@ local function FartHubLoad()
 	end
 
 	local function SetupSurfers(PuzzlesUi)
-		task.wait(0.2)
+		task.wait(0.35)
 		local Container = PuzzlesUi:WaitForChild("Container")
 		local GridHolder = Container:WaitForChild("GridHolder")
 		Container:WaitForChild("UIAspectRatioConstraint"):Destroy()
