@@ -22,6 +22,7 @@ local function FartHubLoad()
 
 	local DebugNotifications = getgenv and getgenv().DebugNotifications or false
 	local SigmaData, JoinedSigmaServer = {}, false
+	local pizzaConnections = {}
 	local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab = nil, nil, nil, nil, nil
 	local BabyShark, KillerFartPart, HRP = nil, nil, nil
 	local SkibidiDistance, BlockEnabled, AimLockTimer = 6, false, 2
@@ -139,6 +140,51 @@ local function FartHubLoad()
 				task.wait()
 			end
 		end)
+	end
+
+	local function WatchForPizza(state)
+		if not state then
+			for _, connection in ipairs(pizzaConnections) do
+				connection:Disconnect()
+			end
+			table.clear(pizzaConnections)
+			return
+		end
+
+		local function onChildAdded(child)
+			if child.Name == "Pizza" then
+				local player = game.Players.LocalPlayer
+				local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+				if hrp then
+					child.CFrame = hrp.CFrame
+				end
+			end
+		end
+
+		local function watchFolder()
+			local ingameFolder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
+			if ingameFolder then
+				table.insert(pizzaConnections, ingameFolder.ChildAdded:Connect(onChildAdded))
+			else
+				table.insert(
+					pizzaConnections,
+					workspace.ChildAdded:Connect(function(child)
+						if child.Name == "Map" then
+							table.insert(
+								pizzaConnections,
+								child.ChildAdded:Connect(function(subChild)
+									if subChild.Name == "Ingame" then
+										table.insert(pizzaConnections, subChild.ChildAdded:Connect(onChildAdded))
+									end
+								end)
+							)
+						end
+					end)
+				)
+			end
+		end
+
+		watchFolder()
 	end
 
 	local function HandleFartContainer(LKFVJNWEFLKJWNEFLKJWNEF)
@@ -1110,6 +1156,17 @@ local function FartHubLoad()
 				running = state
 				game:GetService("ReplicatedStorage").Modules.Network.RemoteEvent
 					:FireServer("SetDevice", state and "Mobile" or "PC")
+			end,
+		})
+
+		PlayerTab:Toggle({
+			Name = "Bring Me Some Pizza",
+			Description = "Teleport Pizza To You.",
+			StartingState = false,
+			Callback = function(state)
+				task.spawn(function()
+					WatchForPizza(state)
+				end)
 			end,
 		})
 
