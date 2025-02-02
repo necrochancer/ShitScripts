@@ -1201,7 +1201,7 @@ local function FartHubLoad()
 		})
 
 		local AutoBlockToggle = BlatantTab:CreateToggle({
-			Name = "Auto Block",
+			Name = "Auto Block ( its vert bad )",
 			CurrentValue = false,
 			Callback = function(state)
 				BlockEnabled = state
