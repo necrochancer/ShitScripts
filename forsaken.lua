@@ -73,6 +73,7 @@ local function FartHubLoad()
 		Link = "https://github.com/ivannetta/ShitScripts/Forsaken",
 
 		DisableBuildWarnings = true,
+		DisableRayfieldPrompts = true,
 
 		KeySystem = true,
 		KeySettings = {
@@ -1181,7 +1182,7 @@ local function FartHubLoad()
 			Name = "Generator Speed",
 			Range = { 0.1, 10 },
 			Increment = 0.1,
-			Suffix = "s",
+			Suffix = "Seconds",
 			CurrentValue = 2,
 			Flag = "GeneratorSpeed",
 			Callback = function(value)
@@ -1220,7 +1221,7 @@ local function FartHubLoad()
 			Name = "Auto Block Distance",
 			Range = { 1, 20 },
 			Increment = 1,
-			Suffix = "m",
+			Suffix = "Studs",
 			CurrentValue = 6,
 			Flag = "AutoBlockDistance",
 			Callback = function(value)
@@ -1256,7 +1257,7 @@ local function FartHubLoad()
 			Name = "Do ALL Generators Speed",
 			Range = { 0.1, 10 },
 			Increment = 0.1,
-			Suffix = "s",
+			Suffix = "Seconds",
 			CurrentValue = 2,
 			Flag = "DoAllGeneratorsSpeed",
 			Callback = function(value)
