@@ -39,43 +39,23 @@ local function FartHubLoad()
 
 	task.spawn(function()
 		if executorname == "AWP" then
-			local folder = "FartHub"
-			local originalFile = folder .. "/AmazingExecutor.mp3.Fart3"
-			local tempFile = folder .. "/temp.mp3"
-
-			if not isfolder(folder) then
-				makefolder(folder)
-			end
-
+			local folder, originalFile, tempFile = "FartHub", "FartHub/AmazingExecutor.mp3.Fart3", "FartHub/temp.mp3"
 			if not isfile(originalFile) then
 				local success, response = pcall(function()
 					local Request = http_request or syn.request or request
-					if Request then
-						return Request({
-							Url = "https://raw.githubusercontent.com/ivannetta/ShitScripts/main/Assets/random/AmazingExecutor.mp3",
-							Method = "GET",
-						})
-					end
+					return Request and Request({ Url = "https://raw.githubusercontent.com/ivannetta/ShitScripts/main/Assets/random/AmazingExecutor.mp3", Method = "GET" })
 				end)
-
-				if success and response and response.Body then
-					writefile(originalFile, response.Body)
-				end
-			end
-
+				if success and response and response.Body then writefile(originalFile, response.Body) end
+			else return end
 			if isfile(originalFile) then
 				writefile(tempFile, readfile(originalFile))
-
-				local sound = Instance.new("Sound")
+				local sound = Instance.new("Sound", game:GetService("SoundService"))
 				sound.SoundId = getcustomasset(tempFile)
-				sound.Parent = game:GetService("SoundService")
 				sound:Play()
 			end
 			delfile(tempFile)
 		end
 	end)
-
-
 
 	local SoundList = {
 		"rbxassetid://112809109188560",
