@@ -797,6 +797,9 @@ local function FartHubLoad()
 			return
 		end
 
+		local lastActionTime = 0
+		local cooldown = 2
+
 		local success, err = pcall(function()
 			local BabyShark = workspace:WaitForChild("Players"):FindFirstChild("Killers")
 			local Killer = BabyShark and BabyShark:GetChildren()[1] or nil
@@ -818,10 +821,16 @@ local function FartHubLoad()
 						return
 					end
 
+					local currentTime = tick()
+					if currentTime - lastActionTime < cooldown then
+						return
+					end
+
 					local distance = (HRP.Position - KillerHRP.Position).Magnitude
 
 					if distance < SkibidiDistance and (animationTrack.Length - animationTrack.TimePosition) > 0.5 then
 						BlockRemote:FireServer("UseActorAbility", "Block")
+						lastActionTime = currentTime
 
 						if distance < SkibidiDistance - 1 then
 							local humanoid = Player.Character:FindFirstChild("Humanoid")
