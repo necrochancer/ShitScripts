@@ -45,10 +45,18 @@ local function FartHubLoad()
 			if not isfile(originalFile) then
 				local success, response = pcall(function()
 					local Request = http_request or syn.request or request
-					return Request and Request({ Url = "https://raw.githubusercontent.com/ivannetta/ShitScripts/main/Assets/random/AmazingExecutor.mp3", Method = "GET" })
+					return Request
+						and Request({
+							Url = "https://raw.githubusercontent.com/ivannetta/ShitScripts/main/Assets/random/AmazingExecutor.mp3",
+							Method = "GET",
+						})
 				end)
-				if success and response and response.Body then writefile(originalFile, response.Body) end
-			else return end
+				if success and response and response.Body then
+					writefile(originalFile, response.Body)
+				end
+			else
+				return
+			end
 			if isfile(originalFile) then
 				writefile(tempFile, readfile(originalFile))
 				local sound = Instance.new("Sound", game:GetService("SoundService"))
@@ -59,7 +67,9 @@ local function FartHubLoad()
 		end
 	end)
 
-	if setclipboard then setclipboard("https://discord.gg/JkWFbJQMtg") end
+	if setclipboard then
+		setclipboard("https://discord.gg/JkWFbJQMtg")
+	end
 
 	local fart = {
 		aimbot = {},
@@ -796,40 +806,35 @@ local function FartHubLoad()
 			local HRP = Player.Character and Player.Character:FindFirstChild("HumanoidRootPart") or nil
 
 			if KillerHumanoid and KillerHRP and HRP then
-				KillerHumanoid.Animator.AnimationPlayed:Connect(function(animationTrack)
-					if animationTrack.Animation and animationTrack.Priority == Enum.AnimationPriority.Action then
-						local animationPlaying = true
-						while animationPlaying and BlockEnabled do
-							local distance = (HRP.Position - KillerHRP.Position).Magnitude
+				local animationTrack = nil
+				KillerHumanoid.Animator.AnimationPlayed:Connect(function(track)
+					if track.Animation and track.Priority == Enum.AnimationPriority.Action then
+						animationTrack = track
+					end
+				end)
 
-							if
-								distance < SkibidiDistance
-								and (animationTrack.Length - animationTrack.TimePosition) > 0.5
-							then
-								BlockRemote:FireServer("UseActorAbility", "Block")
-								task.wait(0.1)
+				game:GetService("RunService").Heartbeat:Connect(function()
+					if not animationTrack or not BlockEnabled then
+						return
+					end
 
-								if distance < SkibidiDistance - 1 then
-									local humanoid = Player.Character:FindFirstChild("Humanoid")
-									if humanoid and humanoid.Animator then
-										for _, track in pairs(humanoid.Animator:GetPlayingAnimationTracks()) do
-											if track.Name == "rbxassetid://72722244508749" then
-												Aimbot(0.5)
-												BlockRemote:FireServer("UseActorAbility", "Punch")
-												break
-											end
-										end
+					local distance = (HRP.Position - KillerHRP.Position).Magnitude
+
+					if distance < SkibidiDistance and (animationTrack.Length - animationTrack.TimePosition) > 0.5 then
+						BlockRemote:FireServer("UseActorAbility", "Block")
+
+						if distance < SkibidiDistance - 1 then
+							local humanoid = Player.Character:FindFirstChild("Humanoid")
+							if humanoid and humanoid.Animator then
+								for _, track in pairs(humanoid.Animator:GetPlayingAnimationTracks()) do
+									if track.Name == "rbxassetid://72722244508749" then
+										Aimbot(0.5)
+										BlockRemote:FireServer("UseActorAbility", "Punch")
+										break
 									end
 								end
-								return
-							end
-							task.wait(0.01)
-
-							if not animationTrack.IsPlaying then
-								animationPlaying = false
 							end
 						end
-
 					end
 				end)
 			end
@@ -841,6 +846,29 @@ local function FartHubLoad()
 		end
 	end
 
+	local function testiclegod12()
+		local killers = workspace.Players:WaitForChild("Killers")
+		local survivors = workspace.Players:WaitForChild("Survivors")
+
+		local function resetBlock()
+			print("resetBlock")
+			task.wait(5)
+			HawkTuah()
+		end
+
+		for _, folder in ipairs({killers, survivors}) do
+			folder.ChildAdded:Connect(resetBlock)
+			folder.ChildRemoved:Connect(resetBlock)
+		end
+	end
+
+	game.Players.PlayerAdded:Connect(function()
+		testiclegod12()
+	end)
+
+	if game.Players.LocalPlayer then
+		testiclegod12()
+	end
 
 	game:GetService("Players").ChildAdded:Connect(function(child)
 		if not BlockEnabled then
