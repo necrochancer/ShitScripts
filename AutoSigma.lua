@@ -20,7 +20,7 @@ local function findGenerators()
 end
 
 local function TpDoGenerator()
-    NotificationLibrary:SendNotification("Info", "okay bbg il look for the generators when the game starts 🙄🙄", 2)
+    NotificationLibrary:SendNotification("Info", "okay bbg il look for the generators when the game starts 🙄🙄", 3)
     local lastPosition = Players.LocalPlayer.Character and Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart") and Players.LocalPlayer.Character.HumanoidRootPart.CFrame
     while true do
         local generators = findGenerators()
@@ -104,7 +104,7 @@ local function Main()
     local main = roundTimer and roundTimer:WaitForChild("Main")
     local title = main and main:WaitForChild("Title")
 
-    if title.Text == "Round ends in:" then
+    if title.Text == "Round ends in:" and tonumber(roundTimer.Text) < 30 then
         NotificationLibrary:SendNotification("Error", "this server sucks", 5)
         local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
         if queueteleport then
@@ -127,15 +127,13 @@ local function Main()
         end
 
     else
-        NotificationLibrary:SendNotification("Info", "hi", 3)
         local generatorsDone = TpDoGenerator()
         if generatorsDone then
-            NotificationLibrary:SendNotification("Success", "I did the generators :3", 3)
             local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
             if queueteleport then
                     queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/AutoSigma.lua', true))()")
             end
-            task.wait(1)
+			teleportToRandomServer()
             while task.wait(5) do
                 teleportToRandomServer()
             end

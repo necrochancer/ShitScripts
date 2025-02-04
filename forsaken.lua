@@ -27,6 +27,8 @@ local function FartHubLoad()
 
 	local DebugNotifications = getgenv and getgenv().DebugNotifications or false
 	local SigmaData, JoinedSigmaServer = {}, false
+	local CurrentFartsActive, NameProtectNames, aimbotActive = {}, {}, false
+	local WowWhatTheZestIsThis
 	local pizzaConnections = {}
 	local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab = nil, nil, nil, nil, nil
 	local BabyShark, KillerFartPart, HRP = nil, nil, nil
@@ -57,16 +59,7 @@ local function FartHubLoad()
 		end
 	end)
 
-	local SoundList = {
-		"rbxassetid://112809109188560",
-		"rbxassetid://101199185291628",
-		"rbxassetid://102228729296384",
-		"rbxassetid://140242176732868",
-	}
-
-	local CurrentFartsActive, NameProtectNames, aimbotActive = {}, {}, false
-	local WowWhatTheZestIsThis
-	setclipboard("https://discord.gg/JkWFbJQMtg")
+	if setclipboard then setclipboard("https://discord.gg/JkWFbJQMtg") end
 
 	local fart = {
 		aimbot = {},
@@ -789,68 +782,65 @@ local function FartHubLoad()
 			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = lastPosition
 		end
 	end
-
-	local function InjectRobux(sound)
-		while sound.Parent and BlockEnabled do
-			local success, err = pcall(function()
-				HRP = game.Players.LocalPlayer.Character
-					and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-				if HRP and KillerFartPart and KillerFartPart.Parent then
-					local killerHRP = KillerFartPart.Parent:FindFirstChild("HumanoidRootPart")
-					if killerHRP then
-						local directionToPlayer = (HRP.Position - killerHRP.Position).Unit
-						local killerLookVector = killerHRP.CFrame.LookVector
-						local dotProduct = directionToPlayer:Dot(killerLookVector)
-						if dotProduct > 0.5 then
-							local distance = (KillerFartPart.Position - HRP.Position).Magnitude
-							if distance < SkibidiDistance then
-								BlockRemote:FireServer("UseActorAbility", "Block")
-								return
-							end
-						end
-					end
-				end
-			end)
-			if not success then
-				Rayfield:Notify({ Title = "An error occurred!", Content = err, Duration = 10, Image = "ban" })
-			end
-			task.wait(0.1)
-		end
-		CurrentFartsActive[sound] = nil
-	end
-
 	local function HawkTuah()
 		if not BlockEnabled then
 			return
 		end
-		local success, err = pcall(function()
-			BabyShark = workspace:WaitForChild("Players"):FindFirstChild("Killers")
-			BabyShark = BabyShark and BabyShark:GetChildren()[1] or nil
-			KillerFartPart = BabyShark and BabyShark:FindFirstChild("HumanoidRootPart") or nil
-		end)
-		if not success then
-			Rayfield:Notify({ Title = "An error occured!", Content = err, Duration = 10 })
-		end
 
-		if KillerFartPart then
-			KillerFartPart.ChildAdded:Connect(function(descendant)
-				if not BlockEnabled then
-					return
-				end
-				local success, err = pcall(function()
-					if descendant:IsA("Sound") and table.find(SoundList, descendant.SoundId) then
-						if not CurrentFartsActive[descendant] then
-							CurrentFartsActive[descendant] = true
-							task.spawn(InjectRobux, descendant)
+		local success, err = pcall(function()
+			local BabyShark = workspace:WaitForChild("Players"):FindFirstChild("Killers")
+			local Killer = BabyShark and BabyShark:GetChildren()[1] or nil
+			local KillerHumanoid = Killer and Killer:FindFirstChildOfClass("Humanoid") or nil
+			local KillerHRP = Killer and Killer:FindFirstChild("HumanoidRootPart") or nil
+			local Player = game.Players.LocalPlayer
+			local HRP = Player.Character and Player.Character:FindFirstChild("HumanoidRootPart") or nil
+
+			if KillerHumanoid and KillerHRP and HRP then
+				KillerHumanoid.Animator.AnimationPlayed:Connect(function(animationTrack)
+					if animationTrack.Animation and animationTrack.Priority == Enum.AnimationPriority.Action then
+						local animationPlaying = true
+						while animationPlaying and BlockEnabled do
+							local distance = (HRP.Position - KillerHRP.Position).Magnitude
+
+							if
+								distance < SkibidiDistance
+								and (animationTrack.Length - animationTrack.TimePosition) > 0.5
+							then
+								BlockRemote:FireServer("UseActorAbility", "Block")
+								task.wait(0.1)
+
+								if distance < SkibidiDistance - 1 then
+									local humanoid = Player.Character:FindFirstChild("Humanoid")
+									if humanoid and humanoid.Animator then
+										for _, track in pairs(humanoid.Animator:GetPlayingAnimationTracks()) do
+											if track.Name == "rbxassetid://72722244508749" then
+												Aimbot(0.5)
+												BlockRemote:FireServer("UseActorAbility", "Punch")
+												break
+											end
+										end
+									end
+								end
+								return
+							end
+							task.wait(0.01)
+
+							if not animationTrack.IsPlaying then
+								animationPlaying = false
+							end
 						end
+
 					end
 				end)
-				if not success then
-					Rayfield:Notify({ Title = "An error occured!", Content = err, Duration = 10, Image = "ban" })
-				end
-			end)
+			end
+		end)
+
+		if not success then
+			Rayfield:Notify({ Title = "An error occurred!", Content = err, Duration = 10 })
+			return
 		end
 	end
+
 
 	game:GetService("Players").ChildAdded:Connect(function(child)
 		if not BlockEnabled then
@@ -1254,7 +1244,7 @@ local function FartHubLoad()
 			Name = "AutoFarm Generators",
 			Description = "Serverhops, Does Generators, Forever and ever.",
 			Callback = function()
-				Rayfield:Notify({ Title = "Loading", Text = "pls wait stinky boy", Duration = 20, Image = "check" })
+				Rayfield:Notify({ Title = "Loading", Content = "pls wait stinky boy", Duration = 20, Image = "check" })
 				loadstring(
 					game:HttpGet(
 						"https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/AutoSigma.lua",
