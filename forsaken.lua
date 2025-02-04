@@ -1074,7 +1074,7 @@ local function FartHubLoad()
 		Rayfield:Notify({
 			Title = "NOTE: Highlights Not Working Fix.",
 			Content = "Reset Your Bloxtrap Settings.",
-			Duration = 10,
+			Duration = 3.6,
 			Image = "layout-grid",
 		})
 
