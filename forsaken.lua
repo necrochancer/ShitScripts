@@ -851,7 +851,6 @@ local function FartHubLoad()
 		local survivors = workspace.Players:WaitForChild("Survivors")
 
 		local function resetBlock()
-			print("resetBlock")
 			task.wait(5)
 			HawkTuah()
 		end
