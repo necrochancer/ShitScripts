@@ -61,12 +61,17 @@ local function FartHubLoad()
 			Chance = { Duration2 = 2 },
 		},
 	}
-
 	local GUI = Mercury:Create({
 		Name = "FartSaken",
 		Size = UDim2.fromOffset(600, 400),
 		Theme = Mercury.Themes.Dark,
 		Link = "https://github.com/ivannetta/ShitScripts/Forsaken",
+	})
+
+	GUI:Notification({
+		Title = "Old Ui!",
+		Text = "You are using outdated old ui, please use new one for updated features.",
+		Duration = 999,
 	})
 
 	local function GetCharAndFold()
