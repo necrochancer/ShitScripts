@@ -37,6 +37,25 @@ local function FartHubLoad()
 		or "Unknown"
 	local supportedExecutors = { AWP = true, Wave = true, Nihon = true, ["Synapse Z"] = true, Swift = true }
 
+	if executorname and executorname == "AWP" then
+		task.spawn(function()
+			local request = syn.request or http_request or request
+			local response = request({
+				Url = "https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/Assets/random/AmazingExecutor.mp3",
+				Method = "GET",
+			})
+		end)
+		writefile("FartHub/awp.mp3.fart3", request)
+
+		local function PlaySound()
+			local sound = Instance.new("Sound", SoundService)
+			sound.SoundId = "rbxassetid://112809109188560"
+			sound.Volume = .5
+			sound:Play()
+		end
+		PlaySound()
+	end
+
 	local SoundList = {
 		"rbxassetid://112809109188560",
 		"rbxassetid://101199185291628",

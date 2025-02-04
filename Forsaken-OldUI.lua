@@ -3,6 +3,7 @@ local Frame
 local TextBox
 local UICorner14
 local UIPadding
+local UICorner
 local UICorner_2
 local TextLabel
 local CheckKeyButton
