@@ -17,7 +17,8 @@
         "setclipboard",
         "getgenv",
         "queue_on_teleport",
-        "fluxus"
+        "fluxus",
+        "delfile"
     ],
     "stylua.targetReleaseVersion": "latest",
     "robloxLsp.diagnostics.disable": [

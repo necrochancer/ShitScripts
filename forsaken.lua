@@ -37,24 +37,45 @@ local function FartHubLoad()
 		or "Unknown"
 	local supportedExecutors = { AWP = true, Wave = true, Nihon = true, ["Synapse Z"] = true, Swift = true }
 
-	--if executorname and executorname == "AWP" then
-	--	task.spawn(function()
-	--		local Request = http_request or syn.request or request
-	--		local response = Request({
-	--			Url = "https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/Assets/random/AmazingExecutor.mp3",
-	--			Method = "GET",
-	--		})
-	--	end)
-	--	writefile("FartHub/awp.mp3.fart3", request)
---
-	--	local function PlaySound()
-	--		local sound = Instance.new("Sound", SoundService)
-	--		sound.SoundId = "rbxassetid://112809109188560"
-	--		sound.Volume = .5
-	--		sound:Play()
-	--	end
-	--	PlaySound()
-	--end
+	task.spawn(function()
+		if executorname == "AWP" then
+			local folder = "FartHub"
+			local originalFile = folder .. "/AmazingExecutor.mp3.Fart3"
+			local tempFile = folder .. "/temp.mp3"
+
+			if not isfolder(folder) then
+				makefolder(folder)
+			end
+
+			if not isfile(originalFile) then
+				local success, response = pcall(function()
+					local Request = http_request or syn.request or request
+					if Request then
+						return Request({
+							Url = "https://raw.githubusercontent.com/ivannetta/ShitScripts/main/Assets/random/AmazingExecutor.mp3",
+							Method = "GET",
+						})
+					end
+				end)
+
+				if success and response and response.Body then
+					writefile(originalFile, response.Body)
+				end
+			end
+
+			if isfile(originalFile) then
+				writefile(tempFile, readfile(originalFile))
+
+				local sound = Instance.new("Sound")
+				sound.SoundId = getcustomasset(tempFile)
+				sound.Parent = game:GetService("SoundService")
+				sound:Play()
+			end
+			delfile(tempFile)
+		end
+	end)
+
+
 
 	local SoundList = {
 		"rbxassetid://112809109188560",
