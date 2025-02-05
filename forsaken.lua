@@ -1306,7 +1306,7 @@ local function FartHubLoad()
 		})
 
 		local DistanceSlider = BlatantTab:CreateSlider({
-			Name = "Smoothness Slider (Higher = Slower Turning)",
+			Name = "Smoothness Slider",
 			Range = { 0, .3 },
 			Increment = .01,
 			Suffix = "Seconds",
