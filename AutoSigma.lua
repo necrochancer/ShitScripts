@@ -104,7 +104,10 @@ local function Main()
     local main = roundTimer and roundTimer:WaitForChild("Main")
     local title = main and main:WaitForChild("Title")
 
-    if title.Text == "Round ends in:" and tonumber(roundTimer.Main.Time.Text) < 30 then
+    local timeText = roundTimer.Main.Time.Text
+    local minutes, seconds = timeText:match("(%d+):(%d+)")
+    local totalSeconds = tonumber(minutes) * 60 + tonumber(seconds)
+    if title.Text == "Round ends in:" and totalSeconds < 30 then
         NotificationLibrary:SendNotification("Error", "this server sucks", 5)
         local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
         if queueteleport then
