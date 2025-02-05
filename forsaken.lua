@@ -170,21 +170,22 @@ local function FartHubLoad()
 
 		task.spawn(function()
 			local startTime = tick()
+			local UserInputService = game:GetService("UserInputService")
+			UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
 			while tick() - startTime < Dur do
 				local target = FindClosestPerson()
 				if target and target:FindFirstChild("HumanoidRootPart") then
 					local wawa = MeButCharacter.HumanoidRootPart
 					local wawaza = target.HumanoidRootPart.Position
 					local MathematicalCalculations = (wawaza - wawa.Position).unit
-					wawa.CFrame = CFrame.new(
-						wawa.Position,
-						wawa.Position + Vector3.new(MathematicalCalculations.X, 0, MathematicalCalculations.Z)
-					)
-					--local Cumera = game.Workspace.CurrentCamera
-					--Cumera.CFrame = CFrame.lookAt(Cumera.CFrame.Position, Cumera.CFrame.Position + Vector3.new(MathematicalCalculations.X, MathematicalCalculations.Y, MathematicalCalculations.Z))
+					-- change camera
+					local Cumera = game.Workspace.CurrentCamera
+					local targetCFrame = CFrame.lookAt(Cumera.CFrame.Position, Cumera.CFrame.Position + Vector3.new(MathematicalCalculations.X, MathematicalCalculations.Y, MathematicalCalculations.Z))
+					game:GetService("TweenService"):Create(Cumera, TweenInfo.new(0.1, Enum.EasingStyle.Linear), {CFrame = targetCFrame}):Play()
 				end
 				task.wait()
 			end
+			UserInputService.MouseBehavior = Enum.MouseBehavior.Default
 		end)
 	end
 
