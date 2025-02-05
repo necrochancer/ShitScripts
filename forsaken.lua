@@ -33,7 +33,7 @@ local function FartHubLoad()
 	local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab = nil, nil, nil, nil, nil
 	local BabyShark, KillerFartPart, HRP = nil, nil, nil
 	local Runners = false
-	local SkibidiDistance, BlockEnabled, AimLockTimer = 6, false, 2
+	local SkibidiDistance, BlockEnabled, AimLockTimer, AimSmoothnes = 6, false, 2, .1
 
 	local executorname = (pcall(getexecutorname) and getexecutorname())
 		or (pcall(identifyexecutor) and identifyexecutor())
@@ -168,12 +168,13 @@ local function FartHubLoad()
 			return ClosestTarget
 		end
 
+		local target = FindClosestPerson()
+
 		task.spawn(function()
 			local startTime = tick()
 			local UserInputService = game:GetService("UserInputService")
 			UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
 			while tick() - startTime < Dur do
-				local target = FindClosestPerson()
 				if target and target:FindFirstChild("HumanoidRootPart") then
 					local wawa = MeButCharacter.HumanoidRootPart
 					local wawaza = target.HumanoidRootPart.Position
@@ -181,7 +182,7 @@ local function FartHubLoad()
 					-- change camera
 					local Cumera = game.Workspace.CurrentCamera
 					local targetCFrame = CFrame.lookAt(Cumera.CFrame.Position, Cumera.CFrame.Position + Vector3.new(MathematicalCalculations.X, MathematicalCalculations.Y, MathematicalCalculations.Z))
-					game:GetService("TweenService"):Create(Cumera, TweenInfo.new(0.1, Enum.EasingStyle.Linear), {CFrame = targetCFrame}):Play()
+					game:GetService("TweenService"):Create(Cumera, TweenInfo.new(AimSmoothnes, Enum.EasingStyle.Linear), {CFrame = targetCFrame}):Play()
 				end
 				task.wait()
 			end
@@ -1264,7 +1265,7 @@ local function FartHubLoad()
 		BlatantTab:CreateSection("Aimbot and Auto Block.")
 
 		local AimbotToggle = BlatantTab:CreateToggle({
-			Name = "Aimbot",
+			Name = "Aimbot (Turn On Shiftlock)",
 			CurrentValue = false,
 			Callback = function(state)
 				HandleFartContainer(state)
@@ -1296,6 +1297,18 @@ local function FartHubLoad()
 			Flag = "AutoBlockDistance",
 			Callback = function(value)
 				SkibidiDistance = value
+			end,
+		})
+
+		local DistanceSlider = BlatantTab:CreateSlider({
+			Name = "Smoothness Slider (Higher = Slower Turning)",
+			Range = { 0, 1 },
+			Increment = .01,
+			Suffix = "Seconds",
+			CurrentValue = .1,
+			Flag = "SmoothnessSlider",
+			Callback = function(value)
+				AimSmoothnes = value
 			end,
 		})
 
