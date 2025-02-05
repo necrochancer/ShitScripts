@@ -58,16 +58,16 @@ local function TpDoGenerator()
 end
 
 local function teleportToRandomServer()
-    local retryCount = 0
-    local maxRetries = 10
-    local retryDelay = 10
+    local Counter = 0
+    local MaxRetry = 10
+    local RetryingDelays = 10
 
     NotificationLibrary:SendNotification("Info", "I get servers", 2.5)
     local Request = http_request or syn.request or request
     if Request then
         local url = "https://games.roblox.com/v1/games/18687417158/servers/Public?sortOrder=Asc&limit=100"
 
-        while retryCount < maxRetries do
+        while Counter < MaxRetry do
             local success, response = pcall(function()
                 return Request({
                     Url = url,
@@ -88,9 +88,9 @@ local function teleportToRandomServer()
                 end
             end
 
-            retryCount = retryCount + 1
-            NotificationLibrary:SendNotification("Error", "i retry (" .. retryCount .. "/" .. maxRetries .. ")...", 10)
-            task.wait(retryDelay)
+            Counter = Counter + 1
+            NotificationLibrary:SendNotification("Error", "i retry (" .. Counter .. "/" .. MaxRetry .. ")...", 10)
+            task.wait(RetryingDelays)
         end
 
         NotificationLibrary:SendNotification("Error", "i give up 😭😭😭", 120)

@@ -274,7 +274,7 @@ local function FartHubLoad()
 				local IsSkibidiToiletMode = false
 				local CONNECTOR
 				if CharacterGender ~= "Chance" then
-					CONNECTOR = lol.CooldownTime:GetPropertyChangedSignal("Text"):Connect(function()
+					CONNECTOR = lol:WaitForChild("CooldownTime", .2):GetPropertyChangedSignal("Text"):Connect(function()
 						if not IsSkibidiToiletMode and lol.CooldownTime.Text ~= "" then
 							IsSkibidiToiletMode = true
 							task.spawn(Aimbot, VeryLongDuration)
@@ -282,7 +282,7 @@ local function FartHubLoad()
 							task.spawn(function()
 								repeat
 									task.wait()
-								until lol.CooldownTime.Text == ""
+								until lol:WaitForChild("CooldownTime", .2).Text == ""
 								task.wait(0.1)
 								IsSkibidiToiletMode = false
 							end)
@@ -757,7 +757,19 @@ local function FartHubLoad()
 			if map then
 				for _, g in ipairs(map:GetChildren()) do
 					if g.Name == "Generator" and g.Progress.Value < 100 then
-						table.insert(generators, g)
+						local playersNearby = false
+						for _, player in ipairs(game.Players:GetPlayers()) do
+							if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+								local distance = (player.Character.HumanoidRootPart.Position - g.Main.Position).Magnitude
+								if distance < 10 then
+									playersNearby = true
+									break
+								end
+							end
+						end
+						if not playersNearby then
+							table.insert(generators, g)
+						end
 					end
 				end
 			end
@@ -793,6 +805,7 @@ local function FartHubLoad()
 			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = lastPosition
 		end
 	end
+
 	local function HawkTuah()
 		if not BlockEnabled then
 			return
@@ -1258,7 +1271,7 @@ local function FartHubLoad()
 		})
 
 		local AutoBlockToggle = BlatantTab:CreateToggle({
-			Name = "Auto Block ( its vert bad )",
+			Name = "Auto Block (Experimental)",
 			CurrentValue = false,
 			Callback = function(state)
 				BlockEnabled = state
