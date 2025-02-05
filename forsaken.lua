@@ -26,6 +26,7 @@ local function FartHubLoad()
 	)()
 
 	local DebugNotifications = getgenv and getgenv().DebugNotifications or false
+	local SmoothShiftLock = require(game:GetService("ReplicatedStorage"):WaitForChild("Systems"):WaitForChild("Player"):WaitForChild("Game"):WaitForChild("SmoothShiftLock"))
 	local SigmaData, JoinedSigmaServer = {}, false
 	local CurrentFartsActive, NameProtectNames, aimbotActive = {}, {}, false
 	local WowWhatTheZestIsThis
@@ -169,6 +170,10 @@ local function FartHubLoad()
 		end
 
 		local target = FindClosestPerson()
+
+		if not SmoothShiftLock.Enabled then
+			SmoothShiftLock:ToggleShiftLock()
+		end
 
 		task.spawn(function()
 			local startTime = tick()
