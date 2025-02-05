@@ -1294,7 +1294,7 @@ local function FartHubLoad()
 				Rayfield:Notify({ Title = "Loading", Content = "pls wait stinky boy", Duration = 20, Image = "check" })
 				loadstring(
 					game:HttpGet(
-						"https://raw.githubusercontent.com/ivannetta/ShitScripts/refs/heads/main/AutoSigma.lua",
+						"https://raw.githubusercontent.com/ivannetta/ShitScripts/main/AutoSigma.lua",
 						true
 					)
 				)()
