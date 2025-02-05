@@ -709,7 +709,7 @@ local function FartHubLoad()
 		while shouldLoop and running do
 			local PuzzleUI = Players.LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("PuzzleUI", 9999)
 
-			task.wait(SkibidiWait)
+			task.wait(SkibidiWait + (math.random() * (SkibidiWait / 5 * 2) - SkibidiWait / 5))
 
 			local FartNapFolder = workspace:FindFirstChild("Map")
 				and workspace.Map:FindFirstChild("Ingame")
@@ -865,7 +865,7 @@ local function FartHubLoad()
 							end
 						end
 					end
-					task.wait(0.01)
+					task.wait(0.1)
 				end)
 			end
 		end)

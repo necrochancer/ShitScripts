@@ -18,7 +18,8 @@
         "getgenv",
         "queue_on_teleport",
         "fluxus",
-        "delfile"
+        "delfile",
+        "gethwid"
     ],
     "stylua.targetReleaseVersion": "latest",
     "robloxLsp.diagnostics.disable": [
