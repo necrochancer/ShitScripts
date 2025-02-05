@@ -32,6 +32,7 @@ local function FartHubLoad()
 	local pizzaConnections = {}
 	local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab = nil, nil, nil, nil, nil
 	local BabyShark, KillerFartPart, HRP = nil, nil, nil
+	local Runners = false
 	local SkibidiDistance, BlockEnabled, AimLockTimer = 6, false, 2
 
 	local executorname = (pcall(getexecutorname) and getexecutorname())
@@ -800,6 +801,12 @@ local function FartHubLoad()
 		local lastActionTime = 0
 		local cooldown = 2
 
+		if Runners then
+			return
+		end
+
+		Runners = true
+
 		local success, err = pcall(function()
 			local BabyShark = workspace:WaitForChild("Players"):FindFirstChild("Killers")
 			local Killer = BabyShark and BabyShark:GetChildren()[1] or nil
@@ -845,9 +852,12 @@ local function FartHubLoad()
 							end
 						end
 					end
+					task.wait(0.01)
 				end)
 			end
 		end)
+
+		Runners = false
 
 		if not success then
 			Rayfield:Notify({ Title = "An error occurred!", Content = err, Duration = 10 })
@@ -861,6 +871,7 @@ local function FartHubLoad()
 
 		local function resetBlock()
 			task.wait(5)
+			Runners = false
 			HawkTuah()
 		end
 
