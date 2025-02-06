@@ -31,7 +31,8 @@ local function FartHubLoad()
 	local CurrentFartsActive, NameProtectNames, aimbotActive = {}, {}, false
 	local WowWhatTheZestIsThis
 	local pizzaConnections = {}
-	local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab = nil, nil, nil, nil, nil
+	local WantedChrges = 3
+	local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab, CoinFlipping = nil, nil, nil, nil, nil, false
 	local BabyShark, KillerFartPart, HRP = nil, nil, nil
 	local Runners = false
 	local SkibidiDistance, BlockEnabled, AimLockTimer, AimSmoothnes = 6, false, 2, .1
@@ -88,7 +89,7 @@ local function FartHubLoad()
 		},
 		Survivors = {
 			Guest1337 = { Duration2 = 2 },
-			Chance = { Duration2 = 2 },
+			Chance = { Duration2 = 1.25 },
 		},
 	}
 
@@ -238,6 +239,18 @@ local function FartHubLoad()
 		end
 
 		watchFolder()
+	end
+
+	local function AutoCoinFlip()
+		while CoinFlipping do
+			if
+				tonumber(game:GetService("Players").LocalPlayer.PlayerGui.MainUI.AbilityContainer.Reroll.Charges.Text)
+				< WantedChrges
+			then
+				BlockRemote:FireServer("UseActorAbility", "CoinFlip")
+			end
+			task.wait(1)
+		end
 	end
 
 	local function HandleFartContainer(LKFVJNWEFLKJWNEFLKJWNEF)
@@ -1228,6 +1241,33 @@ local function FartHubLoad()
 			end,
 		})
 
+		PlayerTab:CreateSection("Character Specific")
+
+		local CFToggle = PlayerTab:CreateToggle({
+			Name = "Auto Chance Coinflip",
+			CurrentValue = false,
+			Callback = function(state)
+				CoinFlipping = state
+				if state then
+					task.spawn(function()
+						AutoCoinFlip()
+					end)
+				end
+			end,
+		})
+
+		local CFSlider = PlayerTab:CreateSlider({
+			Name = "How many charges you want",
+			Range = { 1, 3 },
+			Increment = 1,
+			Suffix = "Charges",
+			CurrentValue = 3,
+			Flag = "CoinflipSpeed",
+			Callback = function(value)
+				WantedChrges = value
+			end,
+		})
+
 		-- Generator Tab
 		local GeneratorSection = GeneratorTab:CreateSection("Solves the puzzle for you.")
 
@@ -1270,7 +1310,7 @@ local function FartHubLoad()
 		BlatantTab:CreateSection("Aimbot and Auto Block.")
 
 		local AimbotToggle = BlatantTab:CreateToggle({
-			Name = "Aimbot (Turn On Shiftlock)",
+			Name = "Aimbot",
 			CurrentValue = false,
 			Callback = function(state)
 				HandleFartContainer(state)
