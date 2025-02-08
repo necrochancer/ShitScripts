@@ -1,3 +1,5 @@
+local UserInputService = game:GetService("UserInputService")
+local Workspace = game:GetService("Workspace")
 local KeySystem
 local Frame
 local TextBox
@@ -27,14 +29,18 @@ local function FartHubLoad()
 
 	local DebugNotifications = getgenv and getgenv().DebugNotifications or false
 	local SmoothShiftLock
+
 	local success, err = pcall(function()
-		SmoothShiftLock = require(game:GetService("ReplicatedStorage"):WaitForChild("Systems"):WaitForChild("Player"):WaitForChild("Game"):WaitForChild("SmoothShiftLock"))
+		if require(game:GetService("ReplicatedStorage"):WaitForChild("Systems"):WaitForChild("Player"):WaitForChild("Game"):WaitForChild("SmoothShiftLock")) then SmoothShiftLock = require(game:GetService("ReplicatedStorage"):WaitForChild("Systems"):WaitForChild("Player"):WaitForChild("Game"):WaitForChild("SmoothShiftLock"))
+	else SmoothShiftLock = "Unavailable"
+		end
 	end)
+
 	local SigmaData, JoinedSigmaServer = {}, false
 	local CurrentFartsActive, NameProtectNames, aimbotActive = {}, {}, false
 	local WowWhatTheZestIsThis
 	local pizzaConnections = {}
-	local WantedChrges = 3
+	local WantedChrges = 2
 	local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab, CoinFlipping = nil, nil, nil, nil, nil, false
 	local BabyShark, KillerFartPart, HRP = nil, nil, nil
 	local Runners = false
@@ -43,7 +49,7 @@ local function FartHubLoad()
 	local executorname = (pcall(getexecutorname) and getexecutorname())
 		or (pcall(identifyexecutor) and identifyexecutor())
 		or "Unknown"
-	local supportedExecutors = { AWP = true, Wave = true, Nihon = true, ["Synapse Z"] = true, Swift = true }
+	local supportedExecutors = { AWP = true, Wave = true, ["Synapse Z"] = true, Swift = true }
 
 	task.spawn(function()
 		if executorname == "AWP" then
@@ -174,12 +180,19 @@ local function FartHubLoad()
 		end
 
 		local target = FindClosestPerson()
-
-		pcall(function()
-			if not SmoothShiftLock.Enabled then
-				SmoothShiftLock:ToggleShiftLock()
-			end
+		task.spawn(function()
+			pcall(function()
+				if SmoothShiftLock ~= "Unavailable" and not SmoothShiftLock.Enabled then
+					SmoothShiftLock:ToggleShiftLock()
+				else
+					local originalCameraMode = Me.CameraMode
+					Me.CameraMode = Enum.CameraMode.LockFirstPerson
+					task.wait(Dur)
+					Me.CameraMode = originalCameraMode
+				end
+			end)
 		end)
+
 
 		task.spawn(function()
 			local startTime = tick()
@@ -1266,7 +1279,7 @@ local function FartHubLoad()
 			Range = { 1, 3 },
 			Increment = 1,
 			Suffix = "Charges",
-			CurrentValue = 3,
+			CurrentValue = 2,
 			Flag = "CoinflipSpeed",
 			Callback = function(value)
 				WantedChrges = value
