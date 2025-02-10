@@ -52,11 +52,11 @@ local function FartHubLoad()
 			SmoothShiftLock = "Unavailable"
 		end
 	end)
-
-	local SigmaData, JoinedSigmaServer, CurrentFartsActive, NameProtectNames, pizzaConnections, WowWhatTheZestIsThis, EmoteVisible, LopticaCooldown, WantedChrges, LopticaGenBill, LopticaNameHighlight, CoinFlipping, Runners, BlockEnabled, aimbotActive = {}, false, {}, {}, {}, nil, false, nil, 2, false, false, false, false, false, false
+	local SigmaData, JoinedSigmaServer, CurrentFartsActive, NameProtectNames, pizzaConnections, WowWhatTheZestIsThis, WantedChrges, LopticaGenBill, LopticaNameHighlight, CoinFlipping, Runners, BlockEnabled, aimbotActive = {}, false, {}, {}, {}, nil, 2, false, false, false, false, false, false
 	local SkibidiDistance, AimLockTimer, AimSmoothnes = 6, 2, 0.1
 	local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab, AnimationsTab = nil, nil, nil, nil, nil, nil
 	local BabyShark, KillerFartPart, HRP = nil, nil, nil
+	local LopticaCooldown = false
 
 	local executorname = (pcall(getexecutorname) and getexecutorname())
 		or (pcall(identifyexecutor) and identifyexecutor())
@@ -2379,7 +2379,6 @@ local function FartHubLoad()
 				if LopticaCooldown then
 					return
 				end
-				LopticaCooldown = true
 
 				local Lighting = game:GetService("Lighting")
 				local CoreGui = game:GetService("CoreGui")
@@ -2388,6 +2387,7 @@ local function FartHubLoad()
 				local BlurEffect = Lighting:FindFirstChild("FartHubBlur")
 
 				if EmoteGUI then
+					LopticaCooldown = true
 					local Holder = EmoteGUI:FindFirstChild("Holder")
 					if Holder then
 						local BlurTweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
@@ -2408,13 +2408,16 @@ local function FartHubLoad()
 						end
 						EmoteGUI:Destroy()
 					end
-				end
 
-				task.delay(1, function()
-					cooldown = false
-				end)
+					task.delay(1, function()
+						LopticaCooldown = false
+					end)
+				else
+					WHATTHEFUCKISTHISSHITCODEKLDOWQNDJQW() -- Open the UI
+				end
 			end,
 		})
+
 
 		-- dead cuz no longer mercury lib
 		--if not JoinedSigmaServer then
