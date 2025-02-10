@@ -41,7 +41,7 @@ local function FartHubLoad()
 	local WowWhatTheZestIsThis
 	local pizzaConnections = {}
 	local WantedChrges = 2
-	local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab, CoinFlipping = nil, nil, nil, nil, nil, false
+	local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab, CoinFlipping, AnimationsTab = nil, nil, nil, nil, nil, false, nil
 	local BabyShark, KillerFartPart, HRP = nil, nil, nil
 	local Runners = false
 	local SkibidiDistance, BlockEnabled, AimLockTimer, AimSmoothnes = 6, false, 2, .1
@@ -185,10 +185,10 @@ local function FartHubLoad()
 				if SmoothShiftLock ~= "Unavailable" and not SmoothShiftLock.Enabled then
 					SmoothShiftLock:ToggleShiftLock()
 				else
-					local originalCameraMode = Me.CameraMode
-					Me.CameraMode = Enum.CameraMode.LockFirstPerson
+					local originalZoom = Me.CameraMaxZoomDistance
+					Me.CameraMaxZoomDistance = 0
 					task.wait(Dur)
-					Me.CameraMode = originalCameraMode
+					Me.CameraMaxZoomDistance = originalZoom
 				end
 			end)
 		end)
@@ -1126,11 +1126,13 @@ local function FartHubLoad()
 	end
 
 	local function MakeButton()
-		if game:GetService("CoreGui"):FindFirstChild("TopBarApp"):FindFirstChild("UnibarLeftFrame") then
-			InitializeButtonGUI()
-		else
-			CreateSigmaFrame()
-		end
+		pcall(function()
+			if game:GetService("CoreGui"):FindFirstChild("TopBarApp"):FindFirstChild("UnibarLeftFrame") then
+				InitializeButtonGUI()
+			else
+				CreateSigmaFrame()
+			end
+		end)
 	end
 
 	local function InitializeGUI()
@@ -1139,6 +1141,8 @@ local function FartHubLoad()
 		PlayerTab = GUI:CreateTab("Player", "user")
 		MiscTab = GUI:CreateTab("Misc", "ghost")
 		BlatantTab = GUI:CreateTab("Blatant", "angry")
+		AnimationsTab = GUI:CreateTab("Animations", "drama")
+
 
 		--GUI:Credit({ Name = "ivannetta", Description = "meowzer", Discord = "ivannetta" })
 
@@ -1157,7 +1161,7 @@ local function FartHubLoad()
 		})
 
 		-- Visuals Tab
-		local VisualsSection = VisualsTab:CreateSection("Highlights for things.")
+		local VisualsSection = VisualsTab:CreateSection("Highlights For Things.")
 
 		local GeneratorColor = VisualsTab:CreateColorPicker({
 			Name = "Generator Color",
@@ -1207,7 +1211,7 @@ local function FartHubLoad()
 		})
 
 		-- Player Tab
-		local PlayerSection = PlayerTab:CreateSection("Player related stuff.")
+		local PlayerSection = PlayerTab:CreateSection("Player Related Stuff.")
 
 		local QuickPromptsButton = PlayerTab:CreateButton({
 			Name = "Quick Proximity Prompts",
@@ -1247,7 +1251,7 @@ local function FartHubLoad()
 			end,
 		})
 
-		PlayerTab:CreateSection("This might not work on free executors.")
+		PlayerTab:CreateSection("This Might Not Work On Free Executors.")
 
 		local DisableStaminaDrainSigmaToggle = PlayerTab:CreateToggle({
 			Name = "Disable Stamina Drain",
@@ -1259,7 +1263,7 @@ local function FartHubLoad()
 			end,
 		})
 
-		PlayerTab:CreateSection("Character Specific")
+		PlayerTab:CreateSection("Character Specific.")
 
 		local CFToggle = PlayerTab:CreateToggle({
 			Name = "Auto Chance Coinflip",
@@ -1287,7 +1291,7 @@ local function FartHubLoad()
 		})
 
 		-- Generator Tab
-		local GeneratorSection = GeneratorTab:CreateSection("Solves the puzzle for you.")
+		local GeneratorSection = GeneratorTab:CreateSection("Solves The Puzzle For You.")
 
 		local QuickNewGens = GeneratorTab:CreateToggle({
 			Name = "Quick Generators",
@@ -1325,7 +1329,7 @@ local function FartHubLoad()
 		})
 
 		-- Blatant Tab
-		BlatantTab:CreateSection("Aimbot and Auto Block.")
+		BlatantTab:CreateSection("Aimbot And Auto Block.")
 
 		local AimbotToggle = BlatantTab:CreateToggle({
 			Name = "Aimbot",
@@ -1412,7 +1416,7 @@ local function FartHubLoad()
 		})
 
 		-- Misc Tab
-		local MiscTitle = MiscTab:CreateSection("Funny Things")
+		local MiscTitle = MiscTab:CreateSection("Funny Things.")
 
 		local FatManToggle = MiscTab:CreateToggle({
 			Name = "Toggle FatMan",
@@ -1444,7 +1448,7 @@ local function FartHubLoad()
 			end,
 		})
 
-		MiscTab:CreateSection("Useful things")
+		MiscTab:CreateSection("Useful Things.")
 
 		local NameProtectActivated = false
 		local NameProtectButton = MiscTab:CreateButton({
@@ -1464,6 +1468,10 @@ local function FartHubLoad()
 				end
 			end,
 		})
+
+		MiscTab:CreateSection("Boring Animations.")
+
+
 		-- dead cuz no longer mercury lib
 		--if not JoinedSigmaServer then
 		--	GUI:Prompt({
