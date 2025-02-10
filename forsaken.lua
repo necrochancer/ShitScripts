@@ -2384,27 +2384,40 @@ local function FartHubLoad()
 			Name = "Emote As Killer GUI",
 			CurrentKeybind = "F",
 			Callback = function(keybind)
-				if game:GetService("CoreGui"):FindFirstChild("FartHubEmoteGUI") then
-					game:GetService("CoreGui"):FindFirstChild("FartHubEmoteGUI"):FindFirstChild("Holder")
-					local BlurTweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
-					local TweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
-					local blurthing = TweenService:Create(
-						game:GetService("Lighting"):FindFirstChild("FartHubBlur"),
-						BlurTweenInfo,
-						{ Size = 0 }
-					)
-					local TweenServiceThing = TweenService:Create(
-						game:GetService("CoreGui"):FindFirstChild("FartHubEmoteGUI"):FindFirstChild("Holder"),
-						TweenInfo,
-						{ Size = UDim2.new(0, 0, 0, 0) }
-					)
-					TweenServiceThing:Play()
-					blurthing:Play()
-					task.wait(0.25)
-					game:GetService("CoreGui"):FindFirstChild("FartHubEmoteGUI"):Destroy()
-				else
-					WHATTHEFUCKISTHISSHITCODEKLDOWQNDJQW()
+				if cooldown then
+					return
 				end
+				cooldown = true
+
+				local EmoteGUI = CoreGui:FindFirstChild("FartHubEmoteGUI")
+				local BlurEffect = Lighting:FindFirstChild("FartHubBlur")
+
+				if EmoteGUI then
+					local Holder = EmoteGUI:FindFirstChild("Holder")
+					if Holder then
+						local BlurTweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
+						local TweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
+
+						if BlurEffect then
+							local blurTween = TweenService:Create(BlurEffect, BlurTweenInfo, { Size = 0 })
+							blurTween:Play()
+						end
+
+						local guiTween = TweenService:Create(Holder, TweenInfo, { Size = UDim2.new(0, 0, 0, 0) })
+						guiTween:Play()
+
+						task.wait(0.25)
+
+						if BlurEffect then
+							BlurEffect:Destroy()
+						end
+						EmoteGUI:Destroy()
+					end
+				end
+
+				task.delay(1, function()
+					cooldown = false
+				end)
 			end,
 		})
 
