@@ -652,7 +652,7 @@ local function FartHubLoad()
 				local billboard = Instance.new("BillboardGui", obj:WaitForChild("Head"))
 				billboard.Name = "FartHubBillboard"
 				billboard.Size = UDim2.new(0, 100, 0, 50)
-				billboard.StudsOffset = Vector3.new(0, 2, 0)
+				billboard.StudsOffset = Vector3.new(0, 1, 0)
 				local textLabel = Instance.new("TextLabel", billboard)
 				textLabel.Size = UDim2.new(1, 0, 1, 0)
 				textLabel.TextColor3 = Color3.new(1, 1, 1)
@@ -678,7 +678,7 @@ local function FartHubLoad()
 					local billboard = Instance.new("BillboardGui", child:WaitForChild("Head"))
 					billboard.Name = "FartHubBillboard"
 					billboard.Size = UDim2.new(0, 100, 0, 50)
-					billboard.StudsOffset = Vector3.new(0, 2, 0)
+					billboard.StudsOffset = Vector3.new(0, 1, 0)
 					local textLabel = Instance.new("TextLabel", billboard)
 					textLabel.TextColor3 = Color3.new(1, 1, 1)
 					textLabel.TextStrokeTransparency = 0
