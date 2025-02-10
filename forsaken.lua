@@ -266,9 +266,9 @@ local function FartHubLoad()
 			repeat
 				local success, result = pcall(function()
 					return game:GetService("Players").LocalPlayer.PlayerGui
-						:WaitForChild("MainUI", 1)
-						:WaitForChild("AbilityContainer", 1)
-						:WaitForChild("Reroll", 1)
+						:WaitForChild("MainUI", 9999) -- skibdidiidiidiidididiididiididid topi9elrtlr3kvjwrfqedvhjklvjqfhkwdegvhjqvjwhdfvjkhlqwdvjhjvhkdwqjvjk
+						:WaitForChild("AbilityContainer",9991)
+						:WaitForChild("Reroll", 9991)
 				end)
 				if success then
 					reroll = result
@@ -284,7 +284,7 @@ local function FartHubLoad()
 		end
 	end
 
-	local function HandleFartContainer(LKFVJNWEFLKJWNEFLKJWNEF)
+	local function HandleFartContainer(LKFVJNWEFLKJWNEFLKJWNEF) -- evil mode activated 😈
 		local Me = game.Players.LocalPlayer
 		local LastSkibidi, LastSkebede = GetCharAndFold()
 
