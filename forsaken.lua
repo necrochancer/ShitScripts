@@ -1,3 +1,4 @@
+local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local Workspace = game:GetService("Workspace")
 local KeySystem
@@ -31,8 +32,24 @@ local function FartHubLoad()
 	local SmoothShiftLock
 
 	local success, err = pcall(function()
-		if require(game:GetService("ReplicatedStorage"):WaitForChild("Systems"):WaitForChild("Player"):WaitForChild("Game"):WaitForChild("SmoothShiftLock")) then SmoothShiftLock = require(game:GetService("ReplicatedStorage"):WaitForChild("Systems"):WaitForChild("Player"):WaitForChild("Game"):WaitForChild("SmoothShiftLock"))
-	else SmoothShiftLock = "Unavailable"
+		if
+			require(
+				game:GetService("ReplicatedStorage")
+					:WaitForChild("Systems")
+					:WaitForChild("Player")
+					:WaitForChild("Game")
+					:WaitForChild("SmoothShiftLock")
+			)
+		then
+			SmoothShiftLock = require(
+				game:GetService("ReplicatedStorage")
+					:WaitForChild("Systems")
+					:WaitForChild("Player")
+					:WaitForChild("Game")
+					:WaitForChild("SmoothShiftLock")
+			)
+		else
+			SmoothShiftLock = "Unavailable"
 		end
 	end)
 
@@ -40,12 +57,14 @@ local function FartHubLoad()
 	local CurrentFartsActive, NameProtectNames, aimbotActive = {}, {}, false
 	local WowWhatTheZestIsThis
 	local pizzaConnections = {}
+	local EmoteVisible = false
 	local WantedChrges = 2
 	local LopticaGenBill, LopticaNameHighlight = false, false
-	local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab, CoinFlipping, AnimationsTab = nil, nil, nil, nil, nil, false, nil
+	local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab, CoinFlipping, AnimationsTab =
+		nil, nil, nil, nil, nil, false, nil
 	local BabyShark, KillerFartPart, HRP = nil, nil, nil
 	local Runners = false
-	local SkibidiDistance, BlockEnabled, AimLockTimer, AimSmoothnes = 6, false, 2, .1
+	local SkibidiDistance, BlockEnabled, AimLockTimer, AimSmoothnes = 6, false, 2, 0.1
 
 	local executorname = (pcall(getexecutorname) and getexecutorname())
 		or (pcall(identifyexecutor) and identifyexecutor())
@@ -219,7 +238,7 @@ local function FartHubLoad()
 		--Properties:
 
 		FartHubEmoteGUI.Name = "FartHubEmoteGUI"
-		FartHubEmoteGUI.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+		FartHubEmoteGUI.Parent = game:GetService("CoreGui")
 		FartHubEmoteGUI.ResetOnSpawn = false
 
 		Holder.Name = "Holder"
@@ -845,21 +864,6 @@ local function FartHubLoad()
 			TextButton8,
 		}
 
-		local TweenServiceSigma = game:GetService("TweenService")
-
-		local Blur = Instance.new("BlurEffect", game:GetService("Lighting"))
-		Blur.Size = 0
-		Blur.Name = "FartHubBlur"
-
-		local tweenInfoSigmaBlur = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0)
-		local tweenSigmaBlur = TweenServiceSigma:Create(Blur, tweenInfoSigmaBlur, { Size = 10 })
-		tweenSigmaBlur:Play()
-
-		local tweeninfoholdersize = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0)
-		local tweenholdersize =
-			TweenServiceSigma:Create(Holder, tweeninfoholdersize, { Size = UDim2.new(0.8 * 0.8, 0, 0.15 * 0.8, 0) })
-		tweenholdersize:Play()
-
 		local function GetEmoteList()
 			local player = game:GetService("Players").LocalPlayer
 			local emotes = player:FindFirstChild("PlayerData")
@@ -909,6 +913,21 @@ local function FartHubLoad()
 				end
 			end)
 		end
+
+		local TweenServiceSigma = game:GetService("TweenService")
+
+		local Blur = Instance.new("BlurEffect", game:GetService("Lighting"))
+		Blur.Size = 0
+		Blur.Name = "FartHubBlur"
+
+		local tweenInfoSigmaBlur = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0)
+		local tweenSigmaBlur = TweenServiceSigma:Create(Blur, tweenInfoSigmaBlur, { Size = 10 })
+		tweenSigmaBlur:Play()
+
+		local tweeninfoholdersize = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0)
+		local tweenholdersize =
+			TweenServiceSigma:Create(Holder, tweeninfoholdersize, { Size = UDim2.new(0.8 * 0.8, 0, 0.15 * 0.8, 0) })
+		tweenholdersize:Play()
 
 		for i, button in ipairs(buttons) do
 			button.Activated:Connect(function()
@@ -990,7 +1009,6 @@ local function FartHubLoad()
 			end)
 		end)
 
-
 		task.spawn(function()
 			local startTime = tick()
 			local UserInputService = game:GetService("UserInputService")
@@ -1002,8 +1020,18 @@ local function FartHubLoad()
 					local MathematicalCalculations = (wawaza - wawa.Position).unit
 					-- change camera
 					local Cumera = game.Workspace.CurrentCamera
-					local targetCFrame = CFrame.lookAt(Cumera.CFrame.Position, Cumera.CFrame.Position + Vector3.new(MathematicalCalculations.X, MathematicalCalculations.Y, MathematicalCalculations.Z))
-					game:GetService("TweenService"):Create(Cumera, TweenInfo.new(AimSmoothnes, Enum.EasingStyle.Linear), {CFrame = targetCFrame}):Play()
+					local targetCFrame = CFrame.lookAt(
+						Cumera.CFrame.Position,
+						Cumera.CFrame.Position
+							+ Vector3.new(
+								MathematicalCalculations.X,
+								MathematicalCalculations.Y,
+								MathematicalCalculations.Z
+							)
+					)
+					game:GetService("TweenService")
+						:Create(Cumera, TweenInfo.new(AimSmoothnes, Enum.EasingStyle.Linear), { CFrame = targetCFrame })
+						:Play()
 				end
 				task.wait()
 			end
@@ -1061,9 +1089,12 @@ local function FartHubLoad()
 			local reroll
 			repeat
 				local success, result = pcall(function()
-					return game:GetService("Players").LocalPlayer.PlayerGui
+					return game
+						:GetService("Players")
+						.LocalPlayer
+						.PlayerGui
 						:WaitForChild("MainUI", 9999) -- skibdidiidiidiidididiididiididid topi9elrtlr3kvjwrfqedvhjklvjqfhkwdegvhjqvjwhdfvjkhlqwdvjhjvhkdwqjvjk
-						:WaitForChild("AbilityContainer",9991)
+						:WaitForChild("AbilityContainer", 9991)
 						:WaitForChild("Reroll", 9991)
 				end)
 				if success then
@@ -1121,20 +1152,22 @@ local function FartHubLoad()
 				local IsSkibidiToiletMode = false
 				local CONNECTOR
 				if CharacterGender ~= "Chance" then
-					CONNECTOR = lol:WaitForChild("CooldownTime", .2):GetPropertyChangedSignal("Text"):Connect(function()
-						if not IsSkibidiToiletMode and lol.CooldownTime.Text ~= "" then
-							IsSkibidiToiletMode = true
-							task.spawn(Aimbot, VeryLongDuration)
+					CONNECTOR = lol:WaitForChild("CooldownTime", 0.2)
+						:GetPropertyChangedSignal("Text")
+						:Connect(function()
+							if not IsSkibidiToiletMode and lol.CooldownTime.Text ~= "" then
+								IsSkibidiToiletMode = true
+								task.spawn(Aimbot, VeryLongDuration)
 
-							task.spawn(function()
-								repeat
-									task.wait()
-								until lol:WaitForChild("CooldownTime", .2).Text == ""
-								task.wait(0.1)
-								IsSkibidiToiletMode = false
-							end)
-						end
-					end)
+								task.spawn(function()
+									repeat
+										task.wait()
+									until lol:WaitForChild("CooldownTime", 0.2).Text == ""
+									task.wait(0.1)
+									IsSkibidiToiletMode = false
+								end)
+							end
+						end)
 					table.insert(fart.abilities, CONNECTOR)
 				end
 			end
@@ -1439,8 +1472,8 @@ local function FartHubLoad()
 		LopticaGenBill = state
 		local localPlayer = game.Players.LocalPlayer
 		for _, obj in ipairs(workspace:GetDescendants()) do
-				if obj:IsA("Highlight") or obj:IsA("BillboardGui") then
-					obj:Destroy()
+			if obj:IsA("Highlight") or obj:IsA("BillboardGui") then
+				obj:Destroy()
 			end
 		end
 		if not state then
@@ -1479,8 +1512,10 @@ local function FartHubLoad()
 							end
 							local humanoid = obj:FindFirstChild("Humanoid")
 							if humanoid then
-								textLabel.Text =
-									string.format(obj.Name .. " : " .. obj:GetAttribute("Username") .. "\n Health: %.1f%%", (humanoid.Health / humanoid.MaxHealth) * 100)
+								textLabel.Text = string.format(
+									obj.Name .. " : " .. obj:GetAttribute("Username") .. "\n Health: %.1f%%",
+									(humanoid.Health / humanoid.MaxHealth) * 100
+								)
 							end
 							task.wait(1)
 						end
@@ -1511,10 +1546,12 @@ local function FartHubLoad()
 								end
 								local humanoid = child:FindFirstChild("Humanoid")
 								if humanoid then
-									textLabel.Text =
-										string.format(child.Name .. " : " .. child:GetAttribute("Username") .. "\n Health: %.1f%%", (humanoid.Health / humanoid.MaxHealth) * 100)
+									textLabel.Text = string.format(
+										child.Name .. " : " .. child:GetAttribute("Username") .. "\n Health: %.1f%%",
+										(humanoid.Health / humanoid.MaxHealth) * 100
+									)
 								end
-								task.wait(.25)
+								task.wait(0.25)
 							end
 						end)
 					end
@@ -1535,7 +1572,6 @@ local function FartHubLoad()
 				if g.Name == "Generator" then
 					AddFart(g, generatorHighlightColor)
 					CreateGeneratorBillboard(g)
-
 				end
 			end
 			mapFolder.ChildAdded:Connect(function(child)
@@ -1794,7 +1830,7 @@ local function FartHubLoad()
 			HawkTuah()
 		end
 
-		for _, folder in ipairs({killers, survivors}) do
+		for _, folder in ipairs({ killers, survivors }) do
 			folder.ChildAdded:Connect(resetBlock)
 			folder.ChildRemoved:Connect(resetBlock)
 		end
@@ -2009,8 +2045,7 @@ local function FartHubLoad()
 		PlayerTab = GUI:CreateTab("Player", "user")
 		MiscTab = GUI:CreateTab("Misc", "ghost")
 		BlatantTab = GUI:CreateTab("Blatant", "angry")
-		--AnimationsTab = GUI:CreateTab("Animations", "drama")
-
+		AnimationsTab = GUI:CreateTab("Animations", "drama")
 
 		--GUI:Credit({ Name = "ivannetta", Description = "meowzer", Discord = "ivannetta" })
 
@@ -2074,7 +2109,9 @@ local function FartHubLoad()
 			CurrentValue = false,
 			Callback = function(state)
 				LopticaNameHighlight = state
-				if highlightingEnabled then UpdateFarts(true) end
+				if highlightingEnabled then
+					UpdateFarts(true)
+				end
 			end,
 		})
 
@@ -2246,10 +2283,10 @@ local function FartHubLoad()
 
 		local DistanceSlider = BlatantTab:CreateSlider({
 			Name = "Smoothness Slider",
-			Range = { 0, .3 },
-			Increment = .01,
+			Range = { 0, 0.3 },
+			Increment = 0.01,
 			Suffix = "Seconds",
-			CurrentValue = .1,
+			CurrentValue = 0.1,
 			Flag = "SmoothnessSlider",
 			Callback = function(value)
 				AimSmoothnes = value
@@ -2264,10 +2301,7 @@ local function FartHubLoad()
 			Callback = function()
 				Rayfield:Notify({ Title = "Loading", Content = "pls wait stinky boy", Duration = 20, Image = "check" })
 				loadstring(
-					game:HttpGet(
-						"https://raw.githubusercontent.com/ivannetta/ShitScripts/main/AutoSigma.lua",
-						true
-					)
+					game:HttpGet("https://raw.githubusercontent.com/ivannetta/ShitScripts/main/AutoSigma.lua", true)
 				)()
 			end,
 		})
@@ -2346,6 +2380,33 @@ local function FartHubLoad()
 			end,
 		})
 
+		local AnimationsTabKeybindGUI = AnimationsTab:CreateKeybind({
+			Name = "Emote As Killer GUI",
+			CurrentKeybind = "F",
+			Callback = function(keybind)
+				if game:GetService("CoreGui"):FindFirstChild("FartHubEmoteGUI") then
+					game:GetService("CoreGui"):FindFirstChild("FartHubEmoteGUI"):FindFirstChild("Holder")
+					local BlurTweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
+					local TweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
+					local blurthing = TweenService:Create(
+						game:GetService("Lighting"):FindFirstChild("FartHubBlur"),
+						BlurTweenInfo,
+						{ Size = 0 }
+					)
+					local TweenServiceThing = TweenService:Create(
+						game:GetService("CoreGui"):FindFirstChild("FartHubEmoteGUI"):FindFirstChild("Holder"),
+						TweenInfo,
+						{ Size = UDim2.new(0, 0, 0, 0) }
+					)
+					TweenServiceThing:Play()
+					blurthing:Play()
+					task.wait(0.25)
+					game:GetService("CoreGui"):FindFirstChild("FartHubEmoteGUI"):Destroy()
+				else
+					WHATTHEFUCKISTHISSHITCODEKLDOWQNDJQW()
+				end
+			end,
+		})
 
 		-- dead cuz no longer mercury lib
 		--if not JoinedSigmaServer then
