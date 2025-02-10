@@ -41,6 +41,7 @@ local function FartHubLoad()
 	local WowWhatTheZestIsThis
 	local pizzaConnections = {}
 	local WantedChrges = 2
+	local LopticaGenBill = false
 	local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab, CoinFlipping, AnimationsTab = nil, nil, nil, nil, nil, false, nil
 	local BabyShark, KillerFartPart, HRP = nil, nil, nil
 	local Runners = false
@@ -600,9 +601,32 @@ local function FartHubLoad()
 
 	LoadSigmaData()
 
+	local function CreateGeneratorBillboard(generator)
+		local billboard = Instance.new("BillboardGui", generator)
+		billboard.Size = UDim2.new(0, 100, 0, 50)
+		billboard.StudsOffset = Vector3.new(0, 2, 0)
+		billboard.AlwaysOnTop = true
+
+		local textLabel = Instance.new("TextLabel", billboard)
+		textLabel.Size = UDim2.new(1, 0, 1, 0)
+		textLabel.BackgroundTransparency = 1
+		textLabel.TextColor3 = Color3.new(1, 1, 1)
+		textLabel.TextStrokeTransparency = 0
+		textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+
+		task.spawn(function()
+			while generator.Parent and LopticaGenBill do
+				textLabel.Text = string.format("%d%% Completed", generator.Progress.Value)
+				task.wait(1)
+			end
+			billboard:Destroy()
+		end)
+	end
+
 	-- Toggle ESP
 	local function ToggleFarts(state)
 		highlightingEnabled = state
+		LopticaGenBill = state
 		local localPlayer = game.Players.LocalPlayer
 		for _, obj in ipairs(workspace:GetDescendants()) do
 			if obj:IsA("Highlight") or obj:IsA("BillboardGui") then
@@ -631,12 +655,22 @@ local function FartHubLoad()
 				billboard.StudsOffset = Vector3.new(0, 2, 0)
 				local textLabel = Instance.new("TextLabel", billboard)
 				textLabel.Size = UDim2.new(1, 0, 1, 0)
-				textLabel.Text = obj:GetAttribute("Username") and obj.Name
 				textLabel.TextColor3 = Color3.new(1, 1, 1)
 				textLabel.TextStrokeTransparency = 0
 				textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
 				billboard.AlwaysOnTop = true
 				textLabel.BackgroundTransparency = 1
+
+				task.spawn(function()
+					while highlightingEnabled and obj:FindFirstChild("Humanoid") do
+						local humanoid = obj:FindFirstChild("Humanoid")
+						if humanoid then
+							textLabel.Text =
+								string.format(obj.Name .. " : " .. obj:GetAttribute("Username") .. "\n Health: %.1f%%", (humanoid.Health / humanoid.MaxHealth) * 100)
+						end
+						task.wait(.25)
+					end
+				end)
 			end
 			folder.ChildAdded:Connect(function(child)
 				if highlightingEnabled then
@@ -653,6 +687,19 @@ local function FartHubLoad()
 					textLabel.Text = child:GetAttribute("Username") and child.Name
 					billboard.AlwaysOnTop = true
 					textLabel.BackgroundTransparency = 1
+
+					task.spawn(function()
+						while highlightingEnabled and child:FindFirstChild("Humanoid") do
+							local humanoid = child:FindFirstChild("Humanoid")
+							if humanoid then
+								textLabel.Text = string.format(
+									child.Name .. " : " .. child:GetAttribute("Username") .. "\n Health: %.1f%%",
+									(humanoid.Health / humanoid.MaxHealth) * 100
+								)
+							end
+							task.wait(.25)
+						end
+					end)
 				end
 			end)
 		end
@@ -668,6 +715,8 @@ local function FartHubLoad()
 			for _, g in ipairs(mapFolder:GetChildren()) do
 				if g.Name == "Generator" then
 					AddFart(g, generatorHighlightColor)
+					CreateGeneratorBillboard(g)
+
 				end
 			end
 			mapFolder.ChildAdded:Connect(function(child)
@@ -1141,7 +1190,7 @@ local function FartHubLoad()
 		PlayerTab = GUI:CreateTab("Player", "user")
 		MiscTab = GUI:CreateTab("Misc", "ghost")
 		BlatantTab = GUI:CreateTab("Blatant", "angry")
-		AnimationsTab = GUI:CreateTab("Animations", "drama")
+		--AnimationsTab = GUI:CreateTab("Animations", "drama")
 
 
 		--GUI:Credit({ Name = "ivannetta", Description = "meowzer", Discord = "ivannetta" })
@@ -1468,8 +1517,6 @@ local function FartHubLoad()
 				end
 			end,
 		})
-
-		MiscTab:CreateSection("Boring Animations.")
 
 
 		-- dead cuz no longer mercury lib
