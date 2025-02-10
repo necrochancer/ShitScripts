@@ -53,18 +53,10 @@ local function FartHubLoad()
 		end
 	end)
 
-	local SigmaData, JoinedSigmaServer = {}, false
-	local CurrentFartsActive, NameProtectNames, aimbotActive = {}, {}, false
-	local WowWhatTheZestIsThis
-	local pizzaConnections = {}
-	local EmoteVisible = false
-	local WantedChrges = 2
-	local LopticaGenBill, LopticaNameHighlight = false, false
-	local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab, CoinFlipping, AnimationsTab =
-		nil, nil, nil, nil, nil, false, nil
+	local SigmaData, JoinedSigmaServer, CurrentFartsActive, NameProtectNames, pizzaConnections, WowWhatTheZestIsThis, EmoteVisible, LopticaCooldown, WantedChrges, LopticaGenBill, LopticaNameHighlight, CoinFlipping, Runners, BlockEnabled, aimbotActive = {}, false, {}, {}, {}, nil, false, nil, 2, false, false, false, false, false, false
+	local SkibidiDistance, AimLockTimer, AimSmoothnes = 6, 2, 0.1
+	local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab, AnimationsTab = nil, nil, nil, nil, nil, nil
 	local BabyShark, KillerFartPart, HRP = nil, nil, nil
-	local Runners = false
-	local SkibidiDistance, BlockEnabled, AimLockTimer, AimSmoothnes = 6, false, 2, 0.1
 
 	local executorname = (pcall(getexecutorname) and getexecutorname())
 		or (pcall(identifyexecutor) and identifyexecutor())
@@ -2384,10 +2376,10 @@ local function FartHubLoad()
 			Name = "Emote As Killer GUI",
 			CurrentKeybind = "F",
 			Callback = function(keybind)
-				if cooldown then
+				if LopticaCooldown then
 					return
 				end
-				cooldown = true
+				LopticaCooldown = true
 
 				local Lighting = game:GetService("Lighting")
 				local CoreGui = game:GetService("CoreGui")
