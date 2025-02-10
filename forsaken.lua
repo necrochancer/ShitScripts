@@ -262,10 +262,21 @@ local function FartHubLoad()
 
 	local function AutoCoinFlip()
 		while CoinFlipping do
-			local reroll = game:GetService("Players").LocalPlayer.PlayerGui
-				:WaitForChild("MainUI")
-				:WaitForChild("AbilityContainer")
-				:WaitForChild("Reroll")
+			local reroll
+			repeat
+				local success, result = pcall(function()
+					return game:GetService("Players").LocalPlayer.PlayerGui
+						:WaitForChild("MainUI", 1)
+						:WaitForChild("AbilityContainer", 1)
+						:WaitForChild("Reroll", 1)
+				end)
+				if success then
+					reroll = result
+				else
+					task.wait(1)
+				end
+			until reroll
+
 			if tonumber(reroll:WaitForChild("Charges").Text) < WantedChrges then
 				BlockRemote:FireServer("UseActorAbility", "CoinFlip")
 			end
