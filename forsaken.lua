@@ -41,7 +41,7 @@ local function FartHubLoad()
 	local WowWhatTheZestIsThis
 	local pizzaConnections = {}
 	local WantedChrges = 2
-	local LopticaGenBill = false
+	local LopticaGenBill, LopticaNameHighlight = false, false
 	local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab, CoinFlipping, AnimationsTab = nil, nil, nil, nil, nil, false, nil
 	local BabyShark, KillerFartPart, HRP = nil, nil, nil
 	local Runners = false
@@ -602,25 +602,27 @@ local function FartHubLoad()
 	LoadSigmaData()
 
 	local function CreateGeneratorBillboard(generator)
-		local billboard = Instance.new("BillboardGui", generator)
-		billboard.Size = UDim2.new(0, 100, 0, 50)
-		billboard.StudsOffset = Vector3.new(0, 2, 0)
-		billboard.AlwaysOnTop = true
+		if LopticaGenBill then
+			local billboard = Instance.new("BillboardGui", generator)
+			billboard.Size = UDim2.new(0, 100, 0, 50)
+			billboard.StudsOffset = Vector3.new(0, 2, 0)
+			billboard.AlwaysOnTop = true
 
-		local textLabel = Instance.new("TextLabel", billboard)
-		textLabel.Size = UDim2.new(1, 0, 1, 0)
-		textLabel.BackgroundTransparency = 1
-		textLabel.TextColor3 = Color3.new(1, 1, 1)
-		textLabel.TextStrokeTransparency = 0
-		textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+			local textLabel = Instance.new("TextLabel", billboard)
+			textLabel.Size = UDim2.new(1, 0, 1, 0)
+			textLabel.BackgroundTransparency = 1
+			textLabel.TextColor3 = Color3.new(1, 1, 1)
+			textLabel.TextStrokeTransparency = 0
+			textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
 
-		task.spawn(function()
-			while generator.Parent and LopticaGenBill do
-				textLabel.Text = string.format("%d%% Completed", generator.Progress.Value)
-				task.wait(1)
-			end
-			billboard:Destroy()
-		end)
+			task.spawn(function()
+				while generator.Parent and LopticaGenBill do
+					textLabel.Text = string.format("%d%% Completed", generator.Progress.Value)
+					task.wait(1)
+				end
+				billboard:Destroy()
+			end)
+		end
 	end
 
 	-- Toggle ESP
@@ -649,60 +651,69 @@ local function FartHubLoad()
 		for _, folder in ipairs({ workspace.Players.Survivors, workspace.Players.Killers }) do
 			for _, obj in ipairs(folder:GetChildren()) do
 				AddFart(obj, folder.Name == "Survivors" and survivorHighlightColor or killerHighlightColor)
-				local billboard = Instance.new("BillboardGui", obj:WaitForChild("Head"))
-				billboard.Name = "FartHubBillboard"
-				billboard.Size = UDim2.new(0, 100, 0, 50)
-				billboard.StudsOffset = Vector3.new(0, 1, 0)
-				local textLabel = Instance.new("TextLabel", billboard)
-				textLabel.Size = UDim2.new(1, 0, 1, 0)
-				textLabel.TextColor3 = Color3.new(1, 1, 1)
-				textLabel.TextStrokeTransparency = 0
-				textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
-				billboard.AlwaysOnTop = true
-				textLabel.BackgroundTransparency = 1
-
-				task.spawn(function()
-					while highlightingEnabled and obj:FindFirstChild("Humanoid") do
-						local humanoid = obj:FindFirstChild("Humanoid")
-						if humanoid then
-							textLabel.Text =
-								string.format(obj.Name .. " : " .. obj:GetAttribute("Username") .. "\n Health: %.1f%%", (humanoid.Health / humanoid.MaxHealth) * 100)
-						end
-						task.wait(.25)
-					end
-				end)
-			end
-			folder.ChildAdded:Connect(function(child)
-				if highlightingEnabled then
-					AddFart(child, folder.Name == "Survivors" and survivorHighlightColor or killerHighlightColor)
-					local billboard = Instance.new("BillboardGui", child:WaitForChild("Head"))
+				if LopticaNameHighlight then
+					local billboard = Instance.new("BillboardGui", obj:WaitForChild("Head"))
 					billboard.Name = "FartHubBillboard"
 					billboard.Size = UDim2.new(0, 100, 0, 50)
 					billboard.StudsOffset = Vector3.new(0, 1, 0)
 					local textLabel = Instance.new("TextLabel", billboard)
+					textLabel.Size = UDim2.new(1, 0, 1, 0)
 					textLabel.TextColor3 = Color3.new(1, 1, 1)
 					textLabel.TextStrokeTransparency = 0
 					textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
-					textLabel.Size = UDim2.new(1, 0, 1, 0)
-					textLabel.Text = child:GetAttribute("Username") and child.Name
 					billboard.AlwaysOnTop = true
 					textLabel.BackgroundTransparency = 1
 
 					task.spawn(function()
-						while highlightingEnabled and child:FindFirstChild("Humanoid") do
-							local humanoid = child:FindFirstChild("Humanoid")
+						while highlightingEnabled and obj:FindFirstChild("Humanoid") do
+							if not obj.Head then
+								break
+							end
+							local humanoid = obj:FindFirstChild("Humanoid")
 							if humanoid then
-								textLabel.Text = string.format(
-									child.Name .. " : " .. child:GetAttribute("Username") .. "\n Health: %.1f%%",
-									(humanoid.Health / humanoid.MaxHealth) * 100
-								)
+								textLabel.Text =
+									string.format(obj.Name .. " : " .. obj:GetAttribute("Username") .. "\n Health: %.1f%%", (humanoid.Health / humanoid.MaxHealth) * 100)
 							end
 							task.wait(.25)
 						end
 					end)
 				end
+			end
+			folder.ChildAdded:Connect(function(child)
+				if highlightingEnabled then
+					AddFart(child, folder.Name == "Survivors" and survivorHighlightColor or killerHighlightColor)
+					if LopticaNameHighlight then
+						local billboard = Instance.new("BillboardGui", child:WaitForChild("Head"))
+						billboard.Name = "FartHubBillboard"
+						billboard.Size = UDim2.new(0, 100, 0, 50)
+						billboard.StudsOffset = Vector3.new(0, 1, 0)
+						local textLabel = Instance.new("TextLabel", billboard)
+						textLabel.TextColor3 = Color3.new(1, 1, 1)
+						textLabel.TextStrokeTransparency = 0
+						textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+						textLabel.Size = UDim2.new(1, 0, 1, 0)
+						textLabel.Text = child:GetAttribute("Username") and child.Name
+						billboard.AlwaysOnTop = true
+						textLabel.BackgroundTransparency = 1
+
+						task.spawn(function()
+							while highlightingEnabled and child:FindFirstChild("Humanoid") do
+								if not child.Head then
+									break
+								end
+								local humanoid = child:FindFirstChild("Humanoid")
+								if humanoid then
+									textLabel.Text =
+										string.format(child.Name .. " : " .. child:GetAttribute("Username") .. "\n Health: %.1f%%", (humanoid.Health / humanoid.MaxHealth) * 100)
+								end
+								task.wait(.25)
+							end
+						end)
+					end
+				end
 			end)
 		end
+
 		local function SetupSigmaListener()
 			local ingameFolder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
 			if not ingameFolder then
@@ -1249,6 +1260,15 @@ local function FartHubLoad()
 		})
 
 		local VisuialsDivider = VisualsTab:CreateDivider()
+
+		local HealthUserToggle = VisualsTab:CreateToggle({
+			Name = "Username + Health ESP",
+			CurrentValue = false,
+			Callback = function(state)
+				LopticaNameHighlight = state
+				if highlightingEnabled then UpdateFarts(true) end
+			end,
+		})
 
 		local VisualsToggle = VisualsTab:CreateToggle({
 			Name = "Highlight Objects",
