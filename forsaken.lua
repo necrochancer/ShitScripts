@@ -2389,6 +2389,9 @@ local function FartHubLoad()
 				end
 				cooldown = true
 
+				local Lighting = game:GetService("Lighting")
+				local CoreGui = game:GetService("CoreGui")
+
 				local EmoteGUI = CoreGui:FindFirstChild("FartHubEmoteGUI")
 				local BlurEffect = Lighting:FindFirstChild("FartHubBlur")
 
