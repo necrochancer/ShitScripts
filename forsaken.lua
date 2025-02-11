@@ -1461,7 +1461,6 @@ local function FartHubLoad()
 	-- Toggle ESP
 	local function ToggleFarts(state)
 		highlightingEnabled = state
-		LopticaGenBill = state
 		local localPlayer = game.Players.LocalPlayer
 		for _, obj in ipairs(workspace:GetDescendants()) do
 			if obj:IsA("Highlight") or obj:IsA("BillboardGui") then
@@ -1484,69 +1483,34 @@ local function FartHubLoad()
 		for _, folder in ipairs({ workspace.Players.Survivors, workspace.Players.Killers }) do
 			for _, obj in ipairs(folder:GetChildren()) do
 				AddFart(obj, folder.Name == "Survivors" and survivorHighlightColor or killerHighlightColor)
-				if LopticaNameHighlight and not obj:FindFirstChild("FartHubBillboard") then
-					local billboard = Instance.new("BillboardGui", obj:WaitForChild("Head"))
-					billboard.Name = "FartHubBillboard"
-					billboard.Size = UDim2.new(0, 100, 0, 50)
-					billboard.StudsOffset = Vector3.new(0, 1, 0)
-					local textLabel = Instance.new("TextLabel", billboard)
-					textLabel.Size = UDim2.new(1, 0, 1, 0)
-					textLabel.TextColor3 = Color3.new(1, 1, 1)
-					textLabel.TextStrokeTransparency = 0
-					textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
-					billboard.AlwaysOnTop = true
-					textLabel.BackgroundTransparency = 1
-
-					task.spawn(function()
-						while highlightingEnabled and obj:FindFirstChild("Humanoid") do
-							if not obj.Head then
-								break
-							end
-							local humanoid = obj:FindFirstChild("Humanoid")
-							if humanoid then
-								textLabel.Text = string.format(
-									obj.Name .. " : " .. obj:GetAttribute("Username") .. "\n Health: %.1f%%",
-									(humanoid.Health / humanoid.MaxHealth) * 100
-								)
-							end
-							task.wait(1)
-						end
-					end)
-				end
+				local billboard = Instance.new("BillboardGui", obj:WaitForChild("Head"))
+				billboard.Name = "FartHubBillboard"
+				billboard.Size = UDim2.new(0, 100, 0, 50)
+				billboard.StudsOffset = Vector3.new(0, 2, 0)
+				local textLabel = Instance.new("TextLabel", billboard)
+				textLabel.Size = UDim2.new(1, 0, 1, 0)
+				textLabel.Text = obj:GetAttribute("Username") and obj.Name
+				textLabel.TextColor3 = Color3.new(1, 1, 1)
+				textLabel.TextStrokeTransparency = 0
+				textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+				billboard.AlwaysOnTop = true
+				textLabel.BackgroundTransparency = 1
 			end
 			folder.ChildAdded:Connect(function(child)
 				if highlightingEnabled then
 					AddFart(child, folder.Name == "Survivors" and survivorHighlightColor or killerHighlightColor)
-					if LopticaNameHighlight and not child:FindFirstChild("FartHubBillboard") then
-						local billboard = Instance.new("BillboardGui", child:WaitForChild("Head"))
-						billboard.Name = "FartHubBillboard"
-						billboard.Size = UDim2.new(0, 100, 0, 50)
-						billboard.StudsOffset = Vector3.new(0, 1, 0)
-						local textLabel = Instance.new("TextLabel", billboard)
-						textLabel.TextColor3 = Color3.new(1, 1, 1)
-						textLabel.TextStrokeTransparency = 0
-						textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
-						textLabel.Size = UDim2.new(1, 0, 1, 0)
-						textLabel.Text = child:GetAttribute("Username") and child.Name
-						billboard.AlwaysOnTop = true
-						textLabel.BackgroundTransparency = 1
-
-						task.spawn(function()
-							while highlightingEnabled and child:FindFirstChild("Humanoid") do
-								if not child.Head then
-									break
-								end
-								local humanoid = child:FindFirstChild("Humanoid")
-								if humanoid then
-									textLabel.Text = string.format(
-										child.Name .. " : " .. child:GetAttribute("Username") .. "\n Health: %.1f%%",
-										(humanoid.Health / humanoid.MaxHealth) * 100
-									)
-								end
-								task.wait(0.25)
-							end
-						end)
-					end
+					local billboard = Instance.new("BillboardGui", child:WaitForChild("Head"))
+					billboard.Name = "FartHubBillboard"
+					billboard.Size = UDim2.new(0, 100, 0, 50)
+					billboard.StudsOffset = Vector3.new(0, 2, 0)
+					local textLabel = Instance.new("TextLabel", billboard)
+					textLabel.TextColor3 = Color3.new(1, 1, 1)
+					textLabel.TextStrokeTransparency = 0
+					textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+					textLabel.Size = UDim2.new(1, 0, 1, 0)
+					textLabel.Text = child:GetAttribute("Username") and child.Name
+					billboard.AlwaysOnTop = true
+					textLabel.BackgroundTransparency = 1
 				end
 			end)
 		end
