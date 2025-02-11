@@ -1955,9 +1955,45 @@ local function FartHubLoad()
 		imageButton.Image = "http://www.roblox.com/asset/?id=131523679474566"
 
 		local function toggleGUI()
-			visible = not visible
-			Rayfield:SetVisibility(visible, false)
-			sausageHolder.Size = UDim2.new(0, originalSize + (visible and 48 or 0), 0, sausageHolder.Size.Y.Offset)
+			--visible = not visible
+			--Rayfield:SetVisibility(visible, false)
+			--sausageHolder.Size = UDim2.new(0, originalSize + (visible and 48 or 0), 0, sausageHolder.Size.Y.Offset)
+
+			local Lighting = game:GetService("Lighting")
+			local CoreGui = game:GetService("CoreGui")
+
+			local EmoteGUI = CoreGui:FindFirstChild("FartHubEmoteGUI")
+			local BlurEffect = Lighting:FindFirstChild("FartHubBlur")
+
+			if EmoteGUI then
+				LopticaCooldown = true
+				local Holder = EmoteGUI:FindFirstChild("Holder")
+				if Holder then
+					local BlurTweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
+					local TweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
+
+					if BlurEffect then
+						local blurTween = TweenService:Create(BlurEffect, BlurTweenInfo, { Size = 0 })
+						blurTween:Play()
+					end
+
+					local guiTween = TweenService:Create(Holder, TweenInfo, { Size = UDim2.new(0, 0, 0, 0) })
+					guiTween:Play()
+
+					task.wait(0.25)
+
+					if BlurEffect then
+						BlurEffect:Destroy()
+					end
+					EmoteGUI:Destroy()
+				end
+
+				task.delay(1, function()
+					LopticaCooldown = false
+				end)
+			else
+				WHATTHEFUCKISTHISSHITCODEKLDOWQNDJQW() -- Open the UI
+			end
 		end
 
 		imageButton.Activated:Connect(toggleGUI)
