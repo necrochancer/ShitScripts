@@ -2336,6 +2336,8 @@ local function FartHubLoad()
 			end,
 		})
 
+		AnimationsTab:CreateSection("You can emote as killer using this.")
+
 		local AnimationsTabKeybindGUI = AnimationsTab:CreateKeybind({
 			Name = "Emote As Killer GUI",
 			CurrentKeybind = "F",
