@@ -990,13 +990,31 @@ local function FartHubLoad()
 		local target = FindClosestPerson()
 		task.spawn(function()
 			pcall(function()
-				if SmoothShiftLock ~= "Unavailable" and not SmoothShiftLock.Enabled then
-					SmoothShiftLock:ToggleShiftLock()
-				else
-					local originalZoom = Me.CameraMaxZoomDistance
-					Me.CameraMaxZoomDistance = 0
-					task.wait(Dur)
-					Me.CameraMaxZoomDistance = originalZoom
+				local success, err = pcall(function()
+					if SmoothShiftLock ~= "Unavailable" and not SmoothShiftLock.Enabled then
+						SmoothShiftLock:ToggleShiftLock()
+					else
+						local Mouse = game:GetService("Players").LocalPlayer:GetMouse()
+						local ShiftlockImage = Mouse.Icon
+
+						if ShiftlockImage ~= "rbxasset://textures/MouseLockedCursor.png" then
+							local ShiftlockKeybindEnum = game:GetService("Players").LocalPlayer.PlayerData.Settings.Keybinds.ShiftLock.Value
+							-- get keycode of shiftlock
+							local ShiftlockKeyCode = Enum.KeyCode[ShiftlockKeybindEnum]
+							VIM:SendKeyEvent(true, ShiftlockKeyCode, false, game:GetService("Players").LocalPlayer.PlayerGui)
+							VIM:SendKeyEvent(false, ShiftlockKeyCode, false, game:GetService("Players").LocalPlayer.PlayerGui)
+						end
+					end
+				end)
+
+				if not success then
+					Rayfield:Notify({
+						Title = "Error",
+						Content = "Unsupported executor",
+						Duration = 5,
+						Image = "ban",
+					})
+					task.wait(5)
 				end
 			end)
 		end)
