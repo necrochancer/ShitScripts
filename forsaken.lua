@@ -95,7 +95,7 @@ local function FartHubLoad()
 	end)
 
 	if setclipboard then
-		setclipboard("https://discord.gg/JkWFbJQMtg")
+		setclipboard("https://linkunlocker.com/fartsaken-ZINXl")
 	end
 
 	local fart = {
@@ -132,12 +132,12 @@ local function FartHubLoad()
 		KeySystem = true,
 		KeySettings = {
 			Title = "Fartsaken Key System",
-			Subtitle = "grrrrrrrrr",
-			Note = "Join Discord Server To Get Key discord.gg/JkWFbJQMtg (copied to clipboard)",
+			Subtitle = "im such a meowzer like meow meow",
+			Note = "Copied Link To Clipboard",
 			FileName = "FartHubKey",
 			SaveKey = true,
 			GrabKeyFromSite = false,
-			Key = { "35degreesinthesun" }, -- this is very protected trust 😭
+			Key = { "hi" }, -- this is very protected trust 😭
 		},
 	})
 
