@@ -2525,7 +2525,10 @@ local function FartHubLoad()
 	end
 
 	CheckAndDeleteAssets()
-	CheckIfFartsDownloaded()
+	task.spawn(function()
+		CheckIfFartsDownloaded()
+	end)
+	
 	InitializeGUI()
 	MakeButton()
 end
