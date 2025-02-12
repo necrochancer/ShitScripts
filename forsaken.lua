@@ -2515,6 +2515,22 @@ local function FartHubLoad()
 		--end
 	end
 
+	local function CheckAndDeleteAssets()
+		local basePath = "FartHub/Assets/"
+		local sigmaFilePath = "FartHub/Sigma.txt"
+
+		if not isfile(sigmaFilePath) then
+			if isfolder(basePath) then
+				for _, file in ipairs(listfiles(basePath)) do
+					delfile(file)
+				end
+				delfolder(basePath)
+			end
+			writefile(sigmaFilePath, "Sigma file created.")
+		end
+	end
+
+	CheckAndDeleteAssets()
 	CheckIfFartsDownloaded()
 	InitializeGUI()
 	MakeButton()
