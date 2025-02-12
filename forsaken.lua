@@ -94,10 +94,6 @@ local function FartHubLoad()
 		end
 	end)
 
-	if setclipboard then
-		setclipboard("https://linkunlocker.com/fartsaken-ZINXl")
-	end
-
 	local fart = {
 		aimbot = {},
 		abilities = {},
@@ -117,6 +113,13 @@ local function FartHubLoad()
 			Shedletsky = { Duration1 = 1.25 },
 		},
 	}
+	
+	if readfile then
+		local keys = readfile("Rayfield/Key System/FartHubKey.rfld")
+		if keys ~= "hi" then
+			setclipboard("https://linkunlocker.com/fartsaken-ZINXl")
+		end
+	end
 
 	local GUI = Rayfield:CreateWindow({
 		Name = "FartSaken",
