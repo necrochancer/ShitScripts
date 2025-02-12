@@ -19,7 +19,9 @@
         "queue_on_teleport",
         "fluxus",
         "delfile",
-        "gethwid"
+        "gethwid",
+        "delfolder",
+        "listfiles"
     ],
     "stylua.targetReleaseVersion": "latest",
     "robloxLsp.diagnostics.disable": [
