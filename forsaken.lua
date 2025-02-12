@@ -2371,7 +2371,7 @@ local function FartHubLoad()
 		})
 
 		local LopticaDropdown = MiscTab:CreateDropdown({
-			Name = "Loptica Dropdown",
+			Name = "Background Video.",
 			Options = {
 				"Subway Surfers",
 				"Minecraft Parkour",
