@@ -1303,8 +1303,7 @@ local function FartHubLoad()
 
 			if not isfile(newFilePath) then
 				DownloadBallers(url, newFilePath)
-				task.wait(0.1)
-				Rayfield:Notify({ Title = "Downloaded", Content = newFilePath, Duration = 5 })
+				Rayfield:Notify({ Title = "Downloaded", Content = newFilePath, Duration = 5, Image = "download" })
 			end
 		end
 	end
@@ -2399,7 +2398,7 @@ local function FartHubLoad()
 			Callback = function(Options)
 				local videos = {
 					["Subway Surfers"] = "SubwaySurfers.mp4.Fart4",
-					["Minecraft Parkour"] = "MinecraftParkour.mp4.Fart4",
+					["Minecraft Parkour"] = "Minecraft.mp4.Fart4",
 					["Family Guy"] = "FamilyGuy.mp4.Fart4",
 					["CS2"] = "CS2.mp4.Fart4",
 					["Necromancy"] = "Necromancy.mp4.Fart4",
@@ -2407,17 +2406,12 @@ local function FartHubLoad()
 					["PistonDoor"] = "PistonDoor.mp4.Fart4",
 				}
 
-				local videoKeys = {}
-				for key in pairs(videos) do
-					table.insert(videoKeys, key)
-				end
-
 				FunnyVideo = videos[Options[1]] or FunnyVideo
 
 				if Options[1] == "Random" then
 					task.spawn(function()
 						while Options[1] == "Random" do
-							FunnyVideo = videos[videoKeys[math.random(#videoKeys)]]
+							FunnyVideo = videos[math.random(1, #videos)]
 							task.wait(3)
 						end
 					end)
