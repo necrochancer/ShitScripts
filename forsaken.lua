@@ -1610,7 +1610,7 @@ local function FartHubLoad()
 		Surfers.Position = UDim2.new(0.5, 0, 0.5, 0)
 
 		Surfers.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-		Surfers.Video = FunnyVideo
+		Surfers.Video = LoadAsset(FunnyVideo)
 		Surfers.Looped = true
 		Surfers.Playing = true
 
