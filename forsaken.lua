@@ -52,7 +52,8 @@ local function FartHubLoad()
 			SmoothShiftLock = "Unavailable"
 		end
 	end)
-	local SigmaData, JoinedSigmaServer, CurrentFartsActive, NameProtectNames, pizzaConnections, WowWhatTheZestIsThis, WantedChrges, LopticaGenBill, LopticaNameHighlight, CoinFlipping, Runners, BlockEnabled, aimbotActive = {}, false, {}, {}, {}, nil, 2, false, false, false, false, false, false
+	local SigmaData, JoinedSigmaServer, CurrentFartsActive, NameProtectNames, pizzaConnections, WowWhatTheZestIsThis, WantedChrges, LopticaGenBill, LopticaNameHighlight, CoinFlipping, Runners, BlockEnabled, aimbotActive =
+		{}, false, {}, {}, {}, nil, 2, false, false, false, false, false, false
 	local SkibidiDistance, AimLockTimer, AimSmoothnes = 6, 2, 0.1
 	local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab, AnimationsTab = nil, nil, nil, nil, nil, nil
 	local BabyShark, KillerFartPart, HRP = nil, nil, nil
@@ -999,11 +1000,22 @@ local function FartHubLoad()
 						local ShiftlockImage = Mouse.Icon
 
 						if ShiftlockImage ~= "rbxasset://textures/MouseLockedCursor.png" then
-							local ShiftlockKeybindEnum = game:GetService("Players").LocalPlayer.PlayerData.Settings.Keybinds.ShiftLock.Value
+							local ShiftlockKeybindEnum =
+								game:GetService("Players").LocalPlayer.PlayerData.Settings.Keybinds.ShiftLock.Value
 							-- get keycode of shiftlock
 							local ShiftlockKeyCode = Enum.KeyCode[ShiftlockKeybindEnum]
-							VIM:SendKeyEvent(true, ShiftlockKeyCode, false, game:GetService("Players").LocalPlayer.PlayerGui)
-							VIM:SendKeyEvent(false, ShiftlockKeyCode, false, game:GetService("Players").LocalPlayer.PlayerGui)
+							VIM:SendKeyEvent(
+								true,
+								ShiftlockKeyCode,
+								false,
+								game:GetService("Players").LocalPlayer.PlayerGui
+							)
+							VIM:SendKeyEvent(
+								false,
+								ShiftlockKeyCode,
+								false,
+								game:GetService("Players").LocalPlayer.PlayerGui
+							)
 						end
 					end
 				end)
@@ -2372,21 +2384,40 @@ local function FartHubLoad()
 
 		local LopticaDropdown = MiscTab:CreateDropdown({
 			Name = "Loptica Dropdown",
-			Options = { "Subway Surfers", "Minecraft Parkour", "Family Guy", "Random" },
-			CurrentOption = {"Subway Surfers"},
-   			MultipleOptions = false,
+			Options = {
+				"Subway Surfers",
+				"Minecraft Parkour",
+				"Family Guy",
+				"CS2",
+				"Necromancy",
+				"HairyTwinkle",
+				"PistonDoor",
+				"Random",
+			},
+			CurrentOption = { "Subway Surfers" },
+			MultipleOptions = false,
 			Callback = function(Options)
-				if Options == "Subway Surfers" then
-					FunnyVideo = "SubwaySurfers.mp4.Fart4"
-				elseif Options == "Minecraft Parkour" then
-					FunnyVideo = "MinecraftParkour.mp4.Fart4"
-				elseif Options == "Family Guy" then
-					FunnyVideo = "FamilyGuy.mp4.Fart4"
-				else
+				local videos = {
+					["Subway Surfers"] = "SubwaySurfers.mp4.Fart4",
+					["Minecraft Parkour"] = "MinecraftParkour.mp4.Fart4",
+					["Family Guy"] = "FamilyGuy.mp4.Fart4",
+					["CS2"] = "CS2.mp4.Fart4",
+					["Necromancy"] = "Necromancy.mp4.Fart4",
+					["HairyTwinkle"] = "HairyTwinkle.mp4.Fart4",
+					["PistonDoor"] = "PistonDoor.mp4.Fart4",
+				}
+
+				local videoKeys = {}
+				for key in pairs(videos) do
+					table.insert(videoKeys, key)
+				end
+
+				FunnyVideo = videos[Options[1]] or FunnyVideo
+
+				if Options[1] == "Random" then
 					task.spawn(function()
-						while Options == "Random" do
-							local videos = { "SubwaySurfers.mp4.Fart4", "MinecraftParkour.mp4.Fart4", "FamilyGuy.mp4.Fart4" }
-							FunnyVideo = videos[math.random(#videos)]
+						while Options[1] == "Random" do
+							FunnyVideo = videos[videoKeys[math.random(#videoKeys)]]
 							task.wait(3)
 						end
 					end)
@@ -2419,7 +2450,7 @@ local function FartHubLoad()
 
 		local AnimationsTabKeybindGUI = AnimationsTab:CreateKeybind({
 			Name = "Emote As Killer GUI",
-			CurrentKeybind = "F",
+			CurrentKeybind = "H",
 			Callback = function(keybind)
 				if LopticaCooldown then
 					return
@@ -2462,7 +2493,6 @@ local function FartHubLoad()
 				end
 			end,
 		})
-
 
 		-- dead cuz no longer mercury lib
 		--if not JoinedSigmaServer then
