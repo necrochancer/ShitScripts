@@ -1907,11 +1907,6 @@ local function FartHubLoad()
 		end
 
 		humanoid:ChangeState("Jumping")
-		if animator then
-			for _, track in pairs(animator:GetPlayingAnimationTracks()) do
-				track:Stop()
-			end
-		end
 
 		local duration = 0.25
 		local steps = 90
