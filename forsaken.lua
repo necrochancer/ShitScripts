@@ -57,6 +57,7 @@ local function FartHubLoad()
 	local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab, AnimationsTab = nil, nil, nil, nil, nil, nil
 	local BabyShark, KillerFartPart, HRP = nil, nil, nil
 	local LopticaCooldown = false
+	local FunnyVideo = "SubwaySurfers.mp4.Fart4"
 
 	local executorname = (pcall(getexecutorname) and getexecutorname())
 		or (pcall(identifyexecutor) and identifyexecutor())
@@ -1609,7 +1610,7 @@ local function FartHubLoad()
 		Surfers.Position = UDim2.new(0.5, 0, 0.5, 0)
 
 		Surfers.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-		Surfers.Video = LoadAsset("SubwaySurfers.mp4.Fart4")
+		Surfers.Video = FunnyVideo
 		Surfers.Looped = true
 		Surfers.Playing = true
 
@@ -2365,6 +2366,30 @@ local function FartHubLoad()
 						Duration = 3,
 						Image = "ban",
 					})
+				end
+			end,
+		})
+
+		local LopticaDropdown = MiscTab:CreateDropdown({
+			Name = "Loptica Dropdown",
+			Options = { "Subway Surfers", "Minecraft Parkour", "Family Guy", "Random" },
+			CurrentOption = {"Subway Surfers"},
+   			MultipleOptions = false,
+			Callback = function(Options)
+				if Options == "Subway Surfers" then
+					FunnyVideo = "SubwaySurfers.mp4.Fart4"
+				elseif Options == "Minecraft Parkour" then
+					FunnyVideo = "MinecraftParkour.mp4.Fart4"
+				elseif Options == "Family Guy" then
+					FunnyVideo = "FamilyGuy.mp4.Fart4"
+				else
+					task.spawn(function()
+						while Options == "Random" do
+							local videos = { "SubwaySurfers.mp4.Fart4", "MinecraftParkour.mp4.Fart4", "FamilyGuy.mp4.Fart4" }
+							FunnyVideo = videos[math.random(#videos)]
+							task.wait(3)
+						end
+					end)
 				end
 			end,
 		})
