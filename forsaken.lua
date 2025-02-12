@@ -133,7 +133,7 @@ local function FartHubLoad()
 			FileName = "FartHubKey",
 			SaveKey = true,
 			GrabKeyFromSite = false,
-			Key = { "sigma" }, -- this is very protected trust 😭
+			Key = { "35degreesinthesun" }, -- this is very protected trust 😭
 		},
 	})
 
