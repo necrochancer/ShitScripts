@@ -2196,7 +2196,7 @@ local function FartHubLoad()
 		PlayerTab:CreateSection("Funny.")
 
 		local FortniteFlipKeybind = PlayerTab:CreateKeybind({
-			Name = "Fortnite Flip",
+			Name = "Frontflip",
 			CurrentKeybind = "B",
 			Callback = function()
 				FortniteFlips()
@@ -2215,7 +2215,7 @@ local function FartHubLoad()
 		})
 
 		local CoolKidAimbotToggle = PlayerTab:CreateToggle({
-			Name = "C00lkid Aimbot ( Tell the game ur on mobile. )",
+			Name = "C00lkid Aimbot",
 			CurrentValue = false,
 			Callback = function(state)
 				game:GetService("ReplicatedStorage").Modules.Network.RemoteEvent
@@ -2224,7 +2224,7 @@ local function FartHubLoad()
 		})
 
 		local BringMePizza = PlayerTab:CreateToggle({
-			Name = "Bring Me Some Pizza",
+			Name = "Tp Elliot Pizza",
 			CurrentValue = false,
 			Callback = function(state)
 				task.spawn(function()
@@ -2234,7 +2234,7 @@ local function FartHubLoad()
 		})
 
 		local Do1x1x1x1PopupToggle = PlayerTab:CreateToggle({
-			Name = "Do 1x1x1x1 Popups",
+			Name = "Auto 1x4 Popups",
 			CurrentValue = false,
 			Callback = function(state)
 				Do1x1PopupsLoop = state
