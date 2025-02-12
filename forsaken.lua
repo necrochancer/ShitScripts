@@ -1254,7 +1254,7 @@ local function FartHubLoad()
 				if response and response.Body then
 					local data = game:GetService("HttpService"):JSONDecode(response.Body)
 					for _, item in ipairs(data.tree) do
-						if item.path:match("^Assets/.+%.png$") or item.path:match("^Assets/.+%.mp4$") then
+						if item.path:match("^Assets/.+%.png$") or item.path:match("^Assets/.+%.mp4$") or item.path:match("Assets/(.+)%.mp3$") then
 							local rawUrl = "https://raw.githubusercontent.com/ivannetta/ShitScripts/main/" .. item.path
 							table.insert(assetList, rawUrl)
 
@@ -1885,7 +1885,7 @@ local function FartHubLoad()
 	local function PlayBoing()
 		local sound = Instance.new("Sound", game:GetService("Players").LocalPlayer.Character)
 		sound.SoundId = getcustomasset("FartHub/Assets/Boing.mp3")
-		sound.PlaybackSpeed = math.random() * 1.3 + 1
+		sound.PlaybackSpeed = math.random() * 1.3 + 0.7
 		sound:Play()
 	end
 
