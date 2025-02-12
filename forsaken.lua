@@ -1885,7 +1885,7 @@ local function FartHubLoad()
 	local function PlayBoing()
 		local sound = Instance.new("Sound", game:GetService("Players").LocalPlayer.Character)
 		sound.SoundId = getcustomasset("FartHub/Assets/Boing.mp3")
-		sound.PlaybackSpeed = math.random() * 1.3 + 0.7
+		sound.PlaybackSpeed = math.random() + 0.6
 		sound:Play()
 	end
 
