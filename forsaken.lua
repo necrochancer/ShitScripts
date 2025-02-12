@@ -2126,17 +2126,6 @@ local function FartHubLoad()
 
 		local VisuialsDivider = VisualsTab:CreateDivider()
 
-		local HealthUserToggle = VisualsTab:CreateToggle({
-			Name = "Username + Health ESP",
-			CurrentValue = false,
-			Callback = function(state)
-				LopticaNameHighlight = state
-				if highlightingEnabled then
-					UpdateFarts(true)
-				end
-			end,
-		})
-
 		local VisualsToggle = VisualsTab:CreateToggle({
 			Name = "Highlight Objects",
 			CurrentValue = false,
@@ -2415,8 +2404,13 @@ local function FartHubLoad()
 
 			if Options[1] == "Random" then
 				task.spawn(function()
+					local index = 1
 					while Options[1] == "Random" do
-						FunnyVideo = videos[videoKeys[math.random(#videoKeys)]]
+						FunnyVideo = videos[videoKeys[index]]
+						index = index + 1
+						if index > #videoKeys then
+							index = 1
+						end
 						task.wait(3)
 					end
 				end)
@@ -2527,7 +2521,7 @@ local function FartHubLoad()
 				delfolder(basePath)
 			end
 			writefile(sigmaFilePath, "Sigma file created.")
-		end
+		end	
 	end
 
 	CheckAndDeleteAssets()
