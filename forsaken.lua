@@ -2398,7 +2398,7 @@ local function FartHubLoad()
 			Callback = function(Options)
 			local videos = {
 				["Subway Surfers"] = "SubwaySurfers.mp4.Fart4",
-				["Minecraft Parkour"] = "MinecraftParkour.mp4.Fart4",
+				["Minecraft Parkour"] = "Minecraft.mp4.Fart4",
 				["Family Guy"] = "FamilyGuy.mp4.Fart4",
 				["CS2"] = "CS2.mp4.Fart4",
 				["Necromancy"] = "Necromancy.mp4.Fart4",
