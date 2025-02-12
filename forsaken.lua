@@ -1022,13 +1022,7 @@ local function FartHubLoad()
 				end)
 
 				if not success then
-					Rayfield:Notify({
-						Title = "Error",
-						Content = "Unsupported executor",
-						Duration = 5,
-						Image = "ban",
-					})
-					task.wait(5)
+					return
 				end
 			end)
 		end)
