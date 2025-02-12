@@ -119,7 +119,7 @@ local function FartHubLoad()
 		Theme = "Default",
 		LoadingTitle = "Fart Hub",
 		LoadingSubtitle = "meow meow meow meow meow meow",
-		Icon = 0,
+		Icon = "microwave",
 		Link = "https://github.com/ivannetta/ShitScripts/Forsaken",
 
 		DisableBuildWarnings = true,
