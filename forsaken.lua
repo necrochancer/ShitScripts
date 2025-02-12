@@ -113,6 +113,7 @@ local function FartHubLoad()
 		Survivors = {
 			Guest1337 = { Duration2 = 2 },
 			Chance = { Duration2 = 1.25 },
+			Shedletsky = { Duration1 = 1.25 },
 		},
 	}
 
@@ -2524,11 +2525,11 @@ local function FartHubLoad()
 		end	
 	end
 
-	CheckAndDeleteAssets()
+	pcall(CheckAndDeleteAssets)
 	task.spawn(function()
-		CheckIfFartsDownloaded()
+		pcall(CheckIfFartsDownloaded)
 	end)
-	
+
 	InitializeGUI()
 	MakeButton()
 end
