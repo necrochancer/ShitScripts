@@ -32,17 +32,13 @@ local function FartHubLoad()
 	local SmoothShiftLock
 
 	local success, err = pcall(function()
-		if require then
-			local Modul = require(
-				game:GetService("ReplicatedStorage")
-					:WaitForChild("Systems")
-					:WaitForChild("Player")
-					:WaitForChild("Game")
-					:FindFirstChild("SmoothShiftLock")
-			)
-			if Modul then
-				SmoothShiftLock = require(Modul)
-			end
+		local smoothShiftLockModule = game:GetService("ReplicatedStorage")
+			:WaitForChild("Systems")
+			:WaitForChild("Player")
+			:WaitForChild("Game")
+			:FindFirstChild("SmoothShiftLock")
+		if smoothShiftLockModule then
+			SmoothShiftLock = require(smoothShiftLockModule)
 		else
 			SmoothShiftLock = "Unavailable"
 		end
