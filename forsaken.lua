@@ -113,7 +113,7 @@ local function FartHubLoad()
 			Shedletsky = { Duration1 = 1.25 },
 		},
 	}
-	
+
 	if readfile then
 		local keys = readfile("Rayfield/Key System/FartHubKey.rfld")
 		if keys ~= "hi" then
@@ -920,7 +920,7 @@ local function FartHubLoad()
 		Blur.Name = "FartHubBlur"
 
 		local tweenInfoSigmaBlur = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0)
-		local tweenSigmaBlur = TweenServiceSigma:Create(Blur, tweenInfoSigmaBlur, { Size = 10 })
+		local tweenSigmaBlur = TweenServiceSigma:Create(Blur, tweenInfoSigmaBlur, { Size = 0 })
 		tweenSigmaBlur:Play()
 
 		local tweeninfoholdersize = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0)
