@@ -1986,7 +1986,7 @@ local function FartHubLoad()
 
 	local function InitializeButtonGUI()
 		local visible = true
-		local sausageHolder = game:GetService("CoreGui").TopBarApp.UnibarLeftFrame.UnibarMenu["2"]
+		local sausageHolder = game:GetService("CoreGui"):FindFirstChild("TopBarApp"):FindFirstChild("UnibarLeftFrame"):FindFirstChild('UnibarMenu["2"]')
 		local originalSize = sausageHolder.Size.X.Offset
 
 		sausageHolder.Size = UDim2.new(0, originalSize + 48, 0, sausageHolder.Size.Y.Offset)
@@ -2058,7 +2058,7 @@ local function FartHubLoad()
 
 	local function CreateSigmaFrame()
 		local visible = true
-		local topBarApp = game:GetService("CoreGui"):WaitForChild("TopBarApp")
+		local topBarApp = game:GetService("CoreGui"):FindFirstChild("TopBarApp")
 		local leftFrame = topBarApp:WaitForChild("TopBarFrame"):WaitForChild("LeftFrame")
 
 		local sigmaFrame = Instance.new("Frame", leftFrame)
