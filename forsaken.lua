@@ -991,10 +991,7 @@ local function FartHubLoad()
 					if SmoothShiftLock ~= "Unavailable" and not SmoothShiftLock.Enabled then
 						SmoothShiftLock:ToggleShiftLock()
 					else
-						local Mouse = game:GetService("Players").LocalPlayer:GetMouse()
-						local ShiftlockImage = Mouse.Icon
-
-						if ShiftlockImage ~= "rbxasset://textures/MouseLockedCursor.png" then
+						if not game:GetService("UserInputService").MouseBehavior == Enum.MouseBehavior.LockCenter then
 							local ShiftlockKeybindEnum =
 								game:GetService("Players").LocalPlayer.PlayerData.Settings.Keybinds.ShiftLock.Value
 							-- get keycode of shiftlock
@@ -2099,7 +2096,7 @@ local function FartHubLoad()
 
 	local function MakeButton()
 		pcall(function()
-			if game:GetService("CoreGui"):FindFirstChild("TopBarApp"):FindFirstChild("UnibarLeftFrame") then
+			if game:GetService("CoreGui"):FindFirstChild("TopBarApp") and game:GetService("CoreGui"):FindFirstChild("TopBarApp"):FindFirstChild("UnibarLeftFrame") then
 				InitializeButtonGUI()
 			else
 				CreateSigmaFrame()
