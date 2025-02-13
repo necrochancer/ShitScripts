@@ -1905,7 +1905,7 @@ local function FartHubLoad()
 
 		humanoid:ChangeState("Jumping")
 
-		local duration = 0.6
+		local duration = 0.45
 		local steps = 60
 		local startCFrame = hrp.CFrame
 		local forwardVector = startCFrame.LookVector
