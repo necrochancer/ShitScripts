@@ -1905,30 +1905,28 @@ local function FartHubLoad()
 
 		humanoid:ChangeState("Jumping")
 
-		local duration = 0.25
-		local steps = 90
+		local duration = 0.3
+		local steps = 60
 		local startCFrame = hrp.CFrame
 		local forwardVector = startCFrame.LookVector
 		local upVector = Vector3.new(0, 1, 0)
+		task.spawn(function()
+			for i = 1, steps do
+				local t = i / steps
+				local height = 4 * (t - t ^ 2) * 10
+				local nextPos = startCFrame.Position + forwardVector * (35 * t) + upVector * height
+				local rotation = startCFrame.Rotation * CFrame.Angles(-math.rad(i * (360 / steps)), 0, 0)
 
-		for i = 1, steps do
-			local t = i / steps
-			local height = 4 * (t - t ^ 2) * 10
-			local nextPos = startCFrame.Position + forwardVector * (35 * t) + upVector * height
-			local rotation = startCFrame.Rotation * CFrame.Angles(-math.rad(i * (360 / steps)), 0, 0)
+				hrp.CFrame = CFrame.new(nextPos) * rotation
+				task.wait(duration / steps)
+			end
 
-			hrp.CFrame = CFrame.new(nextPos) * rotation
-			task.wait(duration / steps)
-		end
-
-		hrp.CFrame = CFrame.new(startCFrame.Position + forwardVector * 35) * startCFrame.Rotation
-
+			hrp.CFrame = CFrame.new(startCFrame.Position + forwardVector * 35) * startCFrame.Rotation
+			FlipCooldown = false
+		end)
 		if animator then
 			humanoid:Move(Vector3.zero)
 		end
-
-		task.wait(0.1)
-		FlipCooldown = false
 	end
 
 	local function SetProximity()
