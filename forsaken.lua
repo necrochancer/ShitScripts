@@ -102,7 +102,7 @@ local function FartHubLoad()
 
 	local SkibidiPomniOhioList = {
 		Killers = {
-			Jason = { Duration1 = 0.5 },
+			Jason = { Duration1 = 0.5, Duration2 = 1, Duration3 = 1.5 },
 			["1x1x1x1"] = { Duration1 = 0.5, Duration2 = 2.5, Duration3 = 1 },
 			JohnDoe = { Duration1 = 0.5, Duration2 = 5 },
 			C00lkidd = { Duration1 = 0.5 },
@@ -1905,12 +1905,13 @@ local function FartHubLoad()
 
 		humanoid:ChangeState("Jumping")
 
-		local duration = 0.3
+		local duration = 0.6
 		local steps = 60
 		local startCFrame = hrp.CFrame
 		local forwardVector = startCFrame.LookVector
 		local upVector = Vector3.new(0, 1, 0)
 		task.spawn(function()
+			local startTime = tick()
 			for i = 1, steps do
 				local t = i / steps
 				local height = 4 * (t - t ^ 2) * 10
@@ -1918,7 +1919,12 @@ local function FartHubLoad()
 				local rotation = startCFrame.Rotation * CFrame.Angles(-math.rad(i * (360 / steps)), 0, 0)
 
 				hrp.CFrame = CFrame.new(nextPos) * rotation
-				task.wait(duration / steps)
+				local elapsedTime = tick() - startTime
+				local expectedTime = (duration / steps) * i
+				local waitTime = expectedTime - elapsedTime
+				if waitTime > 0 then
+					task.wait(waitTime)
+				end
 			end
 
 			hrp.CFrame = CFrame.new(startCFrame.Position + forwardVector * 35) * startCFrame.Rotation
