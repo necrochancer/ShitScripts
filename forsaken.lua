@@ -32,26 +32,22 @@ local function FartHubLoad()
 	local SmoothShiftLock
 
 	local success, err = pcall(function()
-		if
-			require(
+		if require then
+			local Modul = require(
 				game:GetService("ReplicatedStorage")
 					:WaitForChild("Systems")
 					:WaitForChild("Player")
 					:WaitForChild("Game")
-					:WaitForChild("SmoothShiftLock")
+					:FindFirstChild("SmoothShiftLock")
 			)
-		then
-			SmoothShiftLock = require(
-				game:GetService("ReplicatedStorage")
-					:WaitForChild("Systems")
-					:WaitForChild("Player")
-					:WaitForChild("Game")
-					:WaitForChild("SmoothShiftLock")
-			)
+			if Modul then
+				SmoothShiftLock = require(Modul)
+			end
 		else
 			SmoothShiftLock = "Unavailable"
 		end
 	end)
+
 	local SigmaData, JoinedSigmaServer, CurrentFartsActive, NameProtectNames, pizzaConnections, WowWhatTheZestIsThis, WantedChrges, LopticaGenBill, LopticaNameHighlight, CoinFlipping, Runners, BlockEnabled, aimbotActive =
 		{}, false, {}, {}, {}, nil, 2, false, false, false, false, false, false
 	local SkibidiDistance, AimLockTimer, AimSmoothnes = 6, 2, 0.1
@@ -114,7 +110,7 @@ local function FartHubLoad()
 		},
 	}
 
-	if readfile then
+	if isfolder("Rayfield/Key System") and isfile("Rayfield/Key System/FartHubKey.rfld") then
 		local keys = readfile("Rayfield/Key System/FartHubKey.rfld")
 		if keys ~= "hi" then
 			setclipboard("https://linkunlocker.com/fartsaken-ZINXl")
@@ -1928,6 +1924,7 @@ local function FartHubLoad()
 			end
 
 			hrp.CFrame = CFrame.new(startCFrame.Position + forwardVector * 35) * startCFrame.Rotation
+			task.wait(0.5)
 			FlipCooldown = false
 		end)
 		if animator then
