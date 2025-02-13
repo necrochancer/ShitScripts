@@ -110,12 +110,7 @@ local function FartHubLoad()
 		},
 	}
 
-	if isfolder("Rayfield/Key System") and isfile("Rayfield/Key System/FartHubKey.rfld") then
-		local keys = readfile("Rayfield/Key System/FartHubKey.rfld")
-		if keys ~= "hi" then
-			setclipboard("https://linkunlocker.com/fartsaken-ZINXl")
-		end
-	end
+	setclipboard("https://linkunlocker.com/fartsaken-ZINXl")
 
 	local GUI = Rayfield:CreateWindow({
 		Name = "FartSaken",
