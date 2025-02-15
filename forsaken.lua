@@ -28,23 +28,26 @@ local function FartHubLoad()
 		game:HttpGet("https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/source.lua")
 	)()
 	local CheckedPlayers = {}
+	
+	task.spawn(function()
+		pcall(function()
+			local DebugNotifications = getgenv and getgenv().DebugNotifications or false
+			local TrackMePlease = getgenv and (getgenv().TrackMePlease ~= nil and getgenv().TrackMePlease or true)
 
-	local DebugNotifications = getgenv and getgenv().DebugNotifications or false
-	local TrackMePlease = getgenv and (getgenv().TrackMePlease ~= nil and getgenv().TrackMePlease or true)
+			local SkibidiSigma
+			if TrackMePlease == "true" then
+				SkibidiSigma = "Fart/Hub"
+			else
+				SkibidiSigma = "They/Them"
+			end
 
-	local SkibidiSigma
-	if TrackMePlease == "true" then
-		SkibidiSigma = "Fart/Hub"
-	else
-		SkibidiSigma = "They/Them"
-	end
-
-	game:GetService("ReplicatedStorage").Modules.Network.RemoteEvent:FireServer(
-		"UpdateSettings",
-		game:GetService("Players").LocalPlayer.PlayerData.Settings.Accessibility.Pronouns,
-		SkibidiSigma
-	)
-
+			game:GetService("ReplicatedStorage").Modules.Network.RemoteEvent:FireServer(
+				"UpdateSettings",
+				game:GetService("Players").LocalPlayer.PlayerData.Settings.Accessibility.Pronouns,
+				SkibidiSigma
+			)
+		end)
+	end)
 
 	local SmoothShiftLock
 
