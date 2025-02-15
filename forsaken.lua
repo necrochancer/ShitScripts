@@ -28,6 +28,7 @@ local function FartHubLoad()
 		game:HttpGet("https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/source.lua")
 	)()
 	local CheckedPlayers = {}
+	local SkibPlr = {}
 
 	task.spawn(function()
 		pcall(function()
@@ -1790,49 +1791,40 @@ local function FartHubLoad()
 		if character and currentSurvivors then
 			for _, survivor in pairs(currentSurvivors.Parent:GetDescendants()) do
 				if survivor:FindFirstChild("Username") and survivor.Username.Text == Player.Name then
-					survivor.Username.TextColor3 = Color3.fromRGB(170, 255, 127)
-					if CheckedPlayers[Player.Name] then
-						return
-					else
+					if not CheckedPlayers[Player.Name] then
 						Rayfield:Notify({
 							Title = "Another Fartsaken User!",
 							Content = (Player.Name .. " Is Also Using Fartsaken!"),
 							Duration = 10,
 							Image = "snail",
 						})
-						table.insert(CheckedPlayers, Player.Name)
+						--CheckedPlayers[Player.Name] = true
 					end
-				end
-			end
-		end
-	end
-
-	local function FindFartsakeners()
-		for _, PlayerFarting in pairs(game:GetService("Players"):GetPlayers()) do
-			local Farters = game:GetService("Players")
-			local LocalFarter = Farters.LocalPlayer
-			if PlayerFarting ~= LocalFarter then
-				local Pronouns = PlayerFarting.PlayerData.Settings.Accessibility.Pronouns
-				if Pronouns.Value == "Fart/Hub" then
-					NotifyFartsakeners(PlayerFarting)
+					survivor.Username.TextColor3 = Color3.fromRGB(170, 255, 127)
 				end
 			end
 		end
 	end
 
 	task.spawn(function()
-		local success, err = pcall(function()
-			FindFartsakeners()
-			workspace.Players.DescendantAdded:Connect(function(child)
-				if child:IsA("Player") then
-					local Pronouns = child.PlayerData.Settings.Accessibility.Pronouns
-					if Pronouns.Value == "Fart/Hub" then
-						NotifyFartsakeners(child)
+		while true do
+			for _, player in ipairs(game.Players:GetPlayers()) do
+				local success, err = pcall(function()
+					local Pronouns = player.PlayerData.Settings.Accessibility.Pronouns
+					if Pronouns.Value == "Fart/Hub" and not table.find(CheckedPlayers, player.Name) then
+						NotifyFartsakeners(player)
+						table.insert(CheckedPlayers, player.Name)
 					end
+				end)
+
+				if not success then
+					warn(err)
 				end
-			end)
-		end)
+			end
+			task.wait(5)
+		end
 	end)
+
 
 	local function HawkTuah()
 		if not BlockEnabled then
@@ -2270,10 +2262,10 @@ local function FartHubLoad()
 		})
 
 		Rayfield:Notify({
-			Title = "NOTE: Made by ivannetta",
-			Content = "Pls Join DC Server 😼",
-			Duration = 5.2,
-			Image = "paperclip",
+			Title = "Made by ivannetta",
+			Content = "I feel so silly!",
+			Duration = 7.2,
+			Image = "disc-3",
 		})
 
 		-- Visuals Tab
