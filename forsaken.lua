@@ -1970,6 +1970,7 @@ local function FartHubLoad()
 				Duration = 5,
 				Image = "ban",
 			})
+			task.wait(5)
 			return
 		end
 
@@ -2023,8 +2024,6 @@ local function FartHubLoad()
 		humanoid:SetStateEnabled(Enum.HumanoidStateType.Running, false)
 		humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
 		humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing, false)
-
-
 
 		local duration = 0.45
 		local steps = 120
@@ -2610,6 +2609,7 @@ local function FartHubLoad()
 				"Minecraft Parkour",
 				"Family Guy",
 				"CS2",
+				"Smily",
 				"Necromancy",
 				"HairyTwinkle",
 				"PistonDoor",
@@ -2623,6 +2623,7 @@ local function FartHubLoad()
 					["Minecraft Parkour"] = "Minecraft.mp4.Fart4",
 					["Family Guy"] = "FamilyGuy.mp4.Fart4",
 					["CS2"] = "CS2.mp4.Fart4",
+					["Smily"] = "SibidiToiletRizz.mp4.Fart4",
 					["Necromancy"] = "Necromancy.mp4.Fart4",
 					["HairyTwinkle"] = "HairyTwinkle.mp4.Fart4",
 					["PistonDoor"] = "PistonDoor.mp4.Fart4",
