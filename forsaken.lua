@@ -32,6 +32,8 @@ local function FartHubLoad()
 	local DebugNotifications = getgenv and getgenv().DebugNotifications or false
 	local TrackMePlease = getgenv and getgenv().TrackMePlease or true
 
+	print(TrackMePlease)
+
 	local SkibidiSigma
 	if TrackMePlease then
 		SkibidiSigma = "Fart/Hub"
