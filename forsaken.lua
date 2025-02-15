@@ -2009,12 +2009,22 @@ local function FartHubLoad()
 			return
 		end
 
+		local savedTracks = {}
+
+		if animator then
+			for _, track in ipairs(animator:GetPlayingAnimationTracks()) do
+				savedTracks[#savedTracks + 1] = { track = track, time = track.TimePosition }
+				track:Stop(0)
+			end
+		end
+
 		humanoid:ChangeState(Enum.HumanoidStateType.Physics)
 		humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
 		humanoid:SetStateEnabled(Enum.HumanoidStateType.Freefall, false)
 		humanoid:SetStateEnabled(Enum.HumanoidStateType.Running, false)
 		humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
 		humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing, false)
+
 
 
 		local duration = 0.45
@@ -2046,6 +2056,14 @@ local function FartHubLoad()
 			humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
 			humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing, true)
 			humanoid:ChangeState(Enum.HumanoidStateType.Running)
+
+			if animator then
+				for _, data in ipairs(savedTracks) do
+					local track = data.track
+					track:Play()
+					track.TimePosition = data.time
+				end
+			end
 			task.wait(0.25)
 			FlipCooldown = false
 		end)
