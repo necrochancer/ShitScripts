@@ -27,6 +27,7 @@ local function FartHubLoad()
 	local Rayfield = loadstring(
 		game:HttpGet("https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/source.lua")
 	)()
+	local loopty = false
 	local CheckedPlayers = {}
 	local SkibPlr = {}
 
@@ -126,7 +127,7 @@ local function FartHubLoad()
 			Jason = { Duration1 = 0.5, Duration2 = 1, Duration3 = 1.5 },
 			["1x1x1x1"] = { Duration1 = 0.5, Duration2 = 2.5, Duration3 = 1 },
 			JohnDoe = { Duration1 = 0.5, Duration2 = 5 },
-			C00lkidd = { Duration1 = 0.5 },
+			c00lkidd = { Duration1 = 0.5 },
 		},
 		Survivors = {
 			Guest1337 = { Duration2 = 2 },
@@ -1682,6 +1683,7 @@ local function FartHubLoad()
 
 	local function SkibidiGenerator(shouldLoop)
 		while shouldLoop and running do
+			loopty = true
 			local PuzzleUI = Players.LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("PuzzleUI", 9999)
 
 			task.wait(SkibidiWait + (math.random() * (SkibidiWait / 5 * 2) - SkibidiWait / 5))
@@ -1706,6 +1708,7 @@ local function FartHubLoad()
 				end
 			end
 		end
+		loopty = false
 	end
 
 	local function GeneratorOnce()
@@ -1721,7 +1724,8 @@ local function FartHubLoad()
 	end
 
 	local function TpDoGenerator()
-		
+		local wasloopty = loopty
+		if loopty then task.spawn(SkibidiGenerator(false)) end
 		local Geneators = workspace:WaitForChild("Map")
 			and workspace.Map:WaitForChild("Ingame")
 			and workspace.Map.Ingame:WaitForChild("Map")
@@ -1748,6 +1752,9 @@ local function FartHubLoad()
 						end
 					end
 				end
+			end
+			if wasloopty then
+				SkibidiGenerator(true)
 			end
 			return generators
 		end
