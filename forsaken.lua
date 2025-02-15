@@ -1791,14 +1791,14 @@ local function FartHubLoad()
 		if character and currentSurvivors then
 			for _, survivor in pairs(currentSurvivors.Parent:GetDescendants()) do
 				if survivor:FindFirstChild("Username") and survivor.Username.Text == Player.Name then
-					if not CheckedPlayers[Player.Name] then
+					if not table.find(CheckedPlayers, Player.Name) then
 						Rayfield:Notify({
 							Title = "Another Fartsaken User!",
 							Content = (Player.Name .. " Is Also Using Fartsaken!"),
 							Duration = 10,
 							Image = "snail",
 						})
-						--CheckedPlayers[Player.Name] = true
+						table.insert(CheckedPlayers, Player.Name)
 					end
 					survivor.Username.TextColor3 = Color3.fromRGB(170, 255, 127)
 				end
@@ -1810,10 +1810,9 @@ local function FartHubLoad()
 		while true do
 			for _, player in ipairs(game.Players:GetPlayers()) do
 				local success, err = pcall(function()
-					local Pronouns = player.PlayerData.Settings.Accessibility.Pronouns
-					if Pronouns.Value == "Fart/Hub" and not table.find(CheckedPlayers, player.Name) then
+					local Pronouns = player:WaitForChild("PlayerData"):WaitForChild("Setttings"):WaitForChild("Accessebility"):WaitForChild("Pronouns")
+					if Pronouns.Value == "Fart/Hub" then
 						NotifyFartsakeners(player)
-						table.insert(CheckedPlayers, player.Name)
 					end
 				end)
 
