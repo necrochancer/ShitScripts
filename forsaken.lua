@@ -50,6 +50,13 @@ local function FartHubLoad()
 	local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab, AnimationsTab = nil, nil, nil, nil, nil, nil
 	local BabyShark, KillerFartPart, HRP = nil, nil, nil
 	local FlipCooldown = false
+	local success, wowzers = pcall(function()
+		return game:GetService("Players").LocalPlayer.PlayerData.Settings.Game:WaitForChild("FieldOfView", 3)
+	end)
+	if success and wowzers then
+		wowzers:SetAttribute("MaxValue", 120)
+		wowzers:SetAttribute("MinValue", 20)
+	end
 	local LopticaCooldown = false
 	local FunnyVideo = "SubwaySurfers.mp4.Fart4"
 
@@ -1671,7 +1678,7 @@ local function FartHubLoad()
 						for _, player in ipairs(game.Players:GetPlayers()) do
 							if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
 								local distance = (player.Character.HumanoidRootPart.Position - g.Main.Position).Magnitude
-								if distance < 10 then
+								if distance < 25 then
 									playersNearby = true
 									break
 								end
@@ -1912,7 +1919,7 @@ local function FartHubLoad()
 			end
 
 			hrp.CFrame = CFrame.new(startCFrame.Position + forwardVector * 35) * startCFrame.Rotation
-			task.wait(0.5)
+			task.wait(0.25)
 			FlipCooldown = false
 		end)
 		if animator then
@@ -2178,7 +2185,7 @@ local function FartHubLoad()
 
 		local FortniteFlipKeybind = PlayerTab:CreateKeybind({
 			Name = "Frontflip",
-			CurrentKeybind = "B",
+			CurrentKeybind = "[",
 			Callback = function()
 				FortniteFlips()
 			end,
@@ -2222,6 +2229,18 @@ local function FartHubLoad()
 				if state then
 					task.spawn(Do1x1x1x1Popups)
 				end
+			end,
+		})
+
+		local FovSlider = PlayerTab:CreateSlider({
+			Name = "Field of View",
+			Range = { 20, 120 },
+			Increment = 5,
+			Suffix = "Degrees",
+			CurrentValue = wowzers.Value,
+			Flag = "FieldOfView",
+			Callback = function(value)
+				game:GetService("Players").LocalPlayer.PlayerData.Settings.Game.FieldOfView.Value = value
 			end,
 		})
 
@@ -2284,7 +2303,7 @@ local function FartHubLoad()
 
 		local GeneratorKeybind = GeneratorTab:CreateKeybind({
 			Name = "Do Current Generator.",
-			CurrentKeybind = "H",
+			CurrentKeybind = "T",
 			Callback = function(keybind)
 				GeneratorOnce()
 			end,
@@ -2493,7 +2512,7 @@ local function FartHubLoad()
 
 		local AnimationsTabKeybindGUI = AnimationsTab:CreateKeybind({
 			Name = "Emote As Killer GUI",
-			CurrentKeybind = "H",
+			CurrentKeybind = "]",
 			Callback = function(keybind)
 				if LopticaCooldown then
 					return
