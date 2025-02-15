@@ -1195,7 +1195,7 @@ local function FartHubLoad()
 								task.spawn(function()
 									repeat
 										task.wait()
-									until lol:WaitForChild("CooldownTime", 0.2).Text == ""
+									until not lol.Parent or lol:WaitForChild("CooldownTime", 0.2).Text == ""
 									task.wait(0.1)
 									IsSkibidiToiletMode = false
 								end)
@@ -2009,7 +2009,13 @@ local function FartHubLoad()
 			return
 		end
 
-		humanoid.Sit = true
+		humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+		humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
+		humanoid:SetStateEnabled(Enum.HumanoidStateType.Freefall, false)
+		humanoid:SetStateEnabled(Enum.HumanoidStateType.Running, false)
+		humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+		humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing, false)
+
 
 		local duration = 0.45
 		local steps = 120
@@ -2034,14 +2040,15 @@ local function FartHubLoad()
 			end
 
 			hrp.CFrame = CFrame.new(startCFrame.Position + forwardVector * 35) * startCFrame.Rotation
+			humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, true)
+			humanoid:SetStateEnabled(Enum.HumanoidStateType.Freefall, true)
+			humanoid:SetStateEnabled(Enum.HumanoidStateType.Running, true)
+			humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+			humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing, true)
+			humanoid:ChangeState(Enum.HumanoidStateType.Running)
 			task.wait(0.25)
 			FlipCooldown = false
 		end)
-		if animator then
-			humanoid:Move(Vector3.zero)
-		end
-
-		humanoid.Sit = false
 	end
 
 	local function SetProximity()
@@ -2381,7 +2388,7 @@ local function FartHubLoad()
 		PlayerTab:CreateSection("This Might Not Work On Free Executors.")
 
 		local DisableStaminaDrainSigmaToggle = PlayerTab:CreateToggle({
-			Name = "Disable Stamina Drain ( seems to be broken for killers )",
+			Name = "Disable Stamina Drain",
 			CurrentValue = false,
 			Callback = function(state)
 				task.spawn(function()
