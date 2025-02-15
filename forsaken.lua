@@ -35,7 +35,7 @@ local function FartHubLoad()
 			local TrackMePlease = getgenv and (getgenv().TrackMePlease ~= nil and getgenv().TrackMePlease or true)
 
 			local SkibidiSigma
-			if TrackMePlease == "true" then
+			if TrackMePlease == true or TrackMePlease == nil then
 				SkibidiSigma = "Fart/Hub"
 			else
 				SkibidiSigma = "They/Them"
@@ -70,6 +70,7 @@ local function FartHubLoad()
 	local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab, AnimationsTab = nil, nil, nil, nil, nil, nil
 	local BabyShark, KillerFartPart, HRP = nil, nil, nil
 	local FlipCooldown = false
+	local GeneratorKeybindCooldown = false
 	local success, wowzers = pcall(function()
 		return game:GetService("Players").LocalPlayer.PlayerData.Settings.Game:WaitForChild("FieldOfView", 3)
 	end)
@@ -1548,7 +1549,7 @@ local function FartHubLoad()
 		local function AddFart(object, color)
 			if
 				object:IsA("Model")
-				and object ~= game:GetService("Players").LocalPlayer.Character
+				and object ~= localPlayer.Character
 				and not object:FindFirstChildOfClass("Highlight")
 			then
 				local h = Instance.new("Highlight", object)
@@ -1557,7 +1558,6 @@ local function FartHubLoad()
 		end
 		for _, folder in ipairs({ workspace.Players.Survivors, workspace.Players.Killers }) do
 			for _, obj in ipairs(folder:GetChildren()) do
-				if obj == game:GetService("Players").LocalPlayer.Character then return end
 				AddFart(obj, folder.Name == "Survivors" and survivorHighlightColor or killerHighlightColor)
 				local billboard = Instance.new("BillboardGui", obj:WaitForChild("Head"))
 				billboard.Name = "FartHubBillboard"
@@ -1574,7 +1574,6 @@ local function FartHubLoad()
 			end
 			folder.ChildAdded:Connect(function(child)
 				if highlightingEnabled then
-					if child == game:GetService("Players").LocalPlayer.Character then return end
 					AddFart(child, folder.Name == "Survivors" and survivorHighlightColor or killerHighlightColor)
 					local billboard = Instance.new("BillboardGui", child:WaitForChild("Head"))
 					billboard.Name = "FartHubBillboard"
@@ -1792,7 +1791,6 @@ local function FartHubLoad()
 			for _, Survivor in pairs(Survivadorers:GetChildren()) do
 				if Survivor:FindFirstChild("Username") and Survivor.Username.Text == Player.Name then
 					Survivor.Username.TextColor3 = Color3.fromRGB(170, 255, 127)
-					Survivor.SurvivorName.TextColor3 = Color3.fromRGB(170, 255, 127)
 					if CheckedPlayers[Player.Name] then
 						return
 					else
@@ -1802,7 +1800,7 @@ local function FartHubLoad()
 							Duration = 10,
 							Image = "snail",
 						})
-						CheckedPlayers:Append(Player.Name)
+						table.insert(CheckedPlayers, Player.Name)
 					end
 				end
 			end
@@ -1825,7 +1823,6 @@ local function FartHubLoad()
 	task.spawn(function()
 		local success, err = pcall(function()
 			FindFartsakeners()
-
 			workspace.Players.Survivors.ChildAdded:Connect(function(child)
 				if child:IsA("Player") then
 					local Pronouns = child.PlayerData.Settings.Accessibility.Pronouns
@@ -1835,7 +1832,7 @@ local function FartHubLoad()
 				end
 			end)
 		end)
-	end)
+	end)	
 
 	local function HawkTuah()
 		if not BlockEnabled then
@@ -2436,14 +2433,19 @@ local function FartHubLoad()
 			Name = "Do Current Generator.",
 			CurrentKeybind = "T",
 			Callback = function(keybind)
-				GeneratorOnce()
+				if not GeneratorKeybindCooldown then
+					GeneratorOnce()
+					GeneratorKeybindCooldown = true
+					task.wait(1)
+					GeneratorKeybindCooldown = false
+				end
 			end,
 		})
 
 		local GeneratorSpeedSlider = GeneratorTab:CreateSlider({
 			Name = "Generator Speed",
-			Range = { 0.1, 10 },
-			Increment = 0.1,
+			Range = { 0.5, 10 },
+			Increment = 0.5,
 			Suffix = "Seconds",
 			CurrentValue = 2,
 			Flag = "GeneratorSpeed",
