@@ -1788,18 +1788,19 @@ local function FartHubLoad()
 		local playerInfo = temporaryUI and temporaryUI:FindFirstChild("PlayerInfo")
 		local currentSurvivors = playerInfo and playerInfo:FindFirstChild("CurrentSurvivors")
 
+		if not table.find(CheckedPlayers, Player.Name) and Player.Name ~= game:GetService("Players").LocalPlayer.Name then
+			Rayfield:Notify({
+				Title = "Another Fartsaken User!",
+				Content = (Player.Name .. " Is Also Using Fartsaken!"),
+				Duration = 10,
+				Image = "snail",
+			})
+			table.insert(CheckedPlayers, Player.Name)
+		end
+
 		if character and currentSurvivors then
 			for _, survivor in pairs(currentSurvivors.Parent:GetDescendants()) do
 				if survivor:FindFirstChild("Username") and survivor.Username.Text == Player.Name then
-					if not table.find(CheckedPlayers, Player.Name) then
-						Rayfield:Notify({
-							Title = "Another Fartsaken User!",
-							Content = (Player.Name .. " Is Also Using Fartsaken!"),
-							Duration = 10,
-							Image = "snail",
-						})
-						table.insert(CheckedPlayers, Player.Name)
-					end
 					survivor.Username.TextColor3 = Color3.fromRGB(170, 255, 127)
 				end
 			end
