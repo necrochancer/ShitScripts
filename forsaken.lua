@@ -1061,7 +1061,7 @@ local function FartHubLoad()
 		end
 
 		local function onChildAdded(child)
-			if child.Name == "Pizza" then
+			if child.Name == "Pizza" or child.Name == "Milk" then
 				local player = game.Players.LocalPlayer
 				local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
 				if hrp then
@@ -1242,7 +1242,11 @@ local function FartHubLoad()
 				if response and response.Body then
 					local data = game:GetService("HttpService"):JSONDecode(response.Body)
 					for _, item in ipairs(data.tree) do
-						if item.path:match("^Assets/.+%.png$") or item.path:match("^Assets/.+%.mp4$") or item.path:match("Assets/(.+)%.mp3$") then
+						if
+							item.path:match("^Assets/.+%.png$")
+							or item.path:match("^Assets/.+%.mp4$")
+							or item.path:match("Assets/(.+)%.mp3$")
+						then
 							local rawUrl = "https://raw.githubusercontent.com/ivannetta/ShitScripts/main/" .. item.path
 							table.insert(assetList, rawUrl)
 
@@ -1492,7 +1496,7 @@ local function FartHubLoad()
 		local function AddFart(object, color)
 			if
 				object:IsA("Model")
-				and object ~= localPlayer.Character
+				and object ~= game:GetService("Players").LocalPlayer.Character
 				and not object:FindFirstChildOfClass("Highlight")
 			then
 				local h = Instance.new("Highlight", object)
@@ -1501,6 +1505,7 @@ local function FartHubLoad()
 		end
 		for _, folder in ipairs({ workspace.Players.Survivors, workspace.Players.Killers }) do
 			for _, obj in ipairs(folder:GetChildren()) do
+				if obj == game:GetService("Players").LocalPlayer.Character then return end
 				AddFart(obj, folder.Name == "Survivors" and survivorHighlightColor or killerHighlightColor)
 				local billboard = Instance.new("BillboardGui", obj:WaitForChild("Head"))
 				billboard.Name = "FartHubBillboard"
@@ -1517,6 +1522,7 @@ local function FartHubLoad()
 			end
 			folder.ChildAdded:Connect(function(child)
 				if highlightingEnabled then
+					if child == game:GetService("Players").LocalPlayer.Character then return end
 					AddFart(child, folder.Name == "Survivors" and survivorHighlightColor or killerHighlightColor)
 					local billboard = Instance.new("BillboardGui", child:WaitForChild("Head"))
 					billboard.Name = "FartHubBillboard"
@@ -1993,7 +1999,7 @@ local function FartHubLoad()
 
 	local function InitializeButtonGUI()
 		local visible = true
-		local sausageHolder = game:GetService("CoreGui"):FindFirstChild("TopBarApp"):FindFirstChild("UnibarLeftFrame").UnibarMenu["2"]
+		local sausageHolder = game:GetService("CoreGui"):FindFirstChild("TopBarApp"):FindFirstChild("UnibarLeftFrame"):FindFirstChild('UnibarMenu["2"]')
 		local originalSize = sausageHolder.Size.X.Offset
 
 		sausageHolder.Size = UDim2.new(0, originalSize + 48, 0, sausageHolder.Size.Y.Offset)
@@ -2099,7 +2105,10 @@ local function FartHubLoad()
 
 	local function MakeButton()
 		pcall(function()
-			if game:GetService("CoreGui"):FindFirstChild("TopBarApp") and game:GetService("CoreGui"):FindFirstChild("TopBarApp"):FindFirstChild("UnibarLeftFrame") then
+			if
+				game:GetService("CoreGui"):FindFirstChild("TopBarApp")
+				and game:GetService("CoreGui"):FindFirstChild("TopBarApp"):FindFirstChild("UnibarLeftFrame")
+			then
 				InitializeButtonGUI()
 			else
 				CreateSigmaFrame()
@@ -2453,37 +2462,36 @@ local function FartHubLoad()
 			CurrentOption = { "Subway Surfers" },
 			MultipleOptions = false,
 			Callback = function(Options)
-			local videos = {
-				["Subway Surfers"] = "SubwaySurfers.mp4.Fart4",
-				["Minecraft Parkour"] = "Minecraft.mp4.Fart4",
-				["Family Guy"] = "FamilyGuy.mp4.Fart4",
-				["CS2"] = "CS2.mp4.Fart4",
-				["Necromancy"] = "Necromancy.mp4.Fart4",
-				["HairyTwinkle"] = "HairyTwinkle.mp4.Fart4",
-				["PistonDoor"] = "PistonDoor.mp4.Fart4",
-			}
+				local videos = {
+					["Subway Surfers"] = "SubwaySurfers.mp4.Fart4",
+					["Minecraft Parkour"] = "Minecraft.mp4.Fart4",
+					["Family Guy"] = "FamilyGuy.mp4.Fart4",
+					["CS2"] = "CS2.mp4.Fart4",
+					["Necromancy"] = "Necromancy.mp4.Fart4",
+					["HairyTwinkle"] = "HairyTwinkle.mp4.Fart4",
+					["PistonDoor"] = "PistonDoor.mp4.Fart4",
+				}
 
-			local videoKeys = {}
-			for key in pairs(videos) do
-				table.insert(videoKeys, key)
-			end
+				local videoKeys = {}
+				for key in pairs(videos) do
+					table.insert(videoKeys, key)
+				end
 
-			FunnyVideo = videos[Options[1]] or FunnyVideo
+				FunnyVideo = videos[Options[1]] or FunnyVideo
 
-			if Options[1] == "Random" then
-				task.spawn(function()
-					local index = 1
-					while Options[1] == "Random" do
-						FunnyVideo = videos[videoKeys[index]]
-						index = index + 1
-						if index > #videoKeys then
-							index = 1
+				if Options[1] == "Random" then
+					task.spawn(function()
+						local index = 1
+						while Options[1] == "Random" do
+							FunnyVideo = videos[videoKeys[index]]
+							index = index + 1
+							if index > #videoKeys then
+								index = 1
+							end
+							task.wait(3)
 						end
-						task.wait(3)
-					end
-				end)
-			end
-
+					end)
+				end
 			end,
 		})
 
@@ -2589,7 +2597,7 @@ local function FartHubLoad()
 				delfolder(basePath)
 			end
 			writefile(sigmaFilePath, "Sigma file created.")
-		end	
+		end
 	end
 
 	pcall(CheckAndDeleteAssets)
