@@ -1322,21 +1322,53 @@ local function FartHubLoad()
 			local Frame = Instance.new("Frame", WowWhatTheZestIsThis)
 			Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 			Frame.BackgroundTransparency = 1.000
-			Frame.AnchorPoint = Vector2.new(1, 0.5)
+			Frame.AnchorPoint = Vector2.new(0.5, 0.5)
 			Frame.Name = "YAPPING"
-			Frame.Position = UDim2.new(1, 0, 0.5, 0)
-			Frame.Size = UDim2.new(0, 150, 0, 150)
+			Frame.Position = UDim2.new(0.5, 0, 0.5, 0)
+			Frame.Size = UDim2.new(0, 100, 0, 100)
 
 			local VideoFrame = Instance.new("VideoFrame", Frame)
 			VideoFrame.Size = UDim2.new(1, 0, 1, 0)
 			VideoFrame.Video = LoadAsset("FatMan.mp4.Fart4")
 			VideoFrame.Looped = true
 			VideoFrame.Playing = true
+
+			local TweenService = game:GetService("TweenService")
+			local screenSize = game:GetService("Workspace").CurrentCamera.ViewportSize
+
+			local direction = Vector2.new(math.random(-1, 1), math.random(-1, 1)).Unit
+			local speed = 5
+
+			local function bounce()
+				local newPos = Frame.Position + UDim2.new(direction.X * speed / screenSize.X, 0, direction.Y * speed / screenSize.Y, 0)
+				if newPos.X.Scale < 0 or newPos.X.Scale > 1 then
+					direction = Vector2.new(-direction.X, direction.Y)
+				end
+				if newPos.Y.Scale < 0 or newPos.Y.Scale > 1 then
+					direction = Vector2.new(direction.X, -direction.Y)
+				end
+
+				local mousePos = game:GetService("UserInputService"):GetMouseLocation()
+				local framePos = Frame.AbsolutePosition
+				local frameSize = Frame.AbsoluteSize
+				if mousePos.X >= framePos.X and mousePos.X <= framePos.X + frameSize.X and mousePos.Y >= framePos.Y and mousePos.Y <= framePos.Y + frameSize.Y then
+					direction = (Vector2.new(mousePos.X, mousePos.Y) - Vector2.new(framePos.X + frameSize.X / 2, framePos.Y + frameSize.Y / 2)).Unit
+					direction = -direction
+				end
+
+				local tweenInfo = TweenInfo.new(0.01, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
+				local tween = TweenService:Create(Frame, tweenInfo, { Position = Frame.Position + UDim2.new(direction.X * speed / screenSize.X, 0, direction.Y * speed / screenSize.Y, 0), Rotation = Frame.Rotation + 10 })
+				tween:Play()
+				tween.Completed:Connect(bounce)
+			end
+
+			bounce()
 		else
-			WowWhatTheZestIsThis:Destroy()
+			if WowWhatTheZestIsThis then
+				WowWhatTheZestIsThis:Destroy()
+			end
 		end
 	end
-
 	local function NameProtect(state)
 		local function updateNames()
 			local CurrentSurvivors = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("TemporaryUI")
@@ -2194,7 +2226,7 @@ local function FartHubLoad()
 
 		local FortniteFlipKeybind = PlayerTab:CreateKeybind({
 			Name = "Frontflip",
-			CurrentKeybind = "[",
+			CurrentKeybind = "P",
 			Callback = function()
 				FortniteFlips()
 			end,
@@ -2520,7 +2552,7 @@ local function FartHubLoad()
 
 		local AnimationsTabKeybindGUI = AnimationsTab:CreateKeybind({
 			Name = "Emote As Killer GUI",
-			CurrentKeybind = "]",
+			CurrentKeybind = "O",
 			Callback = function(keybind)
 				if LopticaCooldown then
 					return
