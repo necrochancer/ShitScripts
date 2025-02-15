@@ -32,10 +32,12 @@ local function FartHubLoad()
 	local DebugNotifications = getgenv and getgenv().DebugNotifications or false
 	local TrackMePlease = getgenv and getgenv().TrackMePlease or true
 
+	local SkibidiSigma = if TrackMePlease then "Fart/Hub" else "They/Them" end
+
 	game:GetService("ReplicatedStorage").Modules.Network.RemoteEvent:FireServer(
 		"UpdateSettings",
 		game:GetService("Players").LocalPlayer.PlayerData.Settings.Accessibility.Pronouns,
-		TrackMePlease and "Fart/Hub" or "They/Them"
+		SkibidiSigma
 	)
 
 
