@@ -28,7 +28,7 @@ local function FartHubLoad()
 		game:HttpGet("https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/source.lua")
 	)()
 	local CheckedPlayers = {}
-	
+
 	task.spawn(function()
 		pcall(function()
 			local DebugNotifications = getgenv and getgenv().DebugNotifications or false
@@ -2049,7 +2049,7 @@ local function FartHubLoad()
 				end
 			end
 		end)
-		if not success and DebugNotifications then
+		if not success then
 			Rayfield:Notify({ Title = "Error", Content = err, Duration = 5 })
 		end
 	end
@@ -2107,7 +2107,7 @@ local function FartHubLoad()
 
 	local function InitializeButtonGUI()
 		local visible = true
-		local sausageHolder = game:GetService("CoreGui"):FindFirstChild("TopBarApp"):FindFirstChild("UnibarLeftFrame"):FindFirstChild('UnibarMenu["2"]')
+		local sausageHolder = game:GetService("CoreGui"):FindFirstChild("TopBarApp"):FindFirstChild("UnibarLeftFrame").UnibarMenu["2"]
 		local originalSize = sausageHolder.Size.X.Offset
 
 		sausageHolder.Size = UDim2.new(0, originalSize + 48, 0, sausageHolder.Size.Y.Offset)
@@ -2358,6 +2358,20 @@ local function FartHubLoad()
 			Flag = "FieldOfView",
 			Callback = function(value)
 				game:GetService("Players").LocalPlayer.PlayerData.Settings.Game.FieldOfView.Value = value
+			end,
+		})
+
+		PlayerTab:CreateDivider()
+
+		local JumpPowerSlider = PlayerTab:CreateSlider({
+			Name = "Jump Power",
+			Range = { 0, 20 },
+			Increment = 1,
+			Suffix = "Jump Power",
+			CurrentValue = 10,
+			Flag = "JumpPower",
+			Callback = function(value)
+				game.Players.LocalPlayer.Character.Humanoid.JumpPower = value * 3
 			end,
 		})
 
