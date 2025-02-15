@@ -27,8 +27,18 @@ local function FartHubLoad()
 	local Rayfield = loadstring(
 		game:HttpGet("https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/source.lua")
 	)()
+	local CheckedPlayers = {}
 
 	local DebugNotifications = getgenv and getgenv().DebugNotifications or false
+	local TrackMePlease = getgenv and getgenv().TrackMePlease or true
+
+	game:GetService("ReplicatedStorage").Modules.Network.RemoteEvent:FireServer(
+		"UpdateSettings",
+		game:GetService("Players").LocalPlayer.PlayerData.Settings.Accessibility.Pronouns,
+		TrackMePlease and "Fart/Hub" or "They/Them"
+	)
+
+
 	local SmoothShiftLock
 
 	local success, err = pcall(function()
@@ -1760,6 +1770,62 @@ local function FartHubLoad()
 			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = lastPosition
 		end
 	end
+
+	local function NotifyFartsakeners(Player)
+		local Characterizationemation = Player.Character
+		local Survivadorers = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("TemporaryUI")
+			and game:GetService("Players").LocalPlayer.PlayerGui.TemporaryUI:FindFirstChild("PlayerInfo")
+			and game:GetService("Players").LocalPlayer.PlayerGui.TemporaryUI.PlayerInfo
+				:FindFirstChild("CurrentSurvivors")
+
+		if Characterizationemation and Survivadorers then
+			for _, Survivor in pairs(Survivadorers:GetChildren()) do
+				if Survivor:FindFirstChild("Username") and Survivor.Username.Text == Player.Name then
+					Survivor.Username.TextColor3 = Color3.fromRGB(170, 255, 127)
+					Survivor.SurvivorName.TextColor3 = Color3.fromRGB(170, 255, 127)
+					if CheckedPlayers[Player.Name] then
+						return
+					else
+						Rayfield:Notify({
+							Title = "Another Fartsaken User!",
+							Content = (Player.Name .. " Is Also Using Fartsaken!"),
+							Duration = 10,
+							Image = "snail",
+						})
+						CheckedPlayers:Append(Player.Name)
+					end
+				end
+			end
+		end
+	end
+
+	local function FindFartsakeners()
+		for _, PlayerFarting in pairs(game:GetService("Players"):GetPlayers()) do
+			local Farters = game:GetService("Players")
+			local LocalFarter = Farters.LocalPlayer
+			if PlayerFarting ~= LocalFarter then
+				local Pronouns = PlayerFarting.PlayerData.Settings.Accessibility.Pronouns
+				if Pronouns.Value == "Fart/Hub" then
+					NotifyFartsakeners(PlayerFarting)
+				end
+			end
+		end
+	end
+
+	task.spawn(function()
+		local success, err = pcall(function()
+			FindFartsakeners()
+
+			workspace.Players.Survivors.ChildAdded:Connect(function(child)
+				if child:IsA("Player") then
+					local Pronouns = child.PlayerData.Settings.Accessibility.Pronouns
+					if Pronouns.Value == "Fart/Hub" then
+						NotifyFartsakeners(child)
+					end
+				end
+			end)
+		end)
+	end)
 
 	local function HawkTuah()
 		if not BlockEnabled then
