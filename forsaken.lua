@@ -1781,16 +1781,16 @@ local function FartHubLoad()
 	end
 
 	local function NotifyFartsakeners(Player)
-		local Characterizationemation = Player.Character
-		local Survivadorers = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("TemporaryUI")
-			and game:GetService("Players").LocalPlayer.PlayerGui.TemporaryUI:FindFirstChild("PlayerInfo")
-			and game:GetService("Players").LocalPlayer.PlayerGui.TemporaryUI.PlayerInfo
-				:FindFirstChild("CurrentSurvivors")
+		local character = Player.Character
+		local playerGui = game:GetService("Players").LocalPlayer.PlayerGui
+		local temporaryUI = playerGui:FindFirstChild("TemporaryUI")
+		local playerInfo = temporaryUI and temporaryUI:FindFirstChild("PlayerInfo")
+		local currentSurvivors = playerInfo and playerInfo:FindFirstChild("CurrentSurvivors")
 
-		if Characterizationemation and Survivadorers then
-			for _, Survivor in pairs(Survivadorers:GetChildren()) do
-				if Survivor:FindFirstChild("Username") and Survivor.Username.Text == Player.Name then
-					Survivor.Username.TextColor3 = Color3.fromRGB(170, 255, 127)
+		if character and currentSurvivors then
+			for _, survivor in pairs(currentSurvivors.Parent:GetDescendants()) do
+				if survivor:FindFirstChild("Username") and survivor.Username.Text == Player.Name then
+					survivor.Username.TextColor3 = Color3.fromRGB(170, 255, 127)
 					if CheckedPlayers[Player.Name] then
 						return
 					else
@@ -1823,7 +1823,7 @@ local function FartHubLoad()
 	task.spawn(function()
 		local success, err = pcall(function()
 			FindFartsakeners()
-			workspace.Players.Survivors.ChildAdded:Connect(function(child)
+			workspace.Players.DescendantAdded:Connect(function(child)
 				if child:IsA("Player") then
 					local Pronouns = child.PlayerData.Settings.Accessibility.Pronouns
 					if Pronouns.Value == "Fart/Hub" then
