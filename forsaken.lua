@@ -1720,6 +1720,7 @@ local function FartHubLoad()
 	end
 
 	local function TpDoGenerator()
+		
 		local Geneators = workspace:WaitForChild("Map")
 			and workspace.Map:WaitForChild("Ingame")
 			and workspace.Map.Ingame:WaitForChild("Map")
@@ -2374,7 +2375,7 @@ local function FartHubLoad()
 		PlayerTab:CreateSection("This Might Not Work On Free Executors.")
 
 		local DisableStaminaDrainSigmaToggle = PlayerTab:CreateToggle({
-			Name = "Disable Stamina Drain",
+			Name = "Disable Stamina Drain ( seems to be broken for killers )",
 			CurrentValue = false,
 			Callback = function(state)
 				task.spawn(function()
@@ -2435,7 +2436,7 @@ local function FartHubLoad()
 				if not GeneratorKeybindCooldown then
 					GeneratorOnce()
 					GeneratorKeybindCooldown = true
-					task.wait(1)
+					task.wait(2.5)
 					GeneratorKeybindCooldown = false
 				end
 			end,
@@ -2444,9 +2445,9 @@ local function FartHubLoad()
 		local GeneratorSpeedSlider = GeneratorTab:CreateSlider({
 			Name = "Generator Speed",
 			Range = { 2.5, 10 },
-			Increment = 2.5,
+			Increment = .5,
 			Suffix = "Seconds",
-			CurrentValue = 2,
+			CurrentValue = 2.5,
 			Flag = "GeneratorSpeed",
 			Callback = function(value)
 				SkibidiWait = value
