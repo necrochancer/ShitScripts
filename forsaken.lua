@@ -1971,14 +1971,18 @@ local function FartHubLoad()
 				Duration = 5,
 				Image = "ban",
 			})
+			return
 		end
 
-		while SkibidiStaminaLoop do
+		local connection
+		connection = game:GetService("RunService").Heartbeat:Connect(function()
+			if not SkibidiStaminaLoop then
+				connection:Disconnect()
+				SkibidiSprinting.StaminaLossDisabled = nil
+				return
+			end
 			SkibidiSprinting.StaminaLossDisabled = function() end
-			task.wait(1)
-		end
-
-		SkibidiSprinting.StaminaLossDisabled = nil
+		end)
 	end
 
 	local function PlayBoing()
@@ -2005,7 +2009,7 @@ local function FartHubLoad()
 			return
 		end
 
-		humanoid:ChangeState("Jumping")
+		humanoid.Sit = true
 
 		local duration = 0.45
 		local steps = 120
@@ -2036,6 +2040,8 @@ local function FartHubLoad()
 		if animator then
 			humanoid:Move(Vector3.zero)
 		end
+
+		humanoid.Sit = false
 	end
 
 	local function SetProximity()
@@ -2646,7 +2652,7 @@ local function FartHubLoad()
 
 		local AnimationsTabKeybindGUI = AnimationsTab:CreateKeybind({
 			Name = "Emote As Killer GUI",
-			CurrentKeybind = "O",
+			CurrentKeybind = "J",
 			Callback = function(keybind)
 				if LopticaCooldown then
 					return
