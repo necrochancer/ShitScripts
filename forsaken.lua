@@ -32,7 +32,12 @@ local function FartHubLoad()
 	local DebugNotifications = getgenv and getgenv().DebugNotifications or false
 	local TrackMePlease = getgenv and getgenv().TrackMePlease or true
 
-	local SkibidiSigma = if TrackMePlease then "Fart/Hub" else "They/Them" end
+	local SkibidiSigma
+	if TrackMePlease then
+		SkibidiSigma = "Fart/Hub"
+	else
+		SkibidiSigma = "They/Them"
+	end
 
 	game:GetService("ReplicatedStorage").Modules.Network.RemoteEvent:FireServer(
 		"UpdateSettings",
