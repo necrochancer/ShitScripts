@@ -1810,7 +1810,7 @@ local function FartHubLoad()
 		while true do
 			for _, player in ipairs(game.Players:GetPlayers()) do
 				local success, err = pcall(function()
-					local Pronouns = player:WaitForChild("PlayerData"):WaitForChild("Setttings"):WaitForChild("Accessebility"):WaitForChild("Pronouns")
+					local Pronouns = player:WaitForChild("PlayerData"):WaitForChild("Settings"):WaitForChild("Accessibility"):WaitForChild("Pronouns")
 					if Pronouns.Value == "Fart/Hub" then
 						NotifyFartsakeners(player)
 					end
