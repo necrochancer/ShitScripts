@@ -1468,7 +1468,7 @@ local function FartHubLoad()
 	})
 
 	local highlightingEnabled, SkibidiStaminaLoop, running, ItemFartsEnabled, Do1x1PopupsLoop, SkibidiWait, LopticaWaitTime =
-		false, false, false, false, false, 2, 2
+		false, false, false, false, false, 2.5, 2
 	local generatorHighlightColor, survivorHighlightColor, killerHighlightColor, itemHighlightColor =
 		Color3.fromRGB(173, 162, 236),
 		Color3.fromRGB(0, 255, 255),
@@ -1765,9 +1765,8 @@ local function FartHubLoad()
 				)
 				task.wait(LopticaWaitTime / 2)
 				fireproximityprompt(g.Main:WaitForChild("Prompt", 1))
-				task.wait(LopticaWaitTime / 2)
 				for _ = 1, 6 do
-					task.wait(LopticaWaitTime / 5)
+					task.wait(2.5)
 					g.Remotes.RE:FireServer()
 				end
 				task.wait(LopticaWaitTime / 5)
@@ -1832,7 +1831,7 @@ local function FartHubLoad()
 				end
 			end)
 		end)
-	end)	
+	end)
 
 	local function HawkTuah()
 		if not BlockEnabled then
@@ -2444,8 +2443,8 @@ local function FartHubLoad()
 
 		local GeneratorSpeedSlider = GeneratorTab:CreateSlider({
 			Name = "Generator Speed",
-			Range = { 0.5, 10 },
-			Increment = 0.5,
+			Range = { 2.5, 10 },
+			Increment = 2.5,
 			Suffix = "Seconds",
 			CurrentValue = 2,
 			Flag = "GeneratorSpeed",
@@ -2507,16 +2506,18 @@ local function FartHubLoad()
 
 		BlatantTab:CreateSection("Generator Farms.")
 
-		local AutoFarmGeneratorsButton = BlatantTab:CreateButton({
-			Name = "AutoFarm Generators",
-			Description = "Serverhops, Does Generators, Forever and ever.",
-			Callback = function()
-				Rayfield:Notify({ Title = "Loading", Content = "pls wait stinky boy", Duration = 20, Image = "check" })
-				loadstring(
-					game:HttpGet("https://raw.githubusercontent.com/ivannetta/ShitScripts/main/AutoSigma.lua", true)
-				)()
-			end,
-		})
+		-- commented out because its shit
+
+		--local AutoFarmGeneratorsButton = BlatantTab:CreateButton({
+		--	Name = "AutoFarm Generators",
+		--	Description = "Serverhops, Does Generators, Forever and ever.",
+		--	Callback = function()
+		--		Rayfield:Notify({ Title = "Loading", Content = "pls wait stinky boy", Duration = 20, Image = "check" })
+		--		loadstring(
+		--			game:HttpGet("https://raw.githubusercontent.com/ivannetta/ShitScripts/main/AutoSigma.lua", true)
+		--		)()
+		--	end,
+		--})
 
 		local DoAllGeneratorsButton = BlatantTab:CreateButton({
 			Name = "Do ALL Generators",
@@ -2528,10 +2529,10 @@ local function FartHubLoad()
 
 		local DoAllGenSpeedSlider = BlatantTab:CreateSlider({
 			Name = "Do ALL Generators Speed",
-			Range = { 0.1, 10 },
+			Range = { 3, 10 },
 			Increment = 0.1,
 			Suffix = "Seconds",
-			CurrentValue = 2,
+			CurrentValue = 3,
 			Flag = "DoAllGeneratorsSpeed",
 			Callback = function(value)
 				LopticaWaitTime = value
