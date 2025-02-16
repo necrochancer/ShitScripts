@@ -2774,6 +2774,7 @@ local function FartHubLoad()
 				"Necromancy",
 				"HairyTwinkle",
 				"PistonDoor",
+				"Oh My Boy",
 				"Random",
 			},
 			CurrentOption = { "Subway Surfers" },
@@ -2788,6 +2789,7 @@ local function FartHubLoad()
 					["Necromancy"] = "Necromancy.mp4.Fart4",
 					["HairyTwinkle"] = "HairyTwinkle.mp4.Fart4",
 					["PistonDoor"] = "PistonDoor.mp4.Fart4",
+					["Oh My Boy"] = "OhMyBoy.mp4.Fart4",
 				}
 
 				local videoKeys = {}
