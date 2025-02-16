@@ -1324,6 +1324,27 @@ local function FartHubLoad()
 		end
 	end
 
+	task.delay(5, function()
+		pcall(function()
+			if math.random(1, 500) == 69 then
+				local KingVon = Instance.new("ScreenGui", game:GetService("CoreGui"))
+				local Lhbwdqk = Instance.new("Frame")
+				Lhbwdqk.Parent = KingVon
+				Lhbwdqk.Size = UDim2.new(1, 100, 1, 0)
+				Lhbwdqk.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+				local Vid = Instance.new("VideoFrame", Lhbwdqk)
+				Vid.Parent = Lhbwdqk
+				Vid.Size = UDim2.new(1, 0, 1, 0)
+				Vid.ZIndex = 999
+				Vid.Video = getcustomasset("FartHub/Assets/KingVon.mp4.Fart4")
+				Vid.Playing = true
+				Vid.Looped = false
+				task.wait(17)
+				KingVon:Destroy()
+			end
+		end)
+	end)
+
 	local function LoadAsset(assetName)
 		local basePath = "FartHub/Assets/"
 		local assetPath = basePath .. assetName
