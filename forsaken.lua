@@ -24,6 +24,9 @@ local function FartHubLoad()
 	local BlockRemote = game:GetService("ReplicatedStorage").Modules.Network.RemoteEvent
 	local RunService = game:GetService("RunService")
 	local HttpService = game:GetService("HttpService")
+	local buttonFrames = {}
+	local CoolDownBlockers = false
+	local imageButtons = {}
 	local Rayfield = loadstring(
 		game:HttpGet("https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/source.lua")
 	)()
@@ -127,7 +130,7 @@ local function FartHubLoad()
 			Jason = { Duration1 = 0.5, Duration2 = 1, Duration3 = 1.5 },
 			["1x1x1x1"] = { Duration1 = 0.5, Duration2 = 2.5, Duration3 = 1 },
 			JohnDoe = { Duration1 = 0.5, Duration2 = 5 },
-			c00lkidd = { Duration1 = 0.5 },
+			c00lkidd = { Duration1 = 0.5, Duration2 = 1 },
 		},
 		Survivors = {
 			Guest1337 = { Duration2 = 2 },
@@ -2006,11 +2009,75 @@ local function FartHubLoad()
 		end)
 	end
 
-	local function PlayBoing()
+	local function PlayBoing(Path)
 		local sound = Instance.new("Sound", game:GetService("Players").LocalPlayer.Character)
-		sound.SoundId = getcustomasset("FartHub/Assets/Boing.mp3")
+		sound.SoundId = getcustomasset(Path)
 		sound.PlaybackSpeed = math.random() + 0.6
 		sound:Play()
+	end
+
+	local function SetProximity()
+		local success, err = pcall(function()
+			for _, obj in ipairs(workspace:GetDescendants()) do
+				if obj:IsA("ProximityPrompt") then
+					obj.HoldDuration = 0
+				end
+			end
+		end)
+		if not success then
+			Rayfield:Notify({ Title = "Error", Content = err, Duration = 5 })
+		end
+	end
+
+	local function ToggleSigmaItemsHighlights(state)
+		ItemFartsEnabled = state
+		for _, obj in ipairs(workspace:GetDescendants()) do
+			if obj:IsA("Highlight") and table.find(Items, obj.Parent.Name) then
+				task.wait(0.1)
+				obj:Destroy()
+			end
+		end
+		if not state then
+			return
+		end
+		local function AddLopticaHighlight(object, color)
+			if
+				object:IsA("BasePart")
+				and object.Parent:IsA("Model")
+				and not object:FindFirstChildOfClass("Highlight")
+			then
+				local h = Instance.new("Highlight", object)
+				h.FillColor, h.FillTransparency, h.OutlineTransparency = color, 0.7, 0.6
+			end
+		end
+		for _, item in ipairs(Items) do
+			for _, obj in ipairs(workspace.Map.Ingame:GetDescendants()) do
+				if obj:IsA("Model") and obj.Name == item then
+					for _, child in ipairs(obj:GetChildren()) do
+						if child:IsA("BasePart") then
+							AddLopticaHighlight(child, itemHighlightColor)
+						end
+					end
+				end
+			end
+		end
+		workspace.Map.Ingame.DescendantAdded:Connect(function(descendant)
+			if ItemFartsEnabled and descendant:IsA("Model") and table.find(Items, descendant.Name) then
+				for _, child in ipairs(descendant:GetChildren()) do
+					if child:IsA("BasePart") then
+						AddLopticaHighlight(child, itemHighlightColor)
+					end
+				end
+			end
+		end)
+	end
+
+	local function UpdateFarts()
+		ToggleFarts(false)
+		ToggleFarts(true)
+		ToggleSigmaItemsHighlights(false)
+		ToggleSigmaItemsHighlights(true)
+		WriteSigmaData()
 	end
 
 	local function FortniteFlips()
@@ -2018,7 +2085,7 @@ local function FartHubLoad()
 			return
 		end
 
-		PlayBoing()
+		PlayBoing("FartHub/Assets/Boing.mp3")
 
 		FlipCooldown = true
 		local character = game:GetService("Players").LocalPlayer.Character
@@ -2088,90 +2155,33 @@ local function FartHubLoad()
 		end)
 	end
 
-	local function SetProximity()
-		local success, err = pcall(function()
-			for _, obj in ipairs(workspace:GetDescendants()) do
-				if obj:IsA("ProximityPrompt") then
-					obj.HoldDuration = 0
-				end
-			end
-		end)
-		if not success then
-			Rayfield:Notify({ Title = "Error", Content = err, Duration = 5 })
-		end
-	end
-
-	local function ToggleSigmaItemsHighlights(state)
-		ItemFartsEnabled = state
-		for _, obj in ipairs(workspace:GetDescendants()) do
-			if obj:IsA("Highlight") and table.find(Items, obj.Parent.Name) then
-				task.wait(0.1)
-				obj:Destroy()
-			end
-		end
-		if not state then
-			return
-		end
-		local function AddLopticaHighlight(object, color)
-			if
-				object:IsA("BasePart")
-				and object.Parent:IsA("Model")
-				and not object:FindFirstChildOfClass("Highlight")
-			then
-				local h = Instance.new("Highlight", object)
-				h.FillColor, h.FillTransparency, h.OutlineTransparency = color, 0.7, 0.6
-			end
-		end
-		for _, item in ipairs(Items) do
-			for _, obj in ipairs(workspace.Map.Ingame:GetDescendants()) do
-				if obj:IsA("Model") and obj.Name == item then
-					for _, child in ipairs(obj:GetChildren()) do
-						if child:IsA("BasePart") then
-							AddLopticaHighlight(child, itemHighlightColor)
-						end
-					end
-				end
-			end
-		end
-		workspace.Map.Ingame.DescendantAdded:Connect(function(descendant)
-			if ItemFartsEnabled and descendant:IsA("Model") and table.find(Items, descendant.Name) then
-				for _, child in ipairs(descendant:GetChildren()) do
-					if child:IsA("BasePart") then
-						AddLopticaHighlight(child, itemHighlightColor)
-					end
-				end
-			end
-		end)
-	end
-
-	local function UpdateFarts()
-		ToggleFarts(false)
-		ToggleFarts(true)
-		ToggleSigmaItemsHighlights(false)
-		ToggleSigmaItemsHighlights(true)
-		WriteSigmaData()
-	end
-
 	local function InitializeButtonGUI()
 		local visible = true
 		local sausageHolder = game:GetService("CoreGui"):FindFirstChild("TopBarApp"):FindFirstChild("UnibarLeftFrame").UnibarMenu["2"]
 		local originalSize = sausageHolder.Size.X.Offset
+		sausageHolder.Size = UDim2.new(0, originalSize + 144, 0, sausageHolder.Size.Y.Offset)
 
-		sausageHolder.Size = UDim2.new(0, originalSize + 48, 0, sausageHolder.Size.Y.Offset)
+		for i = 1, 3 do
+			local buttonFrame = Instance.new("Frame", sausageHolder)
+			buttonFrame.Name = i .. "-ButtonFrame"
+			buttonFrame.Size = UDim2.new(0, 44, 0, 44)
+			buttonFrame.BackgroundTransparency = 1
+			buttonFrame.BorderSizePixel = 0
+			buttonFrame.Position = UDim2.new(0, sausageHolder.Size.X.Offset - (48 * (4 - i)), 0, 0)
+			buttonFrames[i] = buttonFrame
 
-		local buttonFrame = Instance.new("Frame", sausageHolder)
-		buttonFrame.Size = UDim2.new(0, 44, 0, 44)
-		buttonFrame.BackgroundTransparency = 1
-		buttonFrame.BorderSizePixel = 0
-		buttonFrame.Position = UDim2.new(0, sausageHolder.Size.X.Offset - 48, 0, 0)
+			local imageButton = Instance.new("ImageButton", buttonFrame)
+			imageButton.Name = i .. "-imageButtonFart"
+			imageButton.BackgroundTransparency = 1
+			imageButton.BorderSizePixel = 0
+			imageButton.Size = UDim2.new(0, 32, 0, 32)
+			imageButton.AnchorPoint = Vector2.new(0.5, 0.5)
+			imageButton.Position = UDim2.new(0.5, 0, 0.5, 0)
+			imageButtons[i] = imageButton
+		end
 
-		local imageButton = Instance.new("ImageButton", buttonFrame)
-		imageButton.BackgroundTransparency = 1
-		imageButton.BorderSizePixel = 0
-		imageButton.Size = UDim2.new(0, 36, 0, 36)
-		imageButton.AnchorPoint = Vector2.new(0.5, 0.5)
-		imageButton.Position = UDim2.new(0.5, 0, 0.5, 0)
-		imageButton.Image = "http://www.roblox.com/asset/?id=131523679474566"
+		local imageButton1, imageButton2, imageButton3 = imageButtons[1], imageButtons[2], imageButtons[3]
+
 
 		local function toggleGUI()
 			--visible = not visible
@@ -2215,11 +2225,112 @@ local function FartHubLoad()
 			end
 		end
 
-		imageButton.Activated:Connect(toggleGUI)
+		local function Tooltip(button, desc)
+			if button:FindFirstChild("Tooltip") then
+				return
+			end
+
+			local tooltip = Instance.new("Frame")
+			tooltip.Name = "Tooltip"
+			tooltip.Size = UDim2.new(0, 0, 0, 0)
+			tooltip.Position = UDim2.new(0.5, 0, 1.5, 18)
+			tooltip.AnchorPoint = Vector2.new(0.5, 0.5)
+			tooltip.BackgroundTransparency = 0.08
+			tooltip.BackgroundColor3 = Color3.fromRGB(18, 18, 21)
+			tooltip.Parent = button
+
+			local tooltipUIC = Instance.new("UICorner")
+			tooltipUIC.CornerRadius = UDim.new(1, 0)
+			tooltipUIC.Parent = tooltip
+
+			local text = Instance.new("TextLabel")
+			text.Name = desc
+			text.TextSize = 15
+			text.Text = desc
+			text.Size = UDim2.new(1, 0, 1, 0)
+			text.BackgroundTransparency = 1
+			text.TextColor3 = Color3.fromRGB(255, 255, 255)
+			text.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json")
+			text.Parent = tooltip
+
+			local tween = game:GetService("TweenService"):Create(
+				tooltip,
+				TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+				{ Size = UDim2.new(0, 150, 0, 44) }
+			)
+			tween:Play()
+		end
+
+
+		local function editAll()
+			if imageButton1 then
+				imageButton1.Image = "http://www.roblox.com/asset/?id=111190623546159"
+				imageButton1.Activated:Connect(toggleGUI)
+				imageButton1.MouseEnter:Connect(function()
+					Tooltip(imageButton1, "AnimationUI.")
+				end)
+				imageButton1.MouseLeave:Connect(function()
+					local tooltip = imageButton1:FindFirstChild("Tooltip")
+					if tooltip then
+						tooltip:Destroy()
+					end
+				end)
+			end
+			if imageButton2 then
+				imageButton2.Image = "http://www.roblox.com/asset/?id=112297625224060"
+				imageButton2.Activated:Connect(FortniteFlips)
+				imageButton2.MouseEnter:Connect(function()
+					Tooltip(imageButton2, "Frontflip.")
+				end)
+				imageButton2.MouseLeave:Connect(function()
+					local tooltip = imageButton2:FindFirstChild("Tooltip")
+					if tooltip then
+						tooltip:Destroy()
+					end
+				end)
+			end
+			if imageButton3 then
+				imageButton3.Image = "http://www.roblox.com/asset/?id=95210015051364"
+				imageButton3.Activated:Connect(function()
+					if CoolDownBlockers then return end
+					CoolDownBlockers = true
+					local function FakeBlock()
+						if Players.LocalPlayer.Character.Humanoid then
+							local humanoid = Players.LocalPlayer.Character.Humanoid
+							local animator = humanoid:FindFirstChildOfClass("Animator")
+								or humanoid:WaitForChild("Animator")
+							if animator then
+								local animation = Instance.new("Animation")
+								animation.AnimationId = "rbxassetid://72722244508749"
+								local animTrack = animator:LoadAnimation(animation)
+								animTrack:Play()
+							end
+						end
+					end
+					PlayBoing("FartHub/Assets/Limbus.mp3")
+					FakeBlock()
+					task.wait(2)
+					CoolDownBlockers = false
+				end)
+				imageButton3.MouseEnter:Connect(function()
+					Tooltip(imageButton3, "FakeBlock.")
+				end)
+				imageButton3.MouseLeave:Connect(function()
+					local tooltip = imageButton3:FindFirstChild("Tooltip")
+					if tooltip then
+						tooltip:Destroy()
+					end
+				end)
+			end
+		end
+
+		task.spawn(function()
+			pcall(editAll)
+		end)
 
 		sausageHolder:GetPropertyChangedSignal("Size"):Connect(function()
 			if sausageHolder.Size.X.Offset == originalSize then
-				sausageHolder.Size = UDim2.new(0, originalSize + 48, 0, sausageHolder.Size.Y.Offset)
+				sausageHolder.Size = UDim2.new(0, originalSize + 144, 0, sausageHolder.Size.Y.Offset)
 			end
 		end)
 	end
@@ -2505,7 +2616,7 @@ local function FartHubLoad()
 		})
 
 		-- Blatant Tab
-		BlatantTab:CreateSection("Aimbot And Auto Block.")
+		BlatantTab:CreateSection("Main.")
 
 		local AimbotToggle = BlatantTab:CreateToggle({
 			Name = "Aimbot",
@@ -2555,7 +2666,36 @@ local function FartHubLoad()
 			end,
 		})
 
-		BlatantTab:CreateSection("Generator Farms.")
+		BlatantTab:CreateDivider()
+
+		local BlockKeybind = BlatantTab:CreateKeybind({
+			Name = "Block Keybind",
+			CurrentKeybind = "Y",
+			Callback = function(keybind)
+				if CoolDownBlockers then
+					return
+				end
+				CoolDownBlockers = true
+				local function FakeBlock()
+					if Players.LocalPlayer.Character.Humanoid then
+						local humanoid = Players.LocalPlayer.Character.Humanoid
+						local animator = humanoid:FindFirstChildOfClass("Animator") or humanoid:WaitForChild("Animator")
+						if animator then
+							local animation = Instance.new("Animation")
+							animation.AnimationId = "rbxassetid://72722244508749"
+							local animTrack = animator:LoadAnimation(animation)
+							animTrack:Play()
+						end
+					end
+				end
+				PlayBoing("FartHub/Assets/Limbus.mp3")
+				FakeBlock()
+				task.wait(2)
+				CoolDownBlockers = false
+			end,
+		})
+
+		BlatantTab:CreateSection("Generator Farm.")
 
 		-- commented out because its shit
 
