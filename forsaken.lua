@@ -25,7 +25,7 @@ local function FartHubLoad()
 	local RunService = game:GetService("RunService")
 	local HttpService = game:GetService("HttpService")
 	local buttonFrames = {}
-	local VectoryMultipliery = 1
+	local VectoryMultipliery = 2
 	local CoolDownBlockers = false
 	local imageButtons = {}
 	local SheddyEnabled = false
@@ -1502,33 +1502,39 @@ local function FartHubLoad()
 	end
 
 	local function SheddyFlingy(state)
+		if SheddyEnabled == state then
+			return
+		end
 		SheddyEnabled = state
 		if state then
-			pcall(function()
-				while task.wait(0.1) do
-					if not SheddyEnabled then
-						break
-					end
+			task.spawn(function()
+				local lastCooldown = ""	
+				while SheddyEnabled do
+					task.wait(0.1)
 					local playerGui = game:GetService("Players").LocalPlayer.PlayerGui
-					local mainUI = playerGui:FindFirstChild("MainUI")
+					local mainUI = playerGui and playerGui:FindFirstChild("MainUI")
 					local abilityContainer = mainUI and mainUI:FindFirstChild("AbilityContainer")
 					local slashAbility = abilityContainer
 						and abilityContainer:FindFirstChild("Slash")
 						and abilityContainer.Slash:FindFirstChild("CooldownTime")
-					if slashAbility and slashAbility.Text ~= "" then
-						if not SheddyEnabled then
-							break
+
+					if slashAbility then
+						local currentCooldown = slashAbility.Text
+						if currentCooldown ~= "" and currentCooldown ~= lastCooldown then
+							MoveMePlease()
+							WalkSkib()
+							local waitTime = tonumber(currentCooldown)
+							if waitTime then
+								task.wait(waitTime + 2)
+							end
 						end
-						MoveMePlease()
-						WalkSkib()
-					end
-					if slashAbility and slashAbility.Text ~= "" then
-						task.wait(tonumber(slashAbility.Text) + 2)
+						lastCooldown = currentCooldown
 					end
 				end
 			end)
 		end
 	end
+
 
 	local function NameProtect(state)
 		local function updateNames()
@@ -2838,7 +2844,7 @@ local function FartHubLoad()
 			Range = { 0.5, 5 },
 			Increment = .1,
 			Suffix = "Studs",
-			CurrentValue = 1,
+			CurrentValue = 2,
 			Flag = "ShedletskyVelocitySlider",
 			Callback = function(value)
 				VectoryMultipliery = value
