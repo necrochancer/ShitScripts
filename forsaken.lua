@@ -25,7 +25,7 @@ local function FartHubLoad()
 	local RunService = game:GetService("RunService")
 	local HttpService = game:GetService("HttpService")
 	local buttonFrames = {}
-	local VectoryMultipliery = 2
+	local VectoryMultipliery = 1
 	local CoolDownBlockers = false
 	local imageButtons = {}
 	local SheddyEnabled = false
@@ -2830,10 +2830,10 @@ local function FartHubLoad()
 
 		local SheddyVelocitySlider = BlatantTab:CreateSlider({
 			Name = "Shedletsky Movement Velocity",
-			Range = { 0.5, 10 },
+			Range = { 0.5, 5 },
 			Increment = .1,
 			Suffix = "Studs",
-			CurrentValue = 2,
+			CurrentValue = 1,
 			Flag = "ShedletskyVelocitySlider",
 			Callback = function(value)
 				VectoryMultipliery = value
