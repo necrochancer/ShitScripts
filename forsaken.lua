@@ -1436,6 +1436,7 @@ local function FartHubLoad()
 		end
 	end
 
+
 	local function MoveMePlease()
 		local LocalPlayer = game:GetService("Players").LocalPlayer
 		local KillerModel =
@@ -1445,8 +1446,11 @@ local function FartHubLoad()
 			if KillerHRP then
 				local PlayerHRP = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 				if PlayerHRP then
-					PlayerHRP.CFrame = CFrame.lookAt(PlayerHRP.Position, KillerHRP.Position)
 					local distance = (KillerHRP.Position - PlayerHRP.Position).magnitude
+					if distance > 20 then
+						return
+					end
+					PlayerHRP.CFrame = CFrame.lookAt(PlayerHRP.Position, KillerHRP.Position)
 					local VelocityThing = Instance.new("BodyVelocity")
 					VelocityThing.MaxForce = Vector3.new(9e9, 9e9, 9e9)
 					VelocityThing.Velocity = (KillerHRP.Position - PlayerHRP.Position).unit
@@ -1498,23 +1502,26 @@ local function FartHubLoad()
 	end
 
 	local function SheddyFlingy(state)
-		pcall(function()
-			while task.wait(0.1) do
-				if not SheddyEnabled then break end
-				local slashAbility = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("MainUI")
-					and game:GetService("Players").LocalPlayer.PlayerGui.MainUI:FindFirstChild("AbilityContainer")
-					and game:GetService("Players").LocalPlayer.PlayerGui.MainUI.AbilityContainer:FindFirstChild("Slash")
-					and game:GetService("Players").LocalPlayer.PlayerGui.MainUI.AbilityContainer.Slash
-						:FindFirstChild("CooldownTime")
-				if slashAbility and slashAbility.Text ~= "" then
-					MoveMePlease()
-					WalkSkib()
+		SheddyEnabled = state
+		if state then
+			pcall(function()
+				while task.wait(0.1) do
+					if not SheddyEnabled then break end
+					local playerGui = game:GetService("Players").LocalPlayer.PlayerGui
+					local mainUI = playerGui:FindFirstChild("MainUI")
+					local abilityContainer = mainUI and mainUI:FindFirstChild("AbilityContainer")
+					local slashAbility = abilityContainer and abilityContainer:FindFirstChild("Slash")
+						and abilityContainer.Slash:FindFirstChild("CooldownTime")
+					if slashAbility and slashAbility.Text ~= "" then
+						MoveMePlease()
+						WalkSkib()
+					end
+					if slashAbility and slashAbility.Text ~= "" then
+						task.wait(tonumber(slashAbility.Text) + 2)
+					end
 				end
-				if slashAbility.Text ~= "" then
-					task.wait(tonumber(slashAbility.Text) + 2)
-				end
-			end
-		end)
+			end)
+		end
 	end
 
 	local function NameProtect(state)
