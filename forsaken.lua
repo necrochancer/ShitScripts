@@ -1660,7 +1660,7 @@ local function FartHubLoad()
 				for _, i in ipairs(popups) do
 					if i.Name == "1x1x1x1Popup" then
 						local centerX = i.AbsolutePosition.X + (i.AbsoluteSize.X / 2)
-						local centerY = i.AbsolutePosition.Y + (i.AbsoluteSize.Y / 2)
+						local centerY = i.AbsolutePosition.Y + (i.AbsoluteSize.Y / 2) + 50
 						VIM:SendMouseButtonEvent(
 							centerX,
 							centerY,
