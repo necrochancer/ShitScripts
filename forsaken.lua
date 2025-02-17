@@ -25,8 +25,10 @@ local function FartHubLoad()
 	local RunService = game:GetService("RunService")
 	local HttpService = game:GetService("HttpService")
 	local buttonFrames = {}
+	local VectoryMultipliery = 2
 	local CoolDownBlockers = false
 	local imageButtons = {}
+	local SheddyEnabled = false
 	local Rayfield = loadstring(
 		game:HttpGet("https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/source.lua")
 	)()
@@ -133,7 +135,7 @@ local function FartHubLoad()
 			c00lkidd = { Duration1 = 0.5, Duration2 = 1 },
 		},
 		Survivors = {
-			Guest1337 = { Duration2 = 2 },
+			Guest1337 = { Duration2 = 2, Duration3 = 2 },
 			Chance = { Duration2 = 1.25 },
 			Shedletsky = { Duration1 = 1.25 },
 		},
@@ -1387,7 +1389,8 @@ local function FartHubLoad()
 			local speed = 5
 
 			local function bounce()
-				local newPos = Frame.Position + UDim2.new(direction.X * speed / screenSize.X, 0, direction.Y * speed / screenSize.Y, 0)
+				local newPos = Frame.Position
+					+ UDim2.new(direction.X * speed / screenSize.X, 0, direction.Y * speed / screenSize.Y, 0)
 				if newPos.X.Scale < 0 or newPos.X.Scale > 1 then
 					direction = Vector2.new(-direction.X, direction.Y)
 				end
@@ -1398,13 +1401,29 @@ local function FartHubLoad()
 				local mousePos = game:GetService("UserInputService"):GetMouseLocation()
 				local framePos = Frame.AbsolutePosition
 				local frameSize = Frame.AbsoluteSize
-				if mousePos.X >= framePos.X and mousePos.X <= framePos.X + frameSize.X and mousePos.Y >= framePos.Y and mousePos.Y <= framePos.Y + frameSize.Y then
-					direction = (Vector2.new(mousePos.X, mousePos.Y) - Vector2.new(framePos.X + frameSize.X / 2, framePos.Y + frameSize.Y / 2)).Unit
+				if
+					mousePos.X >= framePos.X
+					and mousePos.X <= framePos.X + frameSize.X
+					and mousePos.Y >= framePos.Y
+					and mousePos.Y <= framePos.Y + frameSize.Y
+				then
+					direction = (Vector2.new(mousePos.X, mousePos.Y) - Vector2.new(
+						framePos.X + frameSize.X / 2,
+						framePos.Y + frameSize.Y / 2
+					)).Unit
 					direction = -direction
 				end
 
 				local tweenInfo = TweenInfo.new(0.01, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
-				local tween = TweenService:Create(Frame, tweenInfo, { Position = Frame.Position + UDim2.new(direction.X * speed / screenSize.X, 0, direction.Y * speed / screenSize.Y, 0), Rotation = Frame.Rotation + 10 })
+				local tween = TweenService:Create(
+					Frame,
+					tweenInfo,
+					{
+						Position = Frame.Position
+							+ UDim2.new(direction.X * speed / screenSize.X, 0, direction.Y * speed / screenSize.Y, 0),
+						Rotation = Frame.Rotation + 10,
+					}
+				)
 				tween:Play()
 				tween.Completed:Connect(bounce)
 			end
@@ -1416,6 +1435,88 @@ local function FartHubLoad()
 			end
 		end
 	end
+
+	local function MoveMePlease()
+		local LocalPlayer = game:GetService("Players").LocalPlayer
+		local KillerModel =
+			workspace:FindFirstChild("Players"):FindFirstChild("Killers"):FindFirstChildWhichIsA("Model")
+		if KillerModel then
+			local KillerHRP = KillerModel:FindFirstChild("HumanoidRootPart")
+			if KillerHRP then
+				local PlayerHRP = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+				if PlayerHRP then
+					PlayerHRP.CFrame = CFrame.lookAt(PlayerHRP.Position, KillerHRP.Position)
+					local distance = (KillerHRP.Position - PlayerHRP.Position).magnitude
+					local VelocityThing = Instance.new("BodyVelocity")
+					VelocityThing.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+					VelocityThing.Velocity = (KillerHRP.Position - PlayerHRP.Position).unit
+						* distance
+						* VectoryMultipliery
+					VelocityThing.Parent = PlayerHRP
+					game.Debris:AddItem(VelocityThing, 0.25)
+				end
+			end
+		end
+	end
+
+	local function WalkSkib()
+		local connection
+		walkflinging = true
+		local startTime = tick()
+
+		connection = RunService.Heartbeat:Connect(function()
+			if tick() - startTime >= 1.75 then
+				walkflinging = false
+				connection:Disconnect()
+				return
+			end
+
+			local character = game:GetService("Players").LocalPlayer.Character
+			local root = character and character:FindFirstChild("HumanoidRootPart")
+			local vel, movel = nil, 0.1
+
+			while not (character and character.Parent and root and root.Parent) do
+				RunService.Heartbeat:Wait()
+				character = game:GetService("Players").LocalPlayer.Character
+				root = character and character:FindFirstChild("HumanoidRootPart")
+			end
+
+			vel = root.Velocity
+			root.Velocity = vel * 10000 + Vector3.new(0, 10000, 0)
+
+			RunService.RenderStepped:Wait()
+			if character and character.Parent and root and root.Parent then
+				root.Velocity = vel
+			end
+
+			RunService.Stepped:Wait()
+			if character and character.Parent and root and root.Parent then
+				root.Velocity = vel + Vector3.new(0, movel, 0)
+				movel = movel * -1
+			end
+		end)
+	end
+
+	local function SheddyFlingy(state)
+		pcall(function()
+			while task.wait(0.1) do
+				if not SheddyEnabled then break end
+				local slashAbility = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("MainUI")
+					and game:GetService("Players").LocalPlayer.PlayerGui.MainUI:FindFirstChild("AbilityContainer")
+					and game:GetService("Players").LocalPlayer.PlayerGui.MainUI.AbilityContainer:FindFirstChild("Slash")
+					and game:GetService("Players").LocalPlayer.PlayerGui.MainUI.AbilityContainer.Slash
+						:FindFirstChild("CooldownTime")
+				if slashAbility and slashAbility.Text ~= "" then
+					MoveMePlease()
+					WalkSkib()
+				end
+				if slashAbility.Text ~= "" then
+					task.wait(tonumber(slashAbility.Text) + 2)
+				end
+			end
+		end)
+	end
+
 	local function NameProtect(state)
 		local function updateNames()
 			local CurrentSurvivors = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("TemporaryUI")
@@ -1749,7 +1850,9 @@ local function FartHubLoad()
 
 	local function TpDoGenerator()
 		local wasloopty = loopty
-		if loopty then task.spawn(SkibidiGenerator(false)) end
+		if loopty then
+			task.spawn(SkibidiGenerator(false))
+		end
 		local Geneators = workspace:WaitForChild("Map")
 			and workspace.Map:WaitForChild("Ingame")
 			and workspace.Map.Ingame:WaitForChild("Map")
@@ -1819,7 +1922,10 @@ local function FartHubLoad()
 		local playerInfo = temporaryUI and temporaryUI:FindFirstChild("PlayerInfo")
 		local currentSurvivors = playerInfo and playerInfo:FindFirstChild("CurrentSurvivors")
 
-		if not table.find(CheckedPlayers, Player.Name) and Player.Name ~= game:GetService("Players").LocalPlayer.Name then
+		if
+			not table.find(CheckedPlayers, Player.Name)
+			and Player.Name ~= game:GetService("Players").LocalPlayer.Name
+		then
 			Rayfield:Notify({
 				Title = "Another Fartsaken User!",
 				Content = (Player.Name .. " Is Also Using Fartsaken!"),
@@ -1842,7 +1948,11 @@ local function FartHubLoad()
 		while true do
 			for _, player in ipairs(game.Players:GetPlayers()) do
 				local success, err = pcall(function()
-					local Pronouns = player:WaitForChild("PlayerData"):WaitForChild("Settings"):WaitForChild("Accessibility"):WaitForChild("Pronouns")
+					local Pronouns = player
+						:WaitForChild("PlayerData")
+						:WaitForChild("Settings")
+						:WaitForChild("Accessibility")
+						:WaitForChild("Pronouns")
 					if Pronouns.Value == "Fart/Hub" then
 						NotifyFartsakeners(player)
 					end
@@ -1855,7 +1965,6 @@ local function FartHubLoad()
 			task.wait(5)
 		end
 	end)
-
 
 	local function HawkTuah()
 		if not BlockEnabled then
@@ -1906,6 +2015,7 @@ local function FartHubLoad()
 						if distance < SkibidiDistance - 1 then
 							local humanoid = Player.Character:FindFirstChild("Humanoid")
 							if humanoid and humanoid.Animator then
+								task.wait(0.2)
 								for _, track in pairs(humanoid.Animator:GetPlayingAnimationTracks()) do
 									if track.Name == "rbxassetid://72722244508749" then
 										Aimbot(0.5)
@@ -2157,7 +2267,8 @@ local function FartHubLoad()
 
 	local function InitializeButtonGUI()
 		local visible = true
-		local sausageHolder = game:GetService("CoreGui"):FindFirstChild("TopBarApp"):FindFirstChild("UnibarLeftFrame").UnibarMenu["2"]
+		local sausageHolder =
+			game:GetService("CoreGui"):FindFirstChild("TopBarApp"):FindFirstChild("UnibarLeftFrame").UnibarMenu["2"]
 		local originalSize = sausageHolder.Size.X.Offset
 		sausageHolder.Size = UDim2.new(0, originalSize + 144, 0, sausageHolder.Size.Y.Offset)
 
@@ -2181,7 +2292,6 @@ local function FartHubLoad()
 		end
 
 		local imageButton1, imageButton2, imageButton3 = imageButtons[1], imageButtons[2], imageButtons[3]
-
 
 		local function toggleGUI()
 			--visible = not visible
@@ -2261,7 +2371,6 @@ local function FartHubLoad()
 			tween:Play()
 		end
 
-
 		local function editAll()
 			if imageButton1 then
 				imageButton1.Image = "http://www.roblox.com/asset/?id=111190623546159"
@@ -2292,7 +2401,9 @@ local function FartHubLoad()
 			if imageButton3 then
 				imageButton3.Image = "http://www.roblox.com/asset/?id=95210015051364"
 				imageButton3.Activated:Connect(function()
-					if CoolDownBlockers then return end
+					if CoolDownBlockers then
+						return
+					end
 					CoolDownBlockers = true
 					local function FakeBlock()
 						if Players.LocalPlayer.Character.Humanoid then
@@ -2606,7 +2717,7 @@ local function FartHubLoad()
 		local GeneratorSpeedSlider = GeneratorTab:CreateSlider({
 			Name = "Generator Speed",
 			Range = { 2.5, 10 },
-			Increment = .5,
+			Increment = 0.5,
 			Suffix = "Seconds",
 			CurrentValue = 2.5,
 			Flag = "GeneratorSpeed",
@@ -2669,7 +2780,7 @@ local function FartHubLoad()
 		BlatantTab:CreateDivider()
 
 		local BlockKeybind = BlatantTab:CreateKeybind({
-			Name = "Block Keybind",
+			Name = "Fake Block Keybind",
 			CurrentKeybind = "Y",
 			Callback = function(keybind)
 				if CoolDownBlockers then
@@ -2692,6 +2803,33 @@ local function FartHubLoad()
 				FakeBlock()
 				task.wait(2)
 				CoolDownBlockers = false
+			end,
+		})
+
+		BlatantTab:CreateDivider()
+
+		local SheddyFlingyToggle = BlatantTab:CreateToggle({
+			Name = "Shedletsky Fling Sword",
+			CurrentValue = false,
+			Callback = function(state)
+				if state then
+					SheddyEnabled = state
+					task.spawn(function()
+						SheddyFlingy(state)
+					end)
+				end
+			end,
+		})
+
+		local SheddyVelocitySlider = BlatantTab:CreateSlider({
+			Name = "Shedletsky Movement Velocity",
+			Range = { 0.5, 10 },
+			Increment = .1,
+			Suffix = "Studs",
+			CurrentValue = 2,
+			Flag = "ShedletskyVelocitySlider",
+			Callback = function(value)
+				VectoryMultipliery = value
 			end,
 		})
 
