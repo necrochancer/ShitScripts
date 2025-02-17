@@ -1506,13 +1506,19 @@ local function FartHubLoad()
 		if state then
 			pcall(function()
 				while task.wait(0.1) do
-					if not SheddyEnabled then break end
+					if not SheddyEnabled then
+						break
+					end
 					local playerGui = game:GetService("Players").LocalPlayer.PlayerGui
 					local mainUI = playerGui:FindFirstChild("MainUI")
 					local abilityContainer = mainUI and mainUI:FindFirstChild("AbilityContainer")
-					local slashAbility = abilityContainer and abilityContainer:FindFirstChild("Slash")
+					local slashAbility = abilityContainer
+						and abilityContainer:FindFirstChild("Slash")
 						and abilityContainer.Slash:FindFirstChild("CooldownTime")
 					if slashAbility and slashAbility.Text ~= "" then
+						if not SheddyEnabled then
+							break
+						end
 						MoveMePlease()
 						WalkSkib()
 					end
@@ -2820,7 +2826,6 @@ local function FartHubLoad()
 			CurrentValue = false,
 			Callback = function(state)
 				if state then
-					SheddyEnabled = state
 					task.spawn(function()
 						SheddyFlingy(state)
 					end)
