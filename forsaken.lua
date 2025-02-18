@@ -73,6 +73,7 @@ local function FartHubLoad()
 	local CoinFlipping = false
 	local Runners = false
 	local LopticaCooldown = false
+	local SigmaData
 
 	-- sittings
 	local VectoryMultipliery = 2
