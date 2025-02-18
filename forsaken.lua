@@ -1438,7 +1438,6 @@ local function FartHubLoad()
 
 
 	local function MoveMePlease()
-		print("MoveMePlease function called")
 		local LocalPlayer = game:GetService("Players").LocalPlayer
 		local KillerModel =
 			workspace:FindFirstChild("Players"):FindFirstChild("Killers"):FindFirstChildWhichIsA("Model")
@@ -1448,7 +1447,6 @@ local function FartHubLoad()
 				local PlayerHRP = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 				if PlayerHRP then
 					local distance = (KillerHRP.Position - PlayerHRP.Position).magnitude
-					print("Distance to killer:", distance)
 					if distance > 30 then
 						return
 					end
@@ -1460,23 +1458,20 @@ local function FartHubLoad()
 						* VectoryMultipliery
 					VelocityThing.Parent = PlayerHRP
 					game.Debris:AddItem(VelocityThing, 0.25)
-					print("Velocity applied")
 				end
 			end
 		end
 	end
 
-	local function WalkSkib()
-		print("WalkSkib function called")
+	local function WalkSkib(Toilet)
 		local connection
 		walkflinging = true
 		local startTime = tick()
 
 		connection = RunService.Heartbeat:Connect(function()
-			if tick() - startTime >= 1.75 then
+			if tick() - startTime >= Toilet then
 				walkflinging = false
 				connection:Disconnect()
-				print("WalkSkib function ended")
 				return
 			end
 
@@ -1507,14 +1502,13 @@ local function FartHubLoad()
 	end
 
 	local function SheddyFlingy(state)
-		print("SheddyFlingy function called with state:", state)
 		if SheddyEnabled == state then
 			return
 		end
 		SheddyEnabled = state
 		if state then
 			task.spawn(function()
-				local lastCooldown = ""	
+				local lastCooldown = ""
 				while SheddyEnabled do
 					task.wait(0.1)
 					local playerGui = game:GetService("Players").LocalPlayer.PlayerGui
@@ -1527,9 +1521,8 @@ local function FartHubLoad()
 					if slashAbility then
 						local currentCooldown = slashAbility.Text
 						if currentCooldown ~= "" and currentCooldown ~= lastCooldown then
-							print("Slash ability cooldown detected:", currentCooldown)
 							MoveMePlease()
-							WalkSkib()
+							WalkSkib(2)
 							local waitTime = tonumber(currentCooldown)
 							if waitTime then
 								task.wait(waitTime + 2)
@@ -2063,6 +2056,31 @@ local function FartHubLoad()
 			Rayfield:Notify({ Title = "An error occurred!", Content = err, Duration = 10 })
 			return
 		end
+	end
+
+	local function FlingKiller()
+		local MyHRP = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+		local KillerHRP = workspace.Players:FindFirstChild("Killers"):GetChildren()[1]:FindFirstChild("HumanoidRootPart")
+
+		if not MyHRP or not KillerHRP then
+			return
+		end
+
+		local originalPosition = MyHRP.CFrame
+
+		WalkSkib(2)
+
+		local connection
+		local startTime = tick()
+		connection = game:GetService("RunService").Heartbeat:Connect(function()
+			if tick() - startTime >= 2 then
+				connection:Disconnect()
+				return
+			end
+			MyHRP.CFrame = KillerHRP.CFrame
+		end)
+
+		MyHRP.CFrame = originalPosition
 	end
 
 	local function testiclegod12()
@@ -2835,7 +2853,7 @@ local function FartHubLoad()
 		BlatantTab:CreateDivider()
 
 		local SheddyFlingyToggle = BlatantTab:CreateToggle({
-			Name = "Shedletsky Fling Sword",
+			Name = "Shedletsky Fling Sword ( Experimental )",
 			CurrentValue = false,
 			Callback = function(state)
 				SheddyFlingy(state)
@@ -2851,6 +2869,14 @@ local function FartHubLoad()
 			Flag = "ShedletskyVelocitySlider",
 			Callback = function(value)
 				VectoryMultipliery = value
+			end,
+		})
+
+		local FlingKillerButton = BlatantTab:CreateButton({
+			Name = "Fling Killer",
+			Description = "Self Explanatory. ( Killer Needs To Stand Still )",
+			Callback = function()
+				FlingKiller()
 			end,
 		})
 
