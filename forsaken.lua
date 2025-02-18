@@ -161,8 +161,8 @@ local function FartHubLoad()
 			Note = "Copied Link To Clipboard",
 			FileName = "FartHubKey",
 			SaveKey = true,
-			GrabKeyFromSite = false,
-			Key = { "hi" }, -- this is very protected trust 😭
+			GrabKeyFromSite = true,
+			Key = { "https://cdn.sussy.dev/ivan/key.txt" }, -- this is very protected trust 😭
 		},
 	})
 
