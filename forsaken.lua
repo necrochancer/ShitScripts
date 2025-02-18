@@ -1438,6 +1438,7 @@ local function FartHubLoad()
 
 
 	local function MoveMePlease()
+		print("MoveMePlease function called")
 		local LocalPlayer = game:GetService("Players").LocalPlayer
 		local KillerModel =
 			workspace:FindFirstChild("Players"):FindFirstChild("Killers"):FindFirstChildWhichIsA("Model")
@@ -1447,7 +1448,8 @@ local function FartHubLoad()
 				local PlayerHRP = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 				if PlayerHRP then
 					local distance = (KillerHRP.Position - PlayerHRP.Position).magnitude
-					if distance > 20 then
+					print("Distance to killer:", distance)
+					if distance > 30 then
 						return
 					end
 					PlayerHRP.CFrame = CFrame.lookAt(PlayerHRP.Position, KillerHRP.Position)
@@ -1458,12 +1460,14 @@ local function FartHubLoad()
 						* VectoryMultipliery
 					VelocityThing.Parent = PlayerHRP
 					game.Debris:AddItem(VelocityThing, 0.25)
+					print("Velocity applied")
 				end
 			end
 		end
 	end
 
 	local function WalkSkib()
+		print("WalkSkib function called")
 		local connection
 		walkflinging = true
 		local startTime = tick()
@@ -1472,6 +1476,7 @@ local function FartHubLoad()
 			if tick() - startTime >= 1.75 then
 				walkflinging = false
 				connection:Disconnect()
+				print("WalkSkib function ended")
 				return
 			end
 
@@ -1502,6 +1507,7 @@ local function FartHubLoad()
 	end
 
 	local function SheddyFlingy(state)
+		print("SheddyFlingy function called with state:", state)
 		if SheddyEnabled == state then
 			return
 		end
@@ -1521,6 +1527,7 @@ local function FartHubLoad()
 					if slashAbility then
 						local currentCooldown = slashAbility.Text
 						if currentCooldown ~= "" and currentCooldown ~= lastCooldown then
+							print("Slash ability cooldown detected:", currentCooldown)
 							MoveMePlease()
 							WalkSkib()
 							local waitTime = tonumber(currentCooldown)
