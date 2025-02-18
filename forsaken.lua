@@ -1331,7 +1331,7 @@ local function FartHubLoad()
 
 	task.delay(5, function()
 		pcall(function()
-			if math.random(1, 500) == 69 then
+			if math.random(1, 100) == 69 then
 				local KingVon = Instance.new("ScreenGui", game:GetService("CoreGui"))
 				local Lhbwdqk = Instance.new("Frame")
 				Lhbwdqk.Parent = KingVon
