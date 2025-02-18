@@ -17,53 +17,31 @@ local UICorner_4
 -- like allat needs to be deleted 🙏
 
 local function FartHubLoad()
+	-- roblox services that i dont need and totaly never use
 	local Players = game:GetService("Players")
 	local SoundService = game:GetService("SoundService")
-	local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
-	local VIM = game:GetService("VirtualInputManager")
-	local BlockRemote = game:GetService("ReplicatedStorage").Modules.Network.RemoteEvent
 	local RunService = game:GetService("RunService")
 	local HttpService = game:GetService("HttpService")
-	local buttonFrames = {}
-	local VectoryMultipliery = 2
-	local CoolDownBlockers = false
-	local imageButtons = {}
-	local SheddyEnabled = false
-	local Rayfield = loadstring(
-		game:HttpGet("https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/source.lua")
-	)()
-	local loopty = false
-	local CheckedPlayers = {}
-	local SkibPlr = {}
+	local VIM = game:GetService("VirtualInputManager")
+	local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-	task.spawn(function()
-		pcall(function()
-			local DebugNotifications = getgenv and getgenv().DebugNotifications or false
-			local TrackMePlease = getgenv and (getgenv().TrackMePlease ~= nil and getgenv().TrackMePlease or true)
+	-- remote skibidi toilet enabler
+	local MainRemoteEvent = ReplicatedStorage.Modules.Network.RemoteEvent
 
-			local SkibidiSigma
-			if TrackMePlease == true or TrackMePlease == nil then
-				SkibidiSigma = "Fart/Hub"
-			else
-				SkibidiSigma = "They/Them"
-			end
+	-- literally just playergui 😭
+	local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
 
-			game:GetService("ReplicatedStorage").Modules.Network.RemoteEvent:FireServer(
-				"UpdateSettings",
-				game:GetService("Players").LocalPlayer.PlayerData.Settings.Accessibility.Pronouns,
-				SkibidiSigma
-			)
-		end)
-	end)
+	-- modulales
+	local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/source.lua"))()
 
 	local SmoothShiftLock
-
 	local success, err = pcall(function()
-		local smoothShiftLockModule = game:GetService("ReplicatedStorage")
+		local smoothShiftLockModule = ReplicatedStorage
 			:WaitForChild("Systems")
 			:WaitForChild("Player")
 			:WaitForChild("Game")
 			:FindFirstChild("SmoothShiftLock")
+
 		if smoothShiftLockModule then
 			SmoothShiftLock = require(smoothShiftLockModule)
 		else
@@ -71,22 +49,82 @@ local function FartHubLoad()
 		end
 	end)
 
-	local SigmaData, JoinedSigmaServer, CurrentFartsActive, NameProtectNames, pizzaConnections, WowWhatTheZestIsThis, WantedChrges, LopticaGenBill, LopticaNameHighlight, CoinFlipping, Runners, BlockEnabled, aimbotActive =
-		{}, false, {}, {}, {}, nil, 2, false, false, false, false, false, false
-	local SkibidiDistance, AimLockTimer, AimSmoothnes = 6, 2, 0.1
-	local PlayerTab, VisualsTab, GeneratorTab, BlatantTab, MiscTab, AnimationsTab = nil, nil, nil, nil, nil, nil
-	local BabyShark, KillerFartPart, HRP = nil, nil, nil
+	-- tablets
+	local buttonFrames = {}
+	local imageButtons = {}
+	local CheckedPlayers = {}
+	local SkibPlr = {}
+	local CurrentFartsActive = {}
+	local NameProtectNames = {}
+	local pizzaConnections = {}
+
+	-- flagatrons
+	local CoolDownBlockers = false
+	local SheddyEnabled = false
+	local loopty = false
+	local JoinedSigmaServer = false
+	local WowWhatTheZestIsThis = nil
+	local BlockEnabled = false
+	local aimbotActive = false
 	local FlipCooldown = false
 	local GeneratorKeybindCooldown = false
+	local LopticaGenBill = false
+	local LopticaNameHighlight = false
+	local CoinFlipping = false
+	local Runners = false
+	local LopticaCooldown = false
+
+	-- sittings
+	local VectoryMultipliery = 2
+	local WantedChrges = 2
+	local SkibidiDistance = 6
+	local AimLockTimer = 2
+	local AimSmoothnes = 0.1
+
+	-- ui tabbings
+	local PlayerTab = nil
+	local VisualsTab = nil
+	local GeneratorTab = nil
+	local BlatantTab = nil
+	local MiscTab = nil
+	local AnimationsTab = nil
+
+	-- Misc tab things that i got angyr at
+	local BabyShark = nil
+	local KillerFartPart = nil
+	local HRP = nil
+	local FunnyVideo = "SubwaySurfers.mp4.Fart4"
+
+	local fart = {
+		aimbot = {},
+		abilities = {},
+		characterChange = nil,
+	}
+
 	local success, wowzers = pcall(function()
-		return game:GetService("Players").LocalPlayer.PlayerData.Settings.Game:WaitForChild("FieldOfView", 3)
+		return Players.LocalPlayer.PlayerData.Settings.Game:WaitForChild("FieldOfView", 3)
 	end)
+
 	if success and wowzers then
 		wowzers:SetAttribute("MaxValue", 120)
 		wowzers:SetAttribute("MinValue", 20)
 	end
-	local LopticaCooldown = false
-	local FunnyVideo = "SubwaySurfers.mp4.Fart4"
+
+	task.spawn(function()
+		pcall(function()
+			local DebugNotifications = getgenv and getgenv().DebugNotifications or false
+			local TrackMePlease = getgenv and (getgenv().TrackMePlease ~= nil and getgenv().TrackMePlease or true)
+
+			local SkibidiSigma = TrackMePlease and "Fart/Hub" or "They/Them"
+
+			MainRemoteEvent:FireServer(
+				"UpdateSettings",
+				Players.LocalPlayer.PlayerData.Settings.Accessibility.Pronouns,
+				SkibidiSigma
+			)
+		end)
+	end)
+
 
 	local executorname = (pcall(getexecutorname) and getexecutorname())
 		or (pcall(identifyexecutor) and identifyexecutor())
@@ -120,12 +158,6 @@ local function FartHubLoad()
 			delfile(tempFile)
 		end
 	end)
-
-	local fart = {
-		aimbot = {},
-		abilities = {},
-		characterChange = nil,
-	}
 
 	local SkibidiPomniOhioList = {
 		Killers = {
@@ -1145,7 +1177,7 @@ local function FartHubLoad()
 			until reroll
 
 			if tonumber(reroll:WaitForChild("Charges").Text) < WantedChrges then
-				BlockRemote:FireServer("UseActorAbility", "CoinFlip")
+				MainRemoteEvent:FireServer("UseActorAbility", "CoinFlip")
 			end
 			task.wait(1)
 		end
@@ -1282,6 +1314,7 @@ local function FartHubLoad()
 							if name then
 								table.insert(NameProtectNames, name)
 							end
+							
 						end
 					end
 				end
@@ -2028,7 +2061,7 @@ local function FartHubLoad()
 					local distance = (HRP.Position - KillerHRP.Position).Magnitude
 
 					if distance < SkibidiDistance and (animationTrack.Length - animationTrack.TimePosition) > 0.5 then
-						BlockRemote:FireServer("UseActorAbility", "Block")
+						MainRemoteEvent:FireServer("UseActorAbility", "Block")
 						lastActionTime = currentTime
 
 						if distance < SkibidiDistance - 1 then
@@ -2038,7 +2071,7 @@ local function FartHubLoad()
 								for _, track in pairs(humanoid.Animator:GetPlayingAnimationTracks()) do
 									if track.Name == "rbxassetid://72722244508749" then
 										Aimbot(0.5)
-										BlockRemote:FireServer("UseActorAbility", "Punch")
+										MainRemoteEvent:FireServer("UseActorAbility", "Punch")
 										break
 									end
 								end
