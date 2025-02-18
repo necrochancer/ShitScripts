@@ -2831,11 +2831,7 @@ local function FartHubLoad()
 			Name = "Shedletsky Fling Sword",
 			CurrentValue = false,
 			Callback = function(state)
-				if state then
-					task.spawn(function()
-						SheddyFlingy(state)
-					end)
-				end
+				SheddyFlingy(state)
 			end,
 		})
 
