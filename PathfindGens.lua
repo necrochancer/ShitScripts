@@ -171,8 +171,9 @@ local function PathFinding(Model)
 				return false
 			end
 			humanoidus:MoveTo(wayponentos.Position)
+			local moveStartTime = tick()
 			humanoidus.MoveToFinished:Wait()
-			if stopped then
+			if stopped or (tick() - moveStartTime) > 1 then
 				return false
 			end
 		end
