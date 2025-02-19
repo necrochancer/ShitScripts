@@ -175,7 +175,7 @@ local function DoAllGenerators()
 				break
 			end
 
-			if not playersNearby and g.Progress.Value < 100 then
+			if not playersNearby and g:FindFirstChild("Progress") and g.Progress.Value < 100 then
 				g:GetPivot()
 			end
 
@@ -189,9 +189,14 @@ local function DoAllGenerators()
 		end
 		if pathStarted then
 			task.wait(0.1)
-			fireproximityprompt(g.Main:WaitForChild("Prompt", 1))
+			local prompt = g:FindFirstChild("Main") and g.Main:FindFirstChild("Prompt")
+			if prompt then
+				fireproximityprompt(prompt)
+			end
 			for i = 1, 6 do
-				g.Remotes.RE:FireServer()
+				if g:FindFirstChild("Remotes") and g.Remotes:FindFirstChild("RE") then
+					g.Remotes.RE:FireServer()
+				end
 				if i < 6 then
 					task.wait(2.5)
 				end
@@ -214,4 +219,6 @@ local function AmIInGameYet()
 	end)
 end
 
+task.wait(5)
+print("loaded?")
 AmIInGameYet()
