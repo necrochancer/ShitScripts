@@ -257,16 +257,16 @@ local function AmIInGameYet()
 end
 
 local function DidiDie()
-	if Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
-		if Players.LocalPlayer.Character.Humanoid.Health == 0 then
-			task.wait(5)
-			teleportToRandomServer()
+	while task.wait(0.5) do
+		if Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
+			if Players.LocalPlayer.Character.Humanoid.Health == 0 then
+				task.wait(5)
+				teleportToRandomServer()
+			end
 		end
 	end
 end
 
 pcall(task.spawn(DidiDie))
-
-task.wait(5)
 print("loaded?")
 AmIInGameYet()
