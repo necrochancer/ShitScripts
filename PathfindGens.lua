@@ -222,6 +222,7 @@ end
 local function DidiDie()
 	if Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
 		if Players.LocalPlayer.Character.Humanoid.Health == 0 then
+			task.wait(5)
 			game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId)
 		end
 	end
