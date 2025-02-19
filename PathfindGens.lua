@@ -1,4 +1,6 @@
 task.wait(5)
+local HttpService = game:GetService("HttpService")
+local TeleportService = game:GetService("TeleportService")
 local PathfindingService = game:GetService("PathfindingService")
 local Players = game:GetService("Players")
 
@@ -20,6 +22,41 @@ local success, SkibidiSprinting = pcall(function()
 	local a = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
 	a.StaminaLossDisabled = nil
 end)
+
+local function teleportToRandomServer()
+	local Counter = 0
+	local MaxRetry = 10
+	local RetryingDelays = 10
+
+	local Request = http_request or syn.request or request
+	if Request then
+		local url = "https://games.roblox.com/v1/games/18687417158/servers/Public?sortOrder=Asc&limit=100"
+
+		while Counter < MaxRetry do
+			local success, response = pcall(function()
+				return Request({
+					Url = url,
+					Method = "GET",
+					Headers = { ["Content-Type"] = "application/json" },
+				})
+			end)
+
+			if success and response and response.Body then
+				local data = HttpService:JSONDecode(response.Body)
+				if data and data.data and #data.data > 0 then
+					local server = data.data[math.random(1, #data.data)]
+					if server.id then
+						TeleportService:TeleportToPlaceInstance(18687417158, server.id, Players.LocalPlayer)
+						return
+					end
+				end
+			end
+
+			Counter = Counter + 1
+			task.wait(RetryingDelays)
+		end
+	end
+end
 
 local function findGenerators()
 	local folder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
@@ -205,7 +242,7 @@ local function DoAllGenerators()
 			warn("Pathfinding failed for generator: " .. g.Name .. " after 5 attempts")
 		end
 	end
-	game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId)
+	teleportToRandomServer()
 end
 
 local function AmIInGameYet()
@@ -223,7 +260,7 @@ local function DidiDie()
 	if Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
 		if Players.LocalPlayer.Character.Humanoid.Health == 0 then
 			task.wait(5)
-			game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId)
+			teleportToRandomServer()
 		end
 	end
 end
