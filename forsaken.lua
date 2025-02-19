@@ -116,7 +116,7 @@ local function FartHubLoad()
 			local DebugNotifications = getgenv and getgenv().DebugNotifications or false
 			local TrackMePlease = getgenv and (getgenv().TrackMePlease ~= nil and getgenv().TrackMePlease or true)
 
-			local SkibidiSigma = TrackMePlease and "Fart/Hub" or "They/Them"
+			local SkibidiSigma = TrackMePlease and "They/Them" or "They/Them"
 
 			MainRemoteEvent:FireServer(
 				"UpdateSettings",
