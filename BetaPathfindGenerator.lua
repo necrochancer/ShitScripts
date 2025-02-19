@@ -183,12 +183,11 @@ local function DoAllGenerators()
 			if pathStarted then
 				break
 			else
-				warn("Pathfinding attempt " .. attempt .. " failed for generator: " .. g.Name)
 				task.wait(1)
 			end
 		end
 		if pathStarted then
-			task.wait(0.1)
+			task.wait(0.5)
 			local prompt = g:FindFirstChild("Main") and g.Main:FindFirstChild("Prompt")
 			if prompt then
 				fireproximityprompt(prompt)
@@ -218,6 +217,16 @@ local function AmIInGameYet()
 		end
 	end)
 end
+
+local function DidiDie()
+	if Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
+		if Players.LocalPlayer.Character.Humanoid.Health == 0 then
+			game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId)
+		end
+	end
+end
+
+pcall(task.spawn(DidiDie))
 
 task.wait(5)
 print("loaded?")
