@@ -73,6 +73,7 @@ local function FartHubLoad()
 	local CoinFlipping = false
 	local Runners = false
 	local LopticaCooldown = false
+	local ReplaceStandingMusic = false
 	local SigmaData
 
 	-- sittings
@@ -94,6 +95,7 @@ local function FartHubLoad()
 	local BabyShark = nil
 	local KillerFartPart = nil
 	local HRP = nil
+	local CurrentSound = "RottenGirl.mp3"
 	local FunnyVideo = "SubwaySurfers.mp4.Fart4"
 
 	local fart = {
@@ -172,6 +174,13 @@ local function FartHubLoad()
 			Chance = { Duration2 = 1.25 },
 			Shedletsky = { Duration1 = 1.25 },
 		},
+	}
+
+	local MusicList = {
+			["RottenGirl"] = "RottenGirl.mp3",
+			[":3"] = "Colon3.mp3",
+			["GODDESS OF INDIFERENCE"] = "GoddessOfIndiference.mp3",
+			["Canto 3 Boss Battle"] = "Canto3BossBattle.mp3"
 	}
 
 	setclipboard("https://linkunlocker.com/fartsaken-ZINXl")
@@ -1476,6 +1485,37 @@ local function FartHubLoad()
 		end
 	end
 
+	local function LastStandingReplacement(state)
+		ReplaceStandingMusic = state
+		local LastStandingFolder = workspace.Themes
+		if ReplaceStandingMusic then
+			if LastStandingFolder then
+				LastStandingFolder.ChildAdded:Connect(function(child)
+					if child:IsA("Sound") and child.Name == "LastSurvivor" then
+						child.SoundId = getcustomasset("FartHub/Assets/LastStandingMusic/" .. tostring(CurrentSound))
+						child.TimePosition = 0
+					end
+				end)
+			end
+		else
+			if LastStandingFolder and LastStandingFolder.ChildAdded then
+				Rayfield:Notify({ Title = "Disabled Music Replace", Content = "Music Will Go Back To Normal Next Round", Duration = 10, Image = "music" }) -- 😭😭😭😭😭😭
+				LastStandingFolder.ChildAdded:Disconnect()
+			end
+		end
+	end
+
+	local function ChangeMusic(music)
+		local LastStandingFolder = workspace.Themes
+		if LastStandingFolder then
+			for _, child in ipairs(LastStandingFolder:GetChildren()) do
+				if child:IsA("Sound") and child.Name == "LastSurvivor" then
+					child.SoundId = getcustomasset("FartHub/Assets/LastStandingMusic/" .. tostring(music))
+					child.TimePosition = 0
+				end
+			end
+		end
+	end
 
 	local function MoveMePlease()
 		local LocalPlayer = game:GetService("Players").LocalPlayer
@@ -3064,6 +3104,35 @@ local function FartHubLoad()
 				end
 			end,
 		})
+
+		MiscTab:CreateSection("Music Replacement.")
+
+		local MusicDropdown = MiscTab:CreateDropdown({
+			Name = "Music Replacement",
+			Options = {
+				"RottenGirl",
+				":3",
+				"GODDESS OF INDIFERENCE",
+				"Canto 3 Boss Battle"
+			},
+			CurrentOption = { "RottenGirl" },
+			MultipleOptions = false,
+			Callback = function(Options)
+				CurrentSound = MusicList[Options[1]]
+			end,
+		})
+
+		local MusicToggle = MiscTab:CreateToggle({
+			Name = "Music Toggle",
+			CurrentValue = false,
+			Callback = function(state)
+				if ReplaceStandingMusic then
+					ChangeMusic(CurrentSound)
+				end
+				LastStandingReplacement(state)
+			end,
+		})
+
 
 		AnimationsTab:CreateSection("You can emote as killer using this.")
 
