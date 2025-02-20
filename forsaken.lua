@@ -1328,40 +1328,46 @@ local function FartHubLoad()
 		return assetList
 	end
 
-	local function DownloadBallers(url, path)
-		if not isfile(path) then
-			local suc, res = pcall(function()
-				return game:HttpGet(url, true)
-			end)
-			if not suc or res == "404: Not Found" then
-				Rayfield:Notify({ Title = "Error", Content = "erm not found", Duration = 5 })
-			end
-			writefile(path, res)
-		end
-	end
-
-	local function CheckIfFartsDownloaded()
-		local assetList = GetAssetList()
-		local basePath = "FartHub/Assets/"
-
-		if not isfolder("FartHub") then
-			makefolder("FartHub")
-		end
-
-		if not isfolder(basePath) then
-			makefolder(basePath)
-		end
-
-		for _, url in ipairs(assetList) do
-			local filePath = basePath .. url:match("Assets/(.+)")
-			local newFilePath = filePath:gsub("%.png$", ".png.Fart"):gsub("%.mp4$", ".mp4.Fart4"):gsub("%.mp3$", ".mp3")
-
-			if not isfile(newFilePath) then
-				DownloadBallers(url, newFilePath)
-				Rayfield:Notify({ Title = "Downloaded", Content = newFilePath, Duration = 1, Image = "download" })
+		local function DownloadBallers(url, path)
+			if not isfile(path) then
+				local suc, res = pcall(function()
+					return game:HttpGet(url, true)
+				end)
+				if not suc or res == "404: Not Found" then
+					Rayfield:Notify({ Title = "Error", Content = "erm not found", Duration = 5 })
+				end
+				writefile(path, res)
 			end
 		end
-	end
+
+		local function CheckIfFartsDownloaded()
+			local assetList = GetAssetList()
+			local basePath = "FartHub/Assets/"
+
+			if not isfolder("FartHub") then
+				makefolder("FartHub")
+			end
+
+			if not isfolder(basePath) then
+				makefolder(basePath)
+			end
+
+			for _, url in ipairs(assetList) do
+				local filePath = basePath .. url:match("Assets/(.+)")
+				if filePath then
+					local newFilePath = filePath:gsub("%.png$", ".png.Fart"):gsub("%.mp4$", ".mp4.Fart4"):gsub("%.mp3$", ".mp3")
+
+					if not isfile(newFilePath) then
+						local folderPath = newFilePath:match("(.*/)")
+						if folderPath and not isfolder(folderPath) then
+							makefolder(folderPath)
+						end
+						DownloadBallers(url, newFilePath)
+						Rayfield:Notify({ Title = "Downloaded", Content = newFilePath, Duration = 1, Image = "download" })
+					end
+				end
+			end
+		end
 
 	task.delay(5, function()
 		pcall(function()
