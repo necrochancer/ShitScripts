@@ -57,6 +57,7 @@ local function FartHubLoad()
 	local CurrentFartsActive = {}
 	local NameProtectNames = {}
 	local pizzaConnections = {}
+	local MusicConnections = {}
 
 	-- flagatrons
 	local CoolDownBlockers = false
@@ -1490,17 +1491,20 @@ local function FartHubLoad()
 		local LastStandingFolder = workspace.Themes
 		if ReplaceStandingMusic then
 			if LastStandingFolder then
-				LastStandingFolder.ChildAdded:Connect(function(child)
+				local connection = LastStandingFolder.ChildAdded:Connect(function(child)
 					if child:IsA("Sound") and child.Name == "LastSurvivor" then
 						child.SoundId = getcustomasset("FartHub/Assets/LastStandingMusic/" .. tostring(CurrentSound))
 						child.TimePosition = 0
 					end
 				end)
+				table.insert(MusicConnections, connection)
 			end
 		else
 			if LastStandingFolder and LastStandingFolder.ChildAdded then
 				Rayfield:Notify({ Title = "Disabled Music Replace", Content = "Music Will Go Back To Normal Next Round", Duration = 10, Image = "music" }) -- 😭😭😭😭😭😭
-				LastStandingFolder.ChildAdded:Disconnect()
+				for _, connection in ipairs(MusicConnections) do
+					connection:Disconnect()
+				end
 			end
 		end
 	end
@@ -3108,28 +3112,33 @@ local function FartHubLoad()
 		MiscTab:CreateSection("Music Replacement.")
 
 		local MusicDropdown = MiscTab:CreateDropdown({
-			Name = "Music Replacement",
+			Name = "Music List",
+
 			Options = {
 				"RottenGirl",
 				":3",
 				"GODDESS OF INDIFERENCE",
 				"Canto 3 Boss Battle"
 			},
+			
 			CurrentOption = { "RottenGirl" },
 			MultipleOptions = false,
 			Callback = function(Options)
 				CurrentSound = MusicList[Options[1]]
+				if ReplaceStandingMusic then
+					ChangeMusic(CurrentSound)
+				end
 			end,
 		})
 
 		local MusicToggle = MiscTab:CreateToggle({
-			Name = "Music Toggle",
+			Name = "Replace Last Standing Music",
 			CurrentValue = false,
 			Callback = function(state)
+				LastStandingReplacement(state)
 				if ReplaceStandingMusic then
 					ChangeMusic(CurrentSound)
 				end
-				LastStandingReplacement(state)
 			end,
 		})
 
