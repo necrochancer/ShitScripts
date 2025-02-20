@@ -252,7 +252,7 @@ local function DoAllGenerators()
 				end
 			end
 		else
-			warn("Pathfinding failed for generator: " .. g.Name .. " after 5 attempts")
+			return
 		end
 	end
 	teleportToRandomServer()
@@ -262,7 +262,6 @@ local function AmIInGameYet()
 	workspace.Players.Survivors.ChildAdded:Connect(function(child)
 		task.wait(1)
 		if child == game:GetService("Players").LocalPlayer.Character then
-			print("sigma?")
 			task.wait(5)
 			DoAllGenerators()
 		end
@@ -281,5 +280,4 @@ local function DidiDie()
 end
 
 pcall(task.spawn(DidiDie))
-print("loaded?")
 AmIInGameYet()
