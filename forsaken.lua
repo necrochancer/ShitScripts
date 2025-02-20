@@ -32,13 +32,12 @@ local function FartHubLoad()
 	local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
 
 	-- modulales
-	local Rayfield = loadstring(
-		game:HttpGet("https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/source.lua")
-	)()
+	local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/source.lua"))()
 
 	local SmoothShiftLock
 	local success, err = pcall(function()
-		local smoothShiftLockModule = ReplicatedStorage:WaitForChild("Systems")
+		local smoothShiftLockModule = ReplicatedStorage
+			:WaitForChild("Systems")
 			:WaitForChild("Player")
 			:WaitForChild("Game")
 			:FindFirstChild("SmoothShiftLock")
@@ -127,6 +126,7 @@ local function FartHubLoad()
 		end)
 	end)
 
+
 	local executorname = (pcall(getexecutorname) and getexecutorname())
 		or (pcall(identifyexecutor) and identifyexecutor())
 		or "Unknown"
@@ -195,7 +195,7 @@ local function FartHubLoad()
 			FileName = "FartHubKey",
 			SaveKey = true,
 			GrabKeyFromSite = false,
-			Key = { "drizzy" },
+			Key = { "zizzy", "evannetta" }, -- this is very protected trust 😭
 		},
 	})
 
@@ -1315,6 +1315,7 @@ local function FartHubLoad()
 							if name then
 								table.insert(NameProtectNames, name)
 							end
+							
 						end
 					end
 				end
@@ -1448,11 +1449,15 @@ local function FartHubLoad()
 				end
 
 				local tweenInfo = TweenInfo.new(0.01, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
-				local tween = TweenService:Create(Frame, tweenInfo, {
-					Position = Frame.Position
-						+ UDim2.new(direction.X * speed / screenSize.X, 0, direction.Y * speed / screenSize.Y, 0),
-					Rotation = Frame.Rotation + 10,
-				})
+				local tween = TweenService:Create(
+					Frame,
+					tweenInfo,
+					{
+						Position = Frame.Position
+							+ UDim2.new(direction.X * speed / screenSize.X, 0, direction.Y * speed / screenSize.Y, 0),
+						Rotation = Frame.Rotation + 10,
+					}
+				)
 				tween:Play()
 				tween.Completed:Connect(bounce)
 			end
@@ -1464,6 +1469,7 @@ local function FartHubLoad()
 			end
 		end
 	end
+
 
 	local function MoveMePlease()
 		local LocalPlayer = game:GetService("Players").LocalPlayer
@@ -1562,6 +1568,7 @@ local function FartHubLoad()
 			end)
 		end
 	end
+
 
 	local function NameProtect(state)
 		local function updateNames()
@@ -2087,8 +2094,7 @@ local function FartHubLoad()
 
 	local function FlingKiller()
 		local MyHRP = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-		local KillerHRP =
-			workspace.Players:FindFirstChild("Killers"):GetChildren()[1]:FindFirstChild("HumanoidRootPart")
+		local KillerHRP = workspace.Players:FindFirstChild("Killers"):GetChildren()[1]:FindFirstChild("HumanoidRootPart")
 
 		if not MyHRP or not KillerHRP then
 			return
@@ -2891,7 +2897,7 @@ local function FartHubLoad()
 		local SheddyVelocitySlider = BlatantTab:CreateSlider({
 			Name = "Shedletsky Movement Velocity",
 			Range = { 0.5, 5 },
-			Increment = 0.1,
+			Increment = .1,
 			Suffix = "Studs",
 			CurrentValue = 2,
 			Flag = "ShedletskyVelocitySlider",
@@ -3143,106 +3149,5 @@ local function FartHubLoad()
 	InitializeGUI()
 	MakeButton()
 end
-
--- best key system no longer needed
---local function MakeKeySystem()
---	KeySystem = Instance.new("ScreenGui")
---	Frame = Instance.new("Frame")
---	TextBox = Instance.new("TextBox")
---	UICorner = Instance.new("UICorner")
---	UIPadding = Instance.new("UIPadding")
---	UICorner_2 = Instance.new("UICorner")
---	TextLabel = Instance.new("TextLabel")
---	CheckKeyButton = Instance.new("TextButton")
---	UICorner_3 = Instance.new("UICorner")
---	GetKey = Instance.new("TextButton")
---	UICorner_4 = Instance.new("UICorner")
---
---	KeySystem.Name = "KeySystem"
---	KeySystem.Parent = game:GetService("CoreGui")
---	KeySystem.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
---	KeySystem.ResetOnSpawn = false
---
---	Frame.Parent = KeySystem
---	Frame.AnchorPoint = Vector2.new(0.5, 0.5)
---	Frame.BackgroundColor3 = Color3.fromRGB(33, 33, 33)
---	Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
---	Frame.BorderSizePixel = 0
---	Frame.Position = UDim2.new(0.5, 0, 0.5, 0)
---	Frame.Size = UDim2.new(0, 300, 0, 120)
---	Frame.ZIndex = 2
---
---	TextBox.Parent = Frame
---	TextBox.BackgroundColor3 = Color3.fromRGB(44, 44, 44)
---	TextBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
---	TextBox.BorderSizePixel = 0
---	TextBox.Position = UDim2.new(0, 0, 0, 10)
---	TextBox.Size = UDim2.new(1, 0, 0, 50)
---	TextBox.ClearTextOnFocus = false
---	TextBox.Font = Enum.Font.FredokaOne
---	TextBox.PlaceholderColor3 = Color3.fromRGB(97, 97, 97)
---	TextBox.PlaceholderText = "FartHub Key..."
---	TextBox.Text = ""
---	TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
---	TextBox.TextSize = 22.000
---	TextBox.TextWrapped = true
---
---	UICorner.Parent = TextBox
---
---	UIPadding.Parent = Frame
---	UIPadding.PaddingBottom = UDim.new(0, 5)
---	UIPadding.PaddingLeft = UDim.new(0, 5)
---	UIPadding.PaddingRight = UDim.new(0, 5)
---	UIPadding.PaddingTop = UDim.new(0, 5)
---
---	UICorner_2.Parent = Frame
---
---	TextLabel.Parent = Frame
---	TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
---	TextLabel.BackgroundTransparency = 1.000
---	TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
---	TextLabel.BorderSizePixel = 0
---	TextLabel.Position = UDim2.new(0, 0, 0, -20)
---	TextLabel.Size = UDim2.new(1, 0, 0, 30)
---	TextLabel.ZIndex = 0
---	TextLabel.Font = Enum.Font.FredokaOne
---	TextLabel.Text = "Fart Hub | Key System"
---	TextLabel.TextColor3 = Color3.fromRGB(221, 221, 221)
---	TextLabel.TextSize = 25.000
---	TextLabel.TextStrokeTransparency = 0.000
---	TextLabel.TextWrapped = true
---
---	CheckKeyButton.Name = "CheckKey"
---	CheckKeyButton.Parent = Frame
---	CheckKeyButton.AnchorPoint = Vector2.new(0, 1)
---	CheckKeyButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
---	CheckKeyButton.BackgroundTransparency = 1.000
---	CheckKeyButton.BorderColor3 = Color3.fromRGB(45, 45, 45)
---	CheckKeyButton.BorderSizePixel = 0
---	CheckKeyButton.Position = UDim2.new(0, 3, 1, 0)
---	CheckKeyButton.Size = UDim2.new(0.449999988, 0, 0, 40)
---	CheckKeyButton.Font = Enum.Font.FredokaOne
---	CheckKeyButton.Text = "Check Key"
---	CheckKeyButton.TextColor3 = Color3.fromRGB(106, 255, 103)
---	CheckKeyButton.TextSize = 22.000
---
---	UICorner_3.Parent = CheckKeyButton
---
---	GetKey.Name = "GetKey"
---	GetKey.Parent = Frame
---	GetKey.AnchorPoint = Vector2.new(1, 1)
---	GetKey.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
---	GetKey.BackgroundTransparency = 1.000
---	GetKey.BorderColor3 = Color3.fromRGB(45, 45, 45)
---	GetKey.BorderSizePixel = 0
---	GetKey.Position = UDim2.new(1, -3, 1, 0)
---	GetKey.Size = UDim2.new(0.449999988, 0, 0, 40)
---	GetKey.Font = Enum.Font.FredokaOne
---	GetKey.Text = "Get Key"
---	GetKey.TextColor3 = Color3.fromRGB(255, 102, 125)
---	GetKey.TextSize = 22.000
---
---	UICorner_4.Parent = GetKey
---end
 
 FartHubLoad()
