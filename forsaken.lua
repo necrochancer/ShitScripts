@@ -2995,6 +2995,7 @@ local function FartHubLoad()
 				"PistonDoor",
 				"Oh My Boy",
 				"Kendrake",
+				"T	otal Extermination",
 				"Random",
 			},
 			CurrentOption = { "Subway Surfers" },
@@ -3011,6 +3012,7 @@ local function FartHubLoad()
 					["PistonDoor"] = "PistonDoor.mp4.Fart4",
 					["Kendrake"] = "SomethingScary.mp4.Fart4",
 					["Oh My Boy"] = "OhMyBoy.mp4.Fart4",
+					["Total Extermination"] = "EvilFight.mp4.Fart4",
 				}
 
 				local videoKeys = {}
