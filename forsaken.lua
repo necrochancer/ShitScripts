@@ -195,7 +195,7 @@ local function FartHubLoad()
 			FileName = "FartHubKey",
 			SaveKey = true,
 			GrabKeyFromSite = false,
-			Key = { "zizzy", "evannetta" }, -- this is very protected trust 😭
+			Key = { "wherethehuzzat" },
 		},
 	})
 
