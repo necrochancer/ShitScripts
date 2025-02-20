@@ -2995,7 +2995,7 @@ local function FartHubLoad()
 				"PistonDoor",
 				"Oh My Boy",
 				"Kendrake",
-				"T	otal Extermination",
+				"Total Extermination",
 				"Random",
 			},
 			CurrentOption = { "Subway Surfers" },
