@@ -182,7 +182,8 @@ local function FartHubLoad()
 		["RottenGirl"] = "RottenGirl.mp3",
 		[":3"] = "Colon3.mp3",
 		["GODDESS OF INDIFERENCE"] = "GoddessOfIndiference.mp3",
-		["Canto 3 Boss Battle"] = "Canto3BossBattle.mp3"
+		["Canto 3 Boss Battle"] = "Canto3BossBattle.mp3",
+		["Sigma Boy Phonk"] = "SigmaBoyPhonk.mp3"
 	}
 
 	setclipboard("https://linkunlocker.com/fartsaken-ZINXl")
@@ -3118,7 +3119,8 @@ local function FartHubLoad()
 				"RottenGirl",
 				":3",
 				"GODDESS OF INDIFERENCE",
-				"Canto 3 Boss Battle"
+				"Canto 3 Boss Battle",
+				"Sigma Boy Phonk",
 			},
 			CurrentOption = { "RottenGirl" },
 			MultipleOptions = false,
