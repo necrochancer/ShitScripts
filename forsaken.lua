@@ -1699,8 +1699,8 @@ local function FartHubLoad()
 		Duration = 2,
 	})
 
-	local highlightingEnabled, SkibidiStaminaLoop, running, ItemFartsEnabled, Do1x1PopupsLoop, SkibidiWait, LopticaWaitTime =
-		false, false, false, false, false, 2.5, 2
+	local highlightingEnabled, SkibidiStaminaLoop, running, ItemFartsEnabled, Do1x1PopupsLoop, SkibidiWait, LopticaWaitTime, SkibidiRandomness =
+		false, false, false, false, false, 2.5, 2, 0
 	local generatorHighlightColor, survivorHighlightColor, killerHighlightColor, itemHighlightColor =
 		Color3.fromRGB(173, 162, 236),
 		Color3.fromRGB(0, 255, 255),
@@ -1916,7 +1916,7 @@ local function FartHubLoad()
 			loopty = true
 			local PuzzleUI = Players.LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("PuzzleUI", 9999)
 
-			task.wait(SkibidiWait + (math.random() * (SkibidiWait / 5 * 2) - SkibidiWait / 5))
+			task.wait(SkibidiWait + math.random(0, SkibidiRandomness))
 
 			local FartNapFolder = workspace:FindFirstChild("Map")
 				and workspace.Map:FindFirstChild("Ingame")
@@ -2853,6 +2853,18 @@ local function FartHubLoad()
 			Flag = "GeneratorSpeed",
 			Callback = function(value)
 				SkibidiWait = value
+			end,
+		})
+
+		local GeneratorRandomness = GeneratorTab:CreateSlider({
+			Name = "Generator Speed Randomness",
+			Range = { 0, 10 },
+			Increment = 0.1,
+			Suffix = "Seconds",
+			CurrentValue = 0,
+			Flag = "GeneratorSpeedRand",
+			Callback = function(value)
+				SkibidiRandomness = value
 			end,
 		})
 
