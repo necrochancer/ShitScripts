@@ -76,6 +76,7 @@ local function FartHubLoad()
 	local Runners = false
 	local LopticaCooldown = false
 	local ReplaceStandingMusic = false
+	local Prediction = false
 	local SigmaData
 
 	-- sittings
@@ -84,6 +85,7 @@ local function FartHubLoad()
 	local SkibidiDistance = 6
 	local AimLockTimer = 2
 	local AimSmoothnes = 0.1
+	local PredictionMultiplier = 0.5
 
 	-- ui tabbings
 	local PlayerTab = nil
@@ -175,6 +177,7 @@ local function FartHubLoad()
 			Guest1337 = { Duration2 = 2, Duration3 = 2 },
 			Chance = { Duration2 = 1.25 },
 			Shedletsky = { Duration1 = 1.25 },
+			Dusekkar = { Duration2 = 1.5 },
 		},
 	}
 
@@ -1095,34 +1098,48 @@ local function FartHubLoad()
 		end)
 
 		task.spawn(function()
-			local startTime = tick()
-			local UserInputService = game:GetService("UserInputService")
-			UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
-			while tick() - startTime < Dur do
-				if target and target:FindFirstChild("HumanoidRootPart") then
-					local wawa = MeButCharacter.HumanoidRootPart
-					local wawaza = target.HumanoidRootPart.Position
-					local MathematicalCalculations = (wawaza - wawa.Position).unit
-					-- change camera
-					local Cumera = game.Workspace.CurrentCamera
-					local targetCFrame = CFrame.lookAt(
-						Cumera.CFrame.Position,
-						Cumera.CFrame.Position
-							+ Vector3.new(
-								MathematicalCalculations.X,
-								MathematicalCalculations.Y,
-								MathematicalCalculations.Z
-							)
-					)
-					game:GetService("TweenService")
-						:Create(Cumera, TweenInfo.new(AimSmoothnes, Enum.EasingStyle.Linear), { CFrame = targetCFrame })
-						:Play()
-				end
-				task.wait()
-			end
-			UserInputService.MouseBehavior = Enum.MouseBehavior.Default
+		    local startTime = tick()
+		    local UserInputService = game:GetService("UserInputService")
+		    UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
+		    local basePredictionTime = PredictionMultiplier  -- Base prediction time in seconds
+		    local minPredictionTime = (PredictionMultiplier / 3)  -- Minimum prediction time for very close targets
+		    local maxPredictionTime = (PredictionMultiplier * 3)  -- Maximum prediction time for very distant targets
+
+		    while tick() - startTime < Dur do
+		        if target and target:FindFirstChild("HumanoidRootPart") then
+		            local wawa = MeButCharacter.HumanoidRootPart
+		            local targetHRP = target.HumanoidRootPart
+		            local targetVelocity = targetHRP.AssemblyLinearVelocity
+
+		            local distanceToTarget = (targetHRP.Position - wawa.Position).magnitude
+
+		            local scaledPredictionTime = math.clamp(basePredictionTime * (1 - math.min(distanceToTarget / 100, 1)), minPredictionTime, maxPredictionTime)
+
+		            local predictedPosition = targetHRP.Position + targetVelocity * scaledPredictionTime
+
+		            local directionToTarget = (predictedPosition - wawa.Position).unit
+
+		            local Camera = game.Workspace.CurrentCamera
+		            local targetCFrame = CFrame.lookAt(
+		                Camera.CFrame.Position,
+		                Camera.CFrame.Position + Vector3.new(
+		                    directionToTarget.X,
+		                    directionToTarget.Y,
+		                    directionToTarget.Z
+		                )
+		            )
+
+		            game:GetService("TweenService")
+		                :Create(Camera, TweenInfo.new(AimSmoothnes, Enum.EasingStyle.Linear), { CFrame = targetCFrame })
+		                :Play()
+		        end
+		        task.wait()
+		    end
+
+		    UserInputService.MouseBehavior = Enum.MouseBehavior.Default
 		end)
 	end
+
 
 	local function WatchPizzaTower(state)
 		if not state then
@@ -1242,7 +1259,15 @@ local function FartHubLoad()
 						:Connect(function()
 							if not IsSkibidiToiletMode and lol.CooldownTime.Text ~= "" then
 								IsSkibidiToiletMode = true
-								task.spawn(Aimbot, VeryLongDuration)
+
+								if CharacterGender == "Dusekkar" then
+									local originalsmooth = AimSmoothnes
+									AimSmoothnes = 0.03
+									task.spawn(Aimbot, VeryLongDuration)
+									AimSmoothnes = originalsmooth
+								else
+									task.spawn(Aimbot, VeryLongDuration)
+								end
 
 								task.spawn(function()
 									repeat
@@ -1327,7 +1352,6 @@ local function FartHubLoad()
 							if name then
 								table.insert(NameProtectNames, name)
 							end
-							
 						end
 					end
 				end
@@ -2718,14 +2742,14 @@ local function FartHubLoad()
 			end,
 		})
 
-		local CoolKidAimbotToggle = PlayerTab:CreateToggle({
-			Name = "C00lkid Aimbot",
-			CurrentValue = false,
-			Callback = function(state)
-				game:GetService("ReplicatedStorage").Modules.Network.RemoteEvent
-					:FireServer("SetDevice", state and "Mobile" or "PC")
-			end,
-		})
+		-- local CoolKidAimbotToggle = PlayerTab:CreateToggle({
+			-- Name = "C00lkid Aimbot",
+			-- CurrentValue = false,
+			-- Callback = function(state)
+				-- game:GetService("ReplicatedStorage").Modules.Network.RemoteEvent
+					-- :FireServer("SetDevice", state and "Mobile" or "PC")
+			-- end,
+		-- })
 
 		local BringMePizza = PlayerTab:CreateToggle({
 			Name = "Tp Elliot Pizza",
@@ -2909,13 +2933,25 @@ local function FartHubLoad()
 
 		local DistanceSlider = BlatantTab:CreateSlider({
 			Name = "Smoothness Slider",
-			Range = { 0, 0.3 },
+			Range = { 0.03, .3 },
 			Increment = 0.01,
 			Suffix = "Seconds",
 			CurrentValue = 0.1,
 			Flag = "SmoothnessSlider",
 			Callback = function(value)
 				AimSmoothnes = value
+			end,
+		})
+
+		local PredictionSlider = BlatantTab:CreateSlider({
+			Name = "Prediction Slider",
+			Range = { 0.2, 1 },
+			Increment = 0.01,
+			Suffix = "Seconds",
+			CurrentValue = 0.1,
+			Flag = "Prediction Slider",
+			Callback = function(value)
+				PredictionMultiplier = value
 			end,
 		})
 
