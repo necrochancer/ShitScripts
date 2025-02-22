@@ -1366,8 +1366,6 @@ local function FartHubLoad()
 		return assetList
 	end
 
-	Rayfield:Notify({ Title = "Erm", Content = "Idk whats happening but on bad executors the new Dussekar guy is broken.", Duration = 30, Image = "ban" })
-
 	local function DownloadBallers(url, path)
 		if not isfile(path) then
 			local suc, res = pcall(function()
@@ -1720,7 +1718,7 @@ local function FartHubLoad()
 		Content = supportedExecutors[executorname] and executorname .. " No Errors Expected"
 			or executorname .. " Errors Expected",
 		Image = supportedExecutors[executorname] and "check" or "ban",
-		Duration = 2,
+		Duration = 5,
 	})
 
 	local highlightingEnabled, SkibidiStaminaLoop, running, ItemFartsEnabled, Do1x1PopupsLoop, SkibidiWait, LopticaWaitTime, SkibidiRandomness =
