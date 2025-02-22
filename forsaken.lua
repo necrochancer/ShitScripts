@@ -32,23 +32,26 @@ local function FartHubLoad()
 	local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
 
 	-- modulales
-	local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/source.lua"))()
+	local Rayfield = loadstring(
+		game:HttpGet("https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/source.lua")
+	)()
 	--local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/101e78bd4144f8e4f5eade68176615e98a1513de/source.lua"))()
 
 	local SmoothShiftLock
-	local success, err = pcall(function()
-		local smoothShiftLockModule = ReplicatedStorage
-			:WaitForChild("Systems")
-			:WaitForChild("Player")
-			:WaitForChild("Game")
-			:FindFirstChild("SmoothShiftLock")
-
-		if smoothShiftLockModule then
-			SmoothShiftLock = require(smoothShiftLockModule)
-		else
-			SmoothShiftLock = "Unavailable"
+	local smoothShiftLockModule = ReplicatedStorage:WaitForChild("Systems")
+		:WaitForChild("Player")
+		:WaitForChild("Game")
+		:FindFirstChild("SmoothShiftLock")
+	local function GetShiftlock()
+		local success, shiftlock = pcall(function()
+			return require(ReplicatedStorage.Systems.Player.Game.SmoothShiftLock)
+		end)
+		if success then
+			return shiftlock
 		end
-	end)
+	end
+
+	GetShiftlock()
 
 	-- tablets
 	local buttonFrames = {}
@@ -132,7 +135,6 @@ local function FartHubLoad()
 		end)
 	end)
 
-
 	local executorname = (pcall(getexecutorname) and getexecutorname())
 		or (pcall(identifyexecutor) and identifyexecutor())
 		or "Unknown"
@@ -186,7 +188,7 @@ local function FartHubLoad()
 		[":3"] = "Colon3.mp3",
 		["GODDESS OF INDIFERENCE"] = "GoddessOfIndiference.mp3",
 		["Canto 3 Boss Battle"] = "Canto3BossBattle.mp3",
-		["Sigma Boy Phonk"] = "SigmaBoyPhonk.mp3"
+		["Sigma Boy Phonk"] = "SigmaBoyPhonk.mp3",
 	}
 
 	setclipboard("https://linkunlocker.com/fartsaken-ZINXl")
@@ -1098,48 +1100,48 @@ local function FartHubLoad()
 		end)
 
 		task.spawn(function()
-		    local startTime = tick()
-		    local UserInputService = game:GetService("UserInputService")
-		    UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
-		    local basePredictionTime = PredictionMultiplier  -- Base prediction time in seconds
-		    local minPredictionTime = (PredictionMultiplier / 3)  -- Minimum prediction time for very close targets
-		    local maxPredictionTime = (PredictionMultiplier * 3)  -- Maximum prediction time for very distant targets
+			local startTime = tick()
+			local UserInputService = game:GetService("UserInputService")
+			UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
+			local basePredictionTime = PredictionMultiplier -- Base prediction time in seconds
+			local minPredictionTime = (PredictionMultiplier / 3) -- Minimum prediction time for very close targets
+			local maxPredictionTime = (PredictionMultiplier * 3) -- Maximum prediction time for very distant targets
 
-		    while tick() - startTime < Dur do
-		        if target and target:FindFirstChild("HumanoidRootPart") then
-		            local wawa = MeButCharacter.HumanoidRootPart
-		            local targetHRP = target.HumanoidRootPart
-		            local targetVelocity = targetHRP.AssemblyLinearVelocity
+			while tick() - startTime < Dur do
+				if target and target:FindFirstChild("HumanoidRootPart") then
+					local wawa = MeButCharacter.HumanoidRootPart
+					local targetHRP = target.HumanoidRootPart
+					local targetVelocity = targetHRP.AssemblyLinearVelocity
 
-		            local distanceToTarget = (targetHRP.Position - wawa.Position).magnitude
+					local distanceToTarget = (targetHRP.Position - wawa.Position).magnitude
 
-		            local scaledPredictionTime = math.clamp(basePredictionTime * (1 - math.min(distanceToTarget / 100, 1)), minPredictionTime, maxPredictionTime)
+					local scaledPredictionTime = math.clamp(
+						basePredictionTime * (1 - math.min(distanceToTarget / 100, 1)),
+						minPredictionTime,
+						maxPredictionTime
+					)
 
-		            local predictedPosition = targetHRP.Position + targetVelocity * scaledPredictionTime
+					local predictedPosition = targetHRP.Position + targetVelocity * scaledPredictionTime
 
-		            local directionToTarget = (predictedPosition - wawa.Position).unit
+					local directionToTarget = (predictedPosition - wawa.Position).unit
 
-		            local Camera = game.Workspace.CurrentCamera
-		            local targetCFrame = CFrame.lookAt(
-		                Camera.CFrame.Position,
-		                Camera.CFrame.Position + Vector3.new(
-		                    directionToTarget.X,
-		                    directionToTarget.Y,
-		                    directionToTarget.Z
-		                )
-		            )
+					local Camera = game.Workspace.CurrentCamera
+					local targetCFrame = CFrame.lookAt(
+						Camera.CFrame.Position,
+						Camera.CFrame.Position
+							+ Vector3.new(directionToTarget.X, directionToTarget.Y, directionToTarget.Z)
+					)
 
-		            game:GetService("TweenService")
-		                :Create(Camera, TweenInfo.new(AimSmoothnes, Enum.EasingStyle.Linear), { CFrame = targetCFrame })
-		                :Play()
-		        end
-		        task.wait()
-		    end
+					game:GetService("TweenService")
+						:Create(Camera, TweenInfo.new(AimSmoothnes, Enum.EasingStyle.Linear), { CFrame = targetCFrame })
+						:Play()
+				end
+				task.wait()
+			end
 
-		    UserInputService.MouseBehavior = Enum.MouseBehavior.Default
+			UserInputService.MouseBehavior = Enum.MouseBehavior.Default
 		end)
 	end
-
 
 	local function WatchPizzaTower(state)
 		if not state then
@@ -1364,46 +1366,44 @@ local function FartHubLoad()
 		return assetList
 	end
 
-		local function DownloadBallers(url, path)
-			if not isfile(path) then
-				local suc, res = pcall(function()
-					return game:HttpGet(url, true)
-				end)
-				if not suc or res == "404: Not Found" then
-					Rayfield:Notify({ Title = "Error", Content = "erm not found", Duration = 5 })
-				end
-				writefile(path, res)
+	Rayfield:Notify({ Title = "Erm", Content = "Idk whats happening but on bad executors the new Dussekar guy is broken.", Duration = 30, Image = "ban" })
+
+	local function DownloadBallers(url, path)
+		if not isfile(path) then
+			local suc, res = pcall(function()
+				return game:HttpGet(url, true)
+			end)
+			if not suc or res == "404: Not Found" then
+				Rayfield:Notify({ Title = "Error", Content = "erm not found", Duration = 5 })
 			end
+			writefile(path, res)
 		end
-
-		local function CheckIfFartsDownloaded()
-			local assetList = GetAssetList()
-			local basePath = "FartHub/Assets/"
-
-			if not isfolder("FartHub") then
-				makefolder("FartHub")
-			end
-
-			if not isfolder(basePath) then
-				makefolder(basePath)
-			end
-
-			for _, url in ipairs(assetList) do
-				local filePath = basePath .. url:match("Assets/(.+)")
-				if filePath then
-					local newFilePath = filePath:gsub("%.png$", ".png.Fart"):gsub("%.mp4$", ".mp4.Fart4"):gsub("%.mp3$", ".mp3")
-
-					if not isfile(newFilePath) then
-						local folderPath = newFilePath:match("(.*/)")
-						if folderPath and not isfolder(folderPath) then
-							makefolder(folderPath)
-						end
-						DownloadBallers(url, newFilePath)
-						Rayfield:Notify({ Title = "Downloaded", Content = newFilePath, Duration = 1, Image = "download" })
+	end
+	local function CheckIfFartsDownloaded()
+		local assetList = GetAssetList()
+		local basePath = "FartHub/Assets/"
+		if not isfolder("FartHub") then
+			makefolder("FartHub")
+		end
+		if not isfolder(basePath) then
+			makefolder(basePath)
+		end
+		for _, url in ipairs(assetList) do
+			local filePath = basePath .. url:match("Assets/(.+)")
+			if filePath then
+				local newFilePath =
+					filePath:gsub("%.png$", ".png.Fart"):gsub("%.mp4$", ".mp4.Fart4"):gsub("%.mp3$", ".mp3")
+				if not isfile(newFilePath) then
+					local folderPath = newFilePath:match("(.*/)")
+					if folderPath and not isfolder(folderPath) then
+						makefolder(folderPath)
 					end
+					DownloadBallers(url, newFilePath)
+					Rayfield:Notify({ Title = "Downloaded", Content = newFilePath, Duration = 1, Image = "download" })
 				end
 			end
 		end
+	end
 
 	task.delay(5, function()
 		pcall(function()
@@ -1491,15 +1491,11 @@ local function FartHubLoad()
 				end
 
 				local tweenInfo = TweenInfo.new(0.01, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
-				local tween = TweenService:Create(
-					Frame,
-					tweenInfo,
-					{
-						Position = Frame.Position
-							+ UDim2.new(direction.X * speed / screenSize.X, 0, direction.Y * speed / screenSize.Y, 0),
-						Rotation = Frame.Rotation + 10,
-					}
-				)
+				local tween = TweenService:Create(Frame, tweenInfo, {
+					Position = Frame.Position
+						+ UDim2.new(direction.X * speed / screenSize.X, 0, direction.Y * speed / screenSize.Y, 0),
+					Rotation = Frame.Rotation + 10,
+				})
 				tween:Play()
 				tween.Completed:Connect(bounce)
 			end
@@ -1527,7 +1523,12 @@ local function FartHubLoad()
 			end
 		else
 			if LastStandingFolder and LastStandingFolder.ChildAdded then
-				Rayfield:Notify({ Title = "Disabled Music Replace", Content = "Music Will Go Back To Normal Next Round", Duration = 10, Image = "music" }) -- 😭😭😭😭😭😭
+				Rayfield:Notify({
+					Title = "Disabled Music Replace",
+					Content = "Music Will Go Back To Normal Next Round",
+					Duration = 10,
+					Image = "music",
+				}) -- 😭😭😭😭😭😭
 				for _, connection in ipairs(MusicConnections) do
 					connection:Disconnect()
 				end
@@ -1644,7 +1645,6 @@ local function FartHubLoad()
 			end)
 		end
 	end
-
 
 	local function NameProtect(state)
 		local function updateNames()
@@ -1779,12 +1779,12 @@ local function FartHubLoad()
 			textLabel.TextColor3 = Color3.new(1, 1, 1)
 			textLabel.TextStrokeTransparency = 0
 			textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+			textLabel.Text = string.format("%d%% Completed", generator.Progress.Value)
 
-			task.spawn(function()
-				while generator.Parent and LopticaGenBill do
-					textLabel.Text = string.format("%d%% Completed", generator.Progress.Value)
-					task.wait(1)
-				end
+			generator.Progress.Changed:Connect(function()
+				textLabel.Text = string.format("%d%% Completed", generator.Progress.Value)
+			end)
+			generator.Destroying:Connect(function()
 				billboard:Destroy()
 			end)
 		end
@@ -1865,6 +1865,7 @@ local function FartHubLoad()
 			mapFolder.ChildAdded:Connect(function(child)
 				if highlightingEnabled and child.Name == "Generator" then
 					AddFart(child, generatorHighlightColor)
+					CreateGeneratorBillboard(child)
 				end
 			end)
 		end
@@ -2170,7 +2171,8 @@ local function FartHubLoad()
 
 	local function FlingKiller()
 		local MyHRP = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-		local KillerHRP = workspace.Players:FindFirstChild("Killers"):GetChildren()[1]:FindFirstChild("HumanoidRootPart")
+		local KillerHRP =
+			workspace.Players:FindFirstChild("Killers"):GetChildren()[1]:FindFirstChild("HumanoidRootPart")
 
 		if not MyHRP or not KillerHRP then
 			return
@@ -2743,12 +2745,12 @@ local function FartHubLoad()
 		})
 
 		-- local CoolKidAimbotToggle = PlayerTab:CreateToggle({
-			-- Name = "C00lkid Aimbot",
-			-- CurrentValue = false,
-			-- Callback = function(state)
-				-- game:GetService("ReplicatedStorage").Modules.Network.RemoteEvent
-					-- :FireServer("SetDevice", state and "Mobile" or "PC")
-			-- end,
+		-- Name = "C00lkid Aimbot",
+		-- CurrentValue = false,
+		-- Callback = function(state)
+		-- game:GetService("ReplicatedStorage").Modules.Network.RemoteEvent
+		-- :FireServer("SetDevice", state and "Mobile" or "PC")
+		-- end,
 		-- })
 
 		local BringMePizza = PlayerTab:CreateToggle({
@@ -2933,7 +2935,7 @@ local function FartHubLoad()
 
 		local DistanceSlider = BlatantTab:CreateSlider({
 			Name = "Smoothness Slider",
-			Range = { 0.03, .3 },
+			Range = { 0.03, 0.3 },
 			Increment = 0.01,
 			Suffix = "Seconds",
 			CurrentValue = 0.1,
@@ -2997,7 +2999,7 @@ local function FartHubLoad()
 		local SheddyVelocitySlider = BlatantTab:CreateSlider({
 			Name = "Shedletsky Movement Velocity",
 			Range = { 0.5, 5 },
-			Increment = .1,
+			Increment = 0.1,
 			Suffix = "Studs",
 			CurrentValue = 2,
 			Flag = "ShedletskyVelocitySlider",
@@ -3190,7 +3192,6 @@ local function FartHubLoad()
 				end
 			end,
 		})
-
 
 		AnimationsTab:CreateSection("You can emote as killer using this.")
 
