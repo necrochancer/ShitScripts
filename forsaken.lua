@@ -1476,7 +1476,7 @@ local function FartHubLoad()
 					direction = Vector2.new(direction.X, -direction.Y)
 				end
 
-				local mousePos = game:GetService("UserInputService"):GetMouseLocation()
+				local mousePos = pcall(game:GetService("UserInputService"):GetMouseLocation())
 				local framePos = Frame.AbsolutePosition
 				local frameSize = Frame.AbsoluteSize
 				if
