@@ -49,12 +49,12 @@ local function FartHubLoad()
 		if success then
 			SmoothShiftLock = require(ReplicatedStorage.Systems.Player.Game.SmoothShiftLock)
 		else
-			Rayfield:Notification("Shiftlock", "Shiftlock is unavailable", 5)
+			Rayfield:Notify({ Title = "An error occured!", Content = "Require isnt available", Duration = 10, Image = "ban" })
 			SmoothShiftLock = "Unavailable"
 		end
 	end
 
-	GetShiftlock()
+	task.spawn(GetShiftlock)
 
 	-- tablets
 	local buttonFrames = {}
