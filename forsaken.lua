@@ -44,7 +44,7 @@ local function FartHubLoad()
 		:FindFirstChild("SmoothShiftLock")
 	local function GetShiftlock()
 		local success, shiftlock = pcall(function()
-			return require(ReplicatedStorage.Systems.Player.Game.SmoothShiftLock)
+			SmoothShiftLock = require(ReplicatedStorage.Systems.Player.Game.SmoothShiftLock)
 		end)
 		if success then
 			return shiftlock
