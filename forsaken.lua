@@ -44,10 +44,13 @@ local function FartHubLoad()
 		:FindFirstChild("SmoothShiftLock")
 	local function GetShiftlock()
 		local success, shiftlock = pcall(function()
-			SmoothShiftLock = require(ReplicatedStorage.Systems.Player.Game.SmoothShiftLock)
+			require(ReplicatedStorage.Systems.Player.Game.SmoothShiftLock)
 		end)
 		if success then
-			return shiftlock
+			SmoothShiftLock = require(ReplicatedStorage.Systems.Player.Game.SmoothShiftLock)
+		else
+			Rayfield:Notification("Shiftlock", "Shiftlock is unavailable", 5)
+			SmoothShiftLock = "Unavailable"
 		end
 	end
 
@@ -189,6 +192,7 @@ local function FartHubLoad()
 		["GODDESS OF INDIFERENCE"] = "GoddessOfIndiference.mp3",
 		["Canto 3 Boss Battle"] = "Canto3BossBattle.mp3",
 		["Sigma Boy Phonk"] = "SigmaBoyPhonk.mp3",
+		["McMental"] = "McMental.mp3",
 	}
 
 	setclipboard("https://linkunlocker.com/fartsaken-ZINXl")
@@ -3169,6 +3173,7 @@ local function FartHubLoad()
 				"GODDESS OF INDIFERENCE",
 				"Canto 3 Boss Battle",
 				"Sigma Boy Phonk",
+				"McMental",
 			},
 			CurrentOption = { "RottenGirl" },
 			MultipleOptions = false,
