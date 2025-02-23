@@ -3098,6 +3098,14 @@ local function FartHubLoad()
 			Callback = function()
 				if not LowAttentionSpanModeActivated then
 					LowAttentionSpanModeActivated = true
+
+					Rayfield:Notify({
+						Title = "Ok u turned it on",
+						Content = "Go to a generator and see what u have done.",
+						Duration = 10,
+						Image = "drumstick",
+					})
+
 					PlayerGui.ChildAdded:Connect(function(child)
 						if child.Name == "PuzzleUI" then
 							SetupSurfers(child)
@@ -3105,9 +3113,9 @@ local function FartHubLoad()
 					end)
 				else
 					Rayfield:Notify({
-						Title = "bro",
-						Content = "its already on",
-						Duration = 3,
+						Title = "ITS ALREADY ON STOP TOUCHING ME",
+						Content = "Omg just go to a generator",
+						Duration = 8,
 						Image = "ban",
 					})
 				end
