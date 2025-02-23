@@ -49,7 +49,12 @@ local function FartHubLoad()
 		if success then
 			SmoothShiftLock = require(ReplicatedStorage.Systems.Player.Game.SmoothShiftLock)
 		else
-			Rayfield:Notify({ Title = "An error occured!", Content = "Require isnt available", Duration = 10, Image = "ban" })
+			Rayfield:Notify({
+				Title = "An error occured!",
+				Content = "Require isnt available",
+				Duration = 10,
+				Image = "ban",
+			})
 			SmoothShiftLock = "Unavailable"
 		end
 	end
@@ -151,7 +156,7 @@ local function FartHubLoad()
 					local Request = http_request or syn.request or request
 					return Request
 						and Request({
-							Url = "https://raw.githubusercontent.com/necrochancer/ShitScripts/main/Assets/random/AmazingExecutor.mp3",
+							Url = "https://raw.githubusercontent.com/ivannetta/ShitScripts/main/Assets/random/AmazingExecutor.mp3",
 							Method = "GET",
 						})
 				end)
@@ -193,7 +198,7 @@ local function FartHubLoad()
 		["Canto 3 Boss Battle"] = "Canto3BossBattle.mp3",
 		["Sigma Boy Phonk"] = "SigmaBoyPhonk.mp3",
 		["McMental"] = "McMental.mp3",
-	        ["GrassSkirt"] = "GrassSkirt.mp3",
+		["GrassSkirt"] = "GrassSkirt.mp3",
 	}
 
 	setclipboard("https://linkunlocker.com/fartsaken-ZINXl")
@@ -204,7 +209,7 @@ local function FartHubLoad()
 		LoadingTitle = "Fart Hub",
 		LoadingSubtitle = "meow meow meow meow meow meow",
 		Icon = "microwave",
-		Link = "https://github.com/necrochancer/ShitScripts/Forsaken",
+		Link = "https://github.com/ivannetta/ShitScripts/Forsaken",
 
 		DisableBuildWarnings = true,
 		DisableRayfieldPrompts = true,
@@ -1332,7 +1337,7 @@ local function FartHubLoad()
 	end
 
 	local function GetAssetList()
-		local url = "https://api.github.com/repos/necrochancer/ShitScripts/git/trees/main?recursive=1"
+		local url = "https://api.github.com/repos/ivannetta/ShitScripts/git/trees/main?recursive=1"
 		local assetList = {}
 
 		local success, errorMessage = pcall(function()
@@ -1352,7 +1357,7 @@ local function FartHubLoad()
 							or item.path:match("^Assets/.+%.mp4$")
 							or item.path:match("Assets/(.+)%.mp3$")
 						then
-							local rawUrl = "https://raw.githubusercontent.com/necrochancer/ShitScripts/main/" .. item.path
+							local rawUrl = "https://raw.githubusercontent.com/ivannetta/ShitScripts/main/" .. item.path
 							table.insert(assetList, rawUrl)
 
 							local name = item.path:match("Assets/(.+)%.png$") or item.path:match("Assets/(.+)%.mp4$")
@@ -3035,7 +3040,7 @@ local function FartHubLoad()
 		--	Callback = function()
 		--		Rayfield:Notify({ Title = "Loading", Content = "pls wait stinky boy", Duration = 20, Image = "check" })
 		--		loadstring(
-		--			game:HttpGet("https://raw.githubusercontent.com/etta/ShitScripts/main/AutoSigma.lua", true)
+		--			game:HttpGet("https://raw.githubusercontent.com/ivannetta/ShitScripts/main/AutoSigma.lua", true)
 		--		)()
 		--	end,
 		--})
