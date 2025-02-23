@@ -88,6 +88,7 @@ local function FartHubLoad()
 	local LopticaCooldown = false
 	local ReplaceStandingMusic = false
 	local Prediction = false
+	local EnableIAIMBOTPLS = false
 	local LowAttentionSpanModeActivated = false
 	local SigmaData
 
@@ -1059,7 +1060,7 @@ local function FartHubLoad()
 			return
 		end
 
-		if not aimbotActive then
+		if not EnableIAIMBOTPLS then
 			return
 		end
 
@@ -2936,6 +2937,7 @@ local function FartHubLoad()
 			Name = "Aimbot",
 			CurrentValue = false,
 			Callback = function(state)
+				EnableIAIMBOTPLS = state
 				HandleFartContainer(state)
 			end,
 		})
