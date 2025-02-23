@@ -88,6 +88,7 @@ local function FartHubLoad()
 	local LopticaCooldown = false
 	local ReplaceStandingMusic = false
 	local Prediction = false
+	local LowAttentionSpanModeActivated = false
 	local SigmaData
 
 	-- sittings
@@ -901,6 +902,21 @@ local function FartHubLoad()
 		NameUIC.Parent = Name
 
 		local Images = {
+			{ name = "JumpingForJoy", renderImage = "rbxassetid://129614581942080" },
+			{ name = "Drumsticks", renderImage = "rbxassetid://80678095206124" },
+			{ name = "KazotskyKick", renderImage = "rbxassetid://132653220480177" },
+			{ name = "MonsterMash", renderImage = "rbxassetid://73592720532565" },
+			{ name = "CCShimmy", renderImage = "rbxassetid://92379847382802" },
+			{ name = "AshleyLookAtMe", renderImage = "rbxassetid://101141010818082" },
+			{ name = "Brickbattler", renderImage = "rbxassetid://97057214315889" },
+			{ name = "AintNoLovinMyMan", renderImage = "rbxassetid://93998300527888" },
+			{ name = "TwoTwoTwo", renderImage = "rbxassetid://96092312091932" },
+			{ name = "Sukuna", renderImage = "rbxassetid://95950437854407" },
+			{ name = "Silly", renderImage = "rbxassetid://121965062547127" },
+			{ name = "StockDance", renderImage = "rbxassetid://136238391916155" },
+			{ name = "GangnamStyle", renderImage = "rbxassetid://101388085235785" },
+			{ name = "Khaled", renderImage = "rbxassetid://104716889279869" },
+			{ name = "HeyNow", renderImage = "rbxassetid://93665655595946" },
 			{ name = "Locked", renderImage = "rbxassetid://103241825392940" },
 			{ name = "LethalCompany", renderImage = "rbxassetid://89769371017185" },
 			{ name = "Headbanger", renderImage = "rbxassetid://126222345373558" },
@@ -999,7 +1015,7 @@ local function FartHubLoad()
 
 		local Blur = Instance.new("BlurEffect", game:GetService("Lighting"))
 		Blur.Size = 0
-		Blur.Name = "FartHubBlur"
+		Blur.Name = "Blur"
 
 		local tweenInfoSigmaBlur = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0)
 		local tweenSigmaBlur = TweenServiceSigma:Create(Blur, tweenInfoSigmaBlur, { Size = 0 })
@@ -2472,7 +2488,7 @@ local function FartHubLoad()
 			local CoreGui = game:GetService("CoreGui")
 
 			local EmoteGUI = CoreGui:FindFirstChild("FartHubEmoteGUI")
-			local BlurEffect = Lighting:FindFirstChild("FartHubBlur")
+			local BlurEffect = Lighting:FindFirstChild("Blur")
 
 			if EmoteGUI then
 				LopticaCooldown = true
@@ -3080,8 +3096,8 @@ local function FartHubLoad()
 			Name = "Low Attention Span Mode",
 			Description = "Activate Low Attention Span Mode",
 			Callback = function()
-				if not _G.LowAttentionSpanModeActivated then
-					_G.LowAttentionSpanModeActivated = true
+				if not LowAttentionSpanModeActivated then
+					LowAttentionSpanModeActivated = true
 					PlayerGui.ChildAdded:Connect(function(child)
 						if child.Name == "PuzzleUI" then
 							SetupSurfers(child)
@@ -3223,7 +3239,7 @@ local function FartHubLoad()
 				local CoreGui = game:GetService("CoreGui")
 
 				local EmoteGUI = CoreGui:FindFirstChild("FartHubEmoteGUI")
-				local BlurEffect = Lighting:FindFirstChild("FartHubBlur")
+				local BlurEffect = Lighting:FindFirstChild("Blur")
 
 				if EmoteGUI then
 					LopticaCooldown = true
