@@ -110,7 +110,7 @@ local function FartHubLoad()
 	local BabyShark = nil
 	local KillerFartPart = nil
 	local HRP = nil
-	local CurrentSound = "RottenGirl.mp3"
+	local CurrentSound = "SigmaBoyPhonk.mp3"
 	local FunnyVideo = "SubwaySurfers.mp4.Fart4"
 
 	local fart = {
@@ -192,7 +192,7 @@ local function FartHubLoad()
 	}
 
 	local MusicList = {
-		["RottenGirl"] = "RottenGirl.mp3",
+		--["RottenGirl"] = "RottenGirl.mp3",
 		[":3"] = "Colon3.mp3",
 		["GODDESS OF INDIFERENCE"] = "GoddessOfIndiference.mp3",
 		["Canto 3 Boss Battle"] = "Canto3BossBattle.mp3",
@@ -3180,7 +3180,7 @@ local function FartHubLoad()
 		local MusicDropdown = MiscTab:CreateDropdown({
 			Name = "Music List",
 			Options = {
-				"RottenGirl",
+				--"RottenGirl",
 				":3",
 				"GODDESS OF INDIFERENCE",
 				"Canto 3 Boss Battle",
@@ -3188,7 +3188,7 @@ local function FartHubLoad()
 				"McMental",
 				"GrassSkirt",
 			},
-			CurrentOption = { "RottenGirl" },
+			CurrentOption = { "Sigma Boy Phonk" },
 			MultipleOptions = false,
 			Callback = function(Options)
 				CurrentSound = MusicList[Options[1]]
