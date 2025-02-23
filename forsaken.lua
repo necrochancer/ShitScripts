@@ -193,7 +193,7 @@ local function FartHubLoad()
 		["Canto 3 Boss Battle"] = "Canto3BossBattle.mp3",
 		["Sigma Boy Phonk"] = "SigmaBoyPhonk.mp3",
 		["McMental"] = "McMental.mp3",
-	        ["Grass Skirt Chase"] = "GrassSkirt.mp3",
+	        ["GrassSkirt"] = "GrassSkirt.mp3",
 	}
 
 	setclipboard("https://linkunlocker.com/fartsaken-ZINXl")
@@ -3181,7 +3181,7 @@ local function FartHubLoad()
 				"Canto 3 Boss Battle",
 				"Sigma Boy Phonk",
 				"McMental",
-				"Grass Skirt Chase",
+				"GrassSkirt",
 			},
 			CurrentOption = { "RottenGirl" },
 			MultipleOptions = false,
