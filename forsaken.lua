@@ -49,7 +49,12 @@ local function FartHubLoad()
 		if success then
 			SmoothShiftLock = require(ReplicatedStorage.Systems.Player.Game.SmoothShiftLock)
 		else
-			Rayfield:Notify({ Title = "An error occured!", Content = "Require isnt available", Duration = 10, Image = "ban" })
+			Rayfield:Notify({
+				Title = "An error occured!",
+				Content = "Require isnt available",
+				Duration = 10,
+				Image = "ban",
+			})
 			SmoothShiftLock = "Unavailable"
 		end
 	end
@@ -193,6 +198,7 @@ local function FartHubLoad()
 		["Canto 3 Boss Battle"] = "Canto3BossBattle.mp3",
 		["Sigma Boy Phonk"] = "SigmaBoyPhonk.mp3",
 		["McMental"] = "McMental.mp3",
+		["GrassSkirt"] = "GrassSkirt.mp3",
 	}
 
 	setclipboard("https://linkunlocker.com/fartsaken-ZINXl")
@@ -3180,6 +3186,7 @@ local function FartHubLoad()
 				"Canto 3 Boss Battle",
 				"Sigma Boy Phonk",
 				"McMental",
+				"GrassSkirt",
 			},
 			CurrentOption = { "RottenGirl" },
 			MultipleOptions = false,
