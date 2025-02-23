@@ -1058,6 +1058,11 @@ local function FartHubLoad()
 		if not Dur then
 			return
 		end
+
+		if not aimbotActive then
+			return
+		end
+
 		local Char, CharacterGender = GetCharAndFold()
 		if not Char or not CharacterGender then
 			return
