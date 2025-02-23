@@ -3181,6 +3181,7 @@ local function FartHubLoad()
 				"Canto 3 Boss Battle",
 				"Sigma Boy Phonk",
 				"McMental",
+				"Grass Skirt Chase",
 			},
 			CurrentOption = { "RottenGirl" },
 			MultipleOptions = false,
