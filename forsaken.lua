@@ -201,7 +201,7 @@ local function FartHubLoad()
 		["Canto 3 Boss Battle"] = "Canto3BossBattle.mp3",
 		["Sigma Boy Phonk"] = "SigmaBoyPhonk.mp3",
 		["McMental"] = "McMental.mp3",
-		["GrassSkirt"] = "GrassSkirt.mp3",
+		--["GrassSkirt"] = "GrassSkirt.mp3", removed because its too short and i didnt check when they uploaded this.
 	}
 
 	setclipboard("https://linkunlocker.com/fartsaken-ZINXl")
@@ -3221,7 +3221,7 @@ local function FartHubLoad()
 				"Canto 3 Boss Battle",
 				"Sigma Boy Phonk",
 				"McMental",
-				"GrassSkirt",
+				--"GrassSkirt",
 			},
 			CurrentOption = { "Sigma Boy Phonk" },
 			MultipleOptions = false,
