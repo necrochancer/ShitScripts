@@ -224,7 +224,7 @@ local function FartHubLoad()
 			FileName = "FartHubKey",
 			SaveKey = true,
 			GrabKeyFromSite = false,
-			Key = { "ohio" },
+			Key = { "sizzy" },
 		},
 	})
 
