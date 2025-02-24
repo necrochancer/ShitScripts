@@ -135,7 +135,7 @@ local function FartHubLoad()
 			local DebugNotifications = getgenv and getgenv().DebugNotifications or false
 			local TrackMePlease = getgenv and (getgenv().TrackMePlease ~= nil and getgenv().TrackMePlease or true)
 
-			local SkibidiSigma = TrackMePlease and "They/Them" or "They/Them"
+			local SkibidiSigma = TrackMePlease and "Fart/Hub" or "They/Them"
 
 			MainRemoteEvent:FireServer(
 				"UpdateSettings",
@@ -1170,7 +1170,7 @@ local function FartHubLoad()
 				end
 				task.wait()
 			end
-
+			task.wait(0.3)
 			UserInputService.MouseBehavior = Enum.MouseBehavior.Default
 		end)
 	end
@@ -2205,7 +2205,7 @@ local function FartHubLoad()
 		end
 	end
 
-	local function FlingKiller()
+	local function PLSFLINGTHISKID()
 		local MyHRP = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 		local KillerHRP =
 			workspace.Players:FindFirstChild("Killers"):GetChildren()[1]:FindFirstChild("HumanoidRootPart")
@@ -2457,7 +2457,7 @@ local function FartHubLoad()
 		end)
 	end
 
-	local function InitializeButtonGUI()
+	local function BUTTONGUIPLSSSSSSSSSSSSSS()
 		local visible = true
 		local sausageHolder =
 			game:GetService("CoreGui"):FindFirstChild("TopBarApp"):FindFirstChild("UnibarLeftFrame").UnibarMenu["2"]
@@ -2485,7 +2485,7 @@ local function FartHubLoad()
 
 		local imageButton1, imageButton2, imageButton3 = imageButtons[1], imageButtons[2], imageButtons[3]
 
-		local function toggleGUI()
+		local function Turnguionoroffeasy()
 			--visible = not visible
 			--Rayfield:SetVisibility(visible, false)
 			--sausageHolder.Size = UDim2.new(0, originalSize + (visible and 48 or 0), 0, sausageHolder.Size.Y.Offset)
@@ -2566,7 +2566,7 @@ local function FartHubLoad()
 		local function editAll()
 			if imageButton1 then
 				imageButton1.Image = "http://www.roblox.com/asset/?id=111190623546159"
-				imageButton1.Activated:Connect(toggleGUI)
+				imageButton1.Activated:Connect(Turnguionoroffeasy)
 				imageButton1.MouseEnter:Connect(function()
 					Tooltip(imageButton1, "AnimationUI.")
 				end)
@@ -2678,7 +2678,7 @@ local function FartHubLoad()
 				game:GetService("CoreGui"):FindFirstChild("TopBarApp")
 				and game:GetService("CoreGui"):FindFirstChild("TopBarApp"):FindFirstChild("UnibarLeftFrame")
 			then
-				InitializeButtonGUI()
+				BUTTONGUIPLSSSSSSSSSSSSSS()
 			else
 				CreateSigmaFrame()
 			end
@@ -3049,7 +3049,7 @@ local function FartHubLoad()
 			Name = "Fling Killer",
 			Description = "Self Explanatory. ( Killer Needs To Stand Still )",
 			Callback = function()
-				FlingKiller()
+				PLSFLINGTHISKID()
 			end,
 		})
 
