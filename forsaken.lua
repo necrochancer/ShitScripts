@@ -202,6 +202,7 @@ local function FartHubLoad()
 		["Sigma Boy Phonk"] = "SigmaBoyPhonk.mp3",
 		["McMental"] = "McMental.mp3",
 		--["GrassSkirt"] = "GrassSkirt.mp3", removed because its too short and i didnt check when they uploaded this.
+		["HueHueHue] = "huehuehue.mp3",
 	}
 
 	setclipboard("https://linkunlocker.com/fartsaken-ZINXl")
@@ -3222,6 +3223,7 @@ local function FartHubLoad()
 				"Sigma Boy Phonk",
 				"McMental",
 				--"GrassSkirt",
+				"HueHueHue",
 			},
 			CurrentOption = { "Sigma Boy Phonk" },
 			MultipleOptions = false,
