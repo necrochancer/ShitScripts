@@ -196,7 +196,7 @@ local function FartHubLoad()
 	local MusicList = {
 		--["RottenGirl"] = "RottenGirl.mp3",
 		[":3"] = "Colon3.mp3",
-		["FartestCompas"] = "FartestCompass.mp3",
+		["FartestCompas"] = "FartestCompas.mp3",
 		["GODDESS OF INDIFERENCE"] = "GoddessOfIndiference.mp3",
 		["Canto 3 Boss Battle"] = "Canto3BossBattle.mp3",
 		["Sigma Boy Phonk"] = "SigmaBoyPhonk.mp3",
@@ -2096,7 +2096,7 @@ local function FartHubLoad()
 			Rayfield:Notify({
 				Title = "Another Fartsaken User!",
 				Content = (Player.Name .. " Is Also Using Fartsaken!"),
-				Duration = 10,
+				Duration = 20,
 				Image = "snail",
 			})
 			table.insert(CheckedPlayers, Player.Name)
