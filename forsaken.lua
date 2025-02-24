@@ -2459,18 +2459,18 @@ local function FartHubLoad()
 
 	local function BUTTONGUIPLSSSSSSSSSSSSSS()
 		local visible = true
-		local sausageHolder =
+		local SausageHolder =
 			game:GetService("CoreGui"):FindFirstChild("TopBarApp"):FindFirstChild("UnibarLeftFrame").UnibarMenu["2"]
-		local originalSize = sausageHolder.Size.X.Offset
-		sausageHolder.Size = UDim2.new(0, originalSize + 144, 0, sausageHolder.Size.Y.Offset)
+		local originalSize = SausageHolder.Size.X.Offset
+		SausageHolder.Size = UDim2.new(0, originalSize + 144, 0, SausageHolder.Size.Y.Offset)
 
 		for i = 1, 3 do
-			local buttonFrame = Instance.new("Frame", sausageHolder)
+			local buttonFrame = Instance.new("Frame", SausageHolder)
 			buttonFrame.Name = i .. "-ButtonFrame"
 			buttonFrame.Size = UDim2.new(0, 44, 0, 44)
 			buttonFrame.BackgroundTransparency = 1
 			buttonFrame.BorderSizePixel = 0
-			buttonFrame.Position = UDim2.new(0, sausageHolder.Size.X.Offset - (48 * (4 - i)), 0, 0)
+			buttonFrame.Position = UDim2.new(0, SausageHolder.Size.X.Offset - (48 * (4 - i)), 0, 0)
 			buttonFrames[i] = buttonFrame
 
 			local imageButton = Instance.new("ImageButton", buttonFrame)
@@ -2527,7 +2527,7 @@ local function FartHubLoad()
 			end
 		end
 
-		local function Tooltip(button, desc)
+		local function Toolytippy(button, desc)
 			if button:FindFirstChild("Tooltip") then
 				return
 			end
@@ -2563,12 +2563,12 @@ local function FartHubLoad()
 			tween:Play()
 		end
 
-		local function editAll()
+		local function editeverythingpls()
 			if imageButton1 then
 				imageButton1.Image = "http://www.roblox.com/asset/?id=111190623546159"
 				imageButton1.Activated:Connect(Turnguionoroffeasy)
 				imageButton1.MouseEnter:Connect(function()
-					Tooltip(imageButton1, "AnimationUI.")
+					Toolytippy(imageButton1, "AnimationUI.")
 				end)
 				imageButton1.MouseLeave:Connect(function()
 					local tooltip = imageButton1:FindFirstChild("Tooltip")
@@ -2581,7 +2581,7 @@ local function FartHubLoad()
 				imageButton2.Image = "http://www.roblox.com/asset/?id=112297625224060"
 				imageButton2.Activated:Connect(FortniteFlips)
 				imageButton2.MouseEnter:Connect(function()
-					Tooltip(imageButton2, "Frontflip.")
+					Toolytippy(imageButton2, "Frontflip.")
 				end)
 				imageButton2.MouseLeave:Connect(function()
 					local tooltip = imageButton2:FindFirstChild("Tooltip")
@@ -2616,7 +2616,7 @@ local function FartHubLoad()
 					CoolDownBlockers = false
 				end)
 				imageButton3.MouseEnter:Connect(function()
-					Tooltip(imageButton3, "FakeBlock.")
+					Toolytippy(imageButton3, "FakeBlock.")
 				end)
 				imageButton3.MouseLeave:Connect(function()
 					local tooltip = imageButton3:FindFirstChild("Tooltip")
@@ -2628,12 +2628,12 @@ local function FartHubLoad()
 		end
 
 		task.spawn(function()
-			pcall(editAll)
+			pcall(editeverythingpls)
 		end)
 
-		sausageHolder:GetPropertyChangedSignal("Size"):Connect(function()
-			if sausageHolder.Size.X.Offset == originalSize then
-				sausageHolder.Size = UDim2.new(0, originalSize + 144, 0, sausageHolder.Size.Y.Offset)
+		SausageHolder:GetPropertyChangedSignal("Size"):Connect(function()
+			if SausageHolder.Size.X.Offset == originalSize then
+				SausageHolder.Size = UDim2.new(0, originalSize + 144, 0, SausageHolder.Size.Y.Offset)
 			end
 		end)
 	end
