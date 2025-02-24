@@ -196,6 +196,7 @@ local function FartHubLoad()
 	local MusicList = {
 		--["RottenGirl"] = "RottenGirl.mp3",
 		[":3"] = "Colon3.mp3",
+		["FartestCompas"] = "FartestCompass.mp3",
 		["GODDESS OF INDIFERENCE"] = "GoddessOfIndiference.mp3",
 		["Canto 3 Boss Battle"] = "Canto3BossBattle.mp3",
 		["Sigma Boy Phonk"] = "SigmaBoyPhonk.mp3",
@@ -3215,6 +3216,7 @@ local function FartHubLoad()
 			Options = {
 				--"RottenGirl",
 				":3",
+				"FartestCompas",
 				"GODDESS OF INDIFERENCE",
 				"Canto 3 Boss Battle",
 				"Sigma Boy Phonk",
