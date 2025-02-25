@@ -78,7 +78,6 @@ local function FartHubLoad()
 	local JoinedSigmaServer = false
 	local WowWhatTheZestIsThis = nil
 	local BlockEnabled = false
-	local aimbotActive = false
 	local FlipCooldown = false
 	local GeneratorKeybindCooldown = false
 	local LopticaGenBill = false
@@ -2042,9 +2041,9 @@ local function FartHubLoad()
 								and Dogens
 								and BypassCooldown
 							do
-								task.wait(.45)
+								task.wait(0.45)
 								closestGenerator.Remotes.RE:FireServer()
-								task.wait(.45)
+								task.wait(0.45)
 								closestGenerator.Remotes.RF:InvokeServer("leave")
 								if closestGenerator.Main:WaitForChild("Prompt", 1) then
 									fireproximityprompt(closestGenerator.Main:WaitForChild("Prompt", 1))
