@@ -3033,10 +3033,6 @@ local function FartHubLoad()
    HoldToInteract = false,
    Flag = "jorkinmahpeanits", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
    Callback = function(keybind)
-
-local UserInputService = game:GetService("UserInputService")
-local humanoid = game.Players.LocalPlayer.Character:WaitForChild("Humanoid")
-local keybind = Enum.KeyCode.Z
 local track = nil
 local jorkin = false
 
@@ -3080,9 +3076,6 @@ while task.wait() do
     end
 end
 
-
-   -- The function that takes place when the keybind is pressed
-   -- The variable (Keybind) is a boolean for whether the keybind is being held or not (HoldToInteract needs to be true)
    end,
 })
 
