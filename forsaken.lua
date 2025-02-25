@@ -3165,7 +3165,7 @@ local function FartHubLoad()
 					["Kendrake"] = "SomethingScary.mp4.Fart4",
 					["Oh My Boy"] = "OhMyBoy.mp4.Fart4",
 					["Total Extermination"] = "EvilFight.mp4.Fart4",
-					["Bad Apple"] = "BadApple.mp4.Fart4",
+					["Bad Apple"] = "BadApple.mp4",
 				}
 
 				local videoKeys = {}
