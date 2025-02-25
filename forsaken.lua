@@ -2432,7 +2432,6 @@ UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
             stopTomfoolery()
         end
     end
-end)
 
 while task.wait() do
     if jorkin then
