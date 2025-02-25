@@ -3,6 +3,10 @@ local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
 local PathfindingService = game:GetService("PathfindingService")
 local Players = game:GetService("Players")
+local Notification
+pcall(function()
+	Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/Jxereas/UI-Libraries/main/notification_gui_library.lua", true))()
+end)
 
 local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
 if queueteleport then
@@ -26,6 +30,8 @@ if _G.CancelPathEvent then
 end
 
 _G.CancelPathEvent = Instance.new("BindableEvent")
+
+Notification.new("info", "script start", "ok")
 
 local Controller =
 	require(game.Players.LocalPlayer:WaitForChild("PlayerScripts"):WaitForChild("PlayerModule")):GetControls()
