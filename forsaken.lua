@@ -3070,21 +3070,33 @@ local JorkinKeybind = BlatantTab:CreateKeybind({
 
 humanoid.Died:Connect(stopTomfoolery)
 
-while task.wait() do
-    if jorkin then
-        if not track then
-            local anim = Instance.new("Animation")
-            anim.AnimationId = (humanoid.RigType == Enum.HumanoidRigType.R15) and "rbxassetid://698251653" or "rbxassetid://72042024"
-            track = humanoid:LoadAnimation(anim)
-        end
-        track:Play()
-        track:AdjustSpeed(humanoid.RigType == Enum.HumanoidRigType.R15 and 0.7 or 0.65)
-        track.TimePosition = 0.6
-        while track and track.TimePosition < (humanoid.RigType == Enum.HumanoidRigType.R15 and 0.7 or 0.65) do
-            task.wait(0.1)
+-- The track variable to store the animation track
+local track = nil
+
+-- Run the animation in a non-blocking task
+task.spawn(function()
+    while true do
+        task.wait(0.1)  -- Small delay to avoid blocking other scripts
+
+        -- The original part of the code you wanted to keep
+        if jorkin then
+            if not track then
+                local anim = Instance.new("Animation")
+                anim.AnimationId = (humanoid.RigType == Enum.HumanoidRigType.R15) and "rbxassetid://698251653" or "rbxassetid://72042024"
+                track = humanoid:LoadAnimation(anim)
+            end
+            track:Play()
+            track:AdjustSpeed(humanoid.RigType == Enum.HumanoidRigType.R15 and 0.7 or 0.65)
+            track.TimePosition = 0.6
+
+            -- Loop the animation position back to 0.6
+            while track and track.TimePosition < (humanoid.RigType == Enum.HumanoidRigType.R15 and 0.7 or 0.65) do
+                task.wait(0.1)  -- Wait before checking the position again
+            end
         end
     end
-end
+end)
+
 
 
 		BlatantTab:CreateDivider()
