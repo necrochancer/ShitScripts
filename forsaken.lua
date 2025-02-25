@@ -3061,8 +3061,6 @@ UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
     end
 end)
 
-humanoid.Died:Connect(stopTomfoolery)
-
 while task.wait() do
     if jorkin then
         if not track then
