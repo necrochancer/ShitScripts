@@ -3032,7 +3032,7 @@ local function FartHubLoad()
    CurrentKeybind = "Z",
    HoldToInteract = false,
    Flag = "jorkinmahpeanits", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function()
+   Callback = function(Keybind)
 
 local UserInputService = game:GetService("UserInputService")
 local humanoid = game.Players.LocalPlayer.Character:WaitForChild("Humanoid")
