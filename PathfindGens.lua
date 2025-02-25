@@ -4,9 +4,7 @@ local TeleportService = game:GetService("TeleportService")
 local PathfindingService = game:GetService("PathfindingService")
 local Players = game:GetService("Players")
 local Notification
-pcall(function()
-	Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/Jxereas/UI-Libraries/main/notification_gui_library.lua", true))()
-end)
+Notification = loadstring(game:HttpGet("https://raw.githubusercontent.com/Jxereas/UI-Libraries/main/notification_gui_library.lua", true))()
 
 local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
 if queueteleport then
