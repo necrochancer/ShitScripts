@@ -3025,17 +3025,11 @@ local function FartHubLoad()
 			end,
 		})
 
-		BlatantTab:CreateDivider()
-
-		local JorkinKeybind = BlatantTab:CreateKeybind({
-   Name = "Jorkin my peanits",
-   CurrentKeybind = "Z",
-   HoldToInteract = false,
-   Flag = "Jork", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Keybind)
-
+		local UserInputService = game:GetService("UserInputService")
+local humanoid = game.Players.LocalPlayer.Character:WaitForChild("Humanoid")
 local track = nil
 local jorkin = false
+local isAnimating = false
 
 local function stopTomfoolery()
     jorkin = false
@@ -3050,16 +3044,29 @@ local function stopTomfoolery()
     end
 end
 
-UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
-    if gameProcessedEvent then return end
-    if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == keybind then
-        if not jorkin then
-            jorkin = true
+BlatantTab:CreateDivider()
+
+local JorkinKeybind = BlatantTab:CreateKeybind({
+    Name = "Jorkin my peanits",
+    CurrentKeybind = "Z",
+    HoldToInteract = true,
+    Flag = "Jork",
+    Callback = function(Keybind)
+        if Keybind then
+            if not isAnimating then
+                isAnimating = true
+                if not jorkin then
+                    jorkin = true
+                end
+            end
         else
-            stopTomfoolery()
+            if isAnimating then
+                isAnimating = false
+                stopTomfoolery()
+            end
         end
     end
-end)
+})
 
 humanoid.Died:Connect(stopTomfoolery)
 
@@ -3079,10 +3086,6 @@ while task.wait() do
     end
 end
 
-   -- The function that takes place when the keybind is pressed
-   -- The variable (Keybind) is a boolean for whether the keybind is being held or not (HoldToInteract needs to be true)
-   end,
-})
 
 		BlatantTab:CreateDivider()
 
