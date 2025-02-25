@@ -1058,6 +1058,43 @@ local function FartHubLoad()
 		end
 	end
 
+	local function ToggleAcid(state)
+		local success, map = pcall(function()
+			return workspace.Map.Ingame.Map
+		end)
+		if success and map and map:FindFirstChild("AcidContainer") then
+			for i, v in pairs(map["AcidContainer"].Acid:GetChildren()) do
+				if v:IsA("Part") then
+					if state then
+						v.Size = Vector3.new(v.Size.X, 7, v.Size.Z)
+					elseif not state then
+						v.Size = Vector3.new(v.Size.X, 6, v.Size.Z)
+					end
+				end
+			end
+		end
+	end
+
+
+	local function ToggleKillerCollide(state)
+		if state == true then
+			state = false
+		else
+			state = true
+		end
+		local success, map = pcall(function()
+			return workspace.Map.Ingame.Map
+		end)
+		if success and map and map:FindFirstChild("Walls (Red Trans = Killer Walkthrough)") then
+			for i, v in pairs(map["Walls (Red Trans = Killer Walkthrough)"].KillerWalkThru:GetChildren()) do
+				if v:IsA("Part") then
+					v.CanCollide = state
+				end
+			end
+		end
+	end
+
+
 	local function Aimbot(Dur)
 		if not Dur then
 			return
@@ -2005,9 +2042,9 @@ local function FartHubLoad()
 								and Dogens
 								and BypassCooldown
 							do
-								task.wait(.5)
+								task.wait(.35)
 								closestGenerator.Remotes.RE:FireServer()
-								task.wait(.5)
+								task.wait(.35)
 								closestGenerator.Remotes.RF:InvokeServer("leave")
 								if closestGenerator.Main:WaitForChild("Prompt", 1) then
 									fireproximityprompt(closestGenerator.Main:WaitForChild("Prompt", 1))
@@ -2824,6 +2861,24 @@ local function FartHubLoad()
 			end,
 		})
 
+		local DisableWallsToggle = PlayerTab:CreateToggle({
+			Name = "Allow To Walk Thru Killer Only Walls",
+			CurrentValue = false,
+			Callback = function(state)
+				if state then Rayfield:Notify({ Title = "Walk Thru Walls Enabled", Content = "Walk Thru Walls Enabled, Might Need To Re-Toggle In Game.", Duration = 5, Image = "drumstick" }) end
+				ToggleKillerCollide(state)
+			end,
+		})
+
+		local DisableAcidToggle = PlayerTab:CreateToggle({
+			Name = "Disable Acid",
+			CurrentValue = false,
+			Callback = function(state)
+				if state then Rayfield:Notify({ Title = "Anti-Acid Enabled", Content = "Acid's Disabled, Might Need To Re-Toggle In Game.", Duration = 5, Image = "drumstick" }) end
+				ToggleAcid(state)
+			end,
+		})
+
 		local Do1x1x1x1PopupToggle = PlayerTab:CreateToggle({
 			Name = "Auto 1x4 Popups",
 			CurrentValue = false,
@@ -2834,6 +2889,8 @@ local function FartHubLoad()
 				end
 			end,
 		})
+
+		PlayerTab:CreateDivider()
 
 		local FovSlider = PlayerTab:CreateSlider({
 			Name = "Field of View",
@@ -2846,8 +2903,6 @@ local function FartHubLoad()
 				game:GetService("Players").LocalPlayer.PlayerData.Settings.Game.FieldOfView.Value = value
 			end,
 		})
-
-		PlayerTab:CreateDivider()
 
 		local JumpPowerSlider = PlayerTab:CreateSlider({
 			Name = "Jump Power",
