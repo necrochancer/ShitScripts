@@ -3031,7 +3031,7 @@ local function FartHubLoad()
    Name = "Jorkin my peanits",
    CurrentKeybind = "Z",
    HoldToInteract = false,
-   Flag = "Jork", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Flag = "jorkin", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
    Callback = function(Keybind)
 
 local track = nil
