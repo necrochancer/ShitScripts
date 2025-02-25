@@ -35,7 +35,6 @@ local function FartHubLoad()
 	local Rayfield = loadstring(
 		game:HttpGet("https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/source.lua")
 	)()
-	--local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/101e78bd4144f8e4f5eade68176615e98a1513de/source.lua"))()
 
 	local SmoothShiftLock
 	local smoothShiftLockModule = ReplicatedStorage:WaitForChild("Systems")
@@ -1090,6 +1089,12 @@ local function FartHubLoad()
 					v.CanCollide = state
 				end
 			end
+		end
+	end
+
+	local function ToggleChat(state)
+		while task.wait(1) do
+			game:GetService("TextChatService").ChatWindowConfiguration.Enabled = state
 		end
 	end
 
@@ -3180,6 +3185,14 @@ local function FartHubLoad()
 			CurrentValue = false,
 			Callback = function(state)
 				ToggleFatMan(state)
+			end,
+		})
+
+		local ChatVisibleToggle = MiscTab:CreateToggle({
+			Name = "Toggle Chat Visibility",
+			CurrentValue = game:GetService("TextChatService").ChatWindowConfiguration.Enabled,
+			Callback = function(state)
+				ToggleChat(state)
 			end,
 		})
 
