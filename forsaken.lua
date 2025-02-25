@@ -90,7 +90,7 @@ local function FartHubLoad()
 	local Prediction = false
 	local EnableIAIMBOTPLS = false
 	local LowAttentionSpanModeActivated = false
-	local BypassCooldown = true
+	local BypassCooldown = false
 	local Dogens = false
 	local SigmaData
 
