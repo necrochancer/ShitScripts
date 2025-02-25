@@ -2041,9 +2041,9 @@ local function FartHubLoad()
 								and Dogens
 								and BypassCooldown
 							do
-								task.wait(0.45)
+								task.wait(0.5)
 								closestGenerator.Remotes.RE:FireServer()
-								task.wait(0.45)
+								task.wait(0.5)
 								closestGenerator.Remotes.RF:InvokeServer("leave")
 								if closestGenerator.Main:WaitForChild("Prompt", 1) then
 									fireproximityprompt(closestGenerator.Main:WaitForChild("Prompt", 1))
