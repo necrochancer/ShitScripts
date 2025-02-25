@@ -90,6 +90,8 @@ local function FartHubLoad()
 	local Prediction = false
 	local EnableIAIMBOTPLS = false
 	local LowAttentionSpanModeActivated = false
+	local BypassCooldown = true
+	local Dogens = false
 	local SigmaData
 
 	-- sittings
@@ -226,7 +228,7 @@ local function FartHubLoad()
 			FileName = "FartHubKey",
 			SaveKey = true,
 			GrabKeyFromSite = false,
-			Key = { "sizzy" },
+			Key = { "spongebob" },
 		},
 	})
 
@@ -1979,8 +1981,6 @@ local function FartHubLoad()
 			loopty = true
 			local PuzzleUI = Players.LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("PuzzleUI", 9999)
 
-			task.wait(SkibidiWait + math.random(0, SkibidiRandomness))
-
 			local FartNapFolder = workspace:FindFirstChild("Map")
 				and workspace.Map:FindFirstChild("Ingame")
 				and workspace.Map.Ingame:FindFirstChild("Map")
@@ -1989,7 +1989,7 @@ local function FartHubLoad()
 				local playerPosition = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
 				for _, g in ipairs(FartNapFolder:GetChildren()) do
 					if g.Name == "Generator" and g.Progress.Value < 100 then
-						local distance = (g.Main.Position - playerPosition).Magnitude
+						local distance = (g:GetPivot().Position - playerPosition).Magnitude
 						if distance < closestDistance then
 							closestDistance = distance
 							closestGenerator = g
@@ -1997,7 +1997,31 @@ local function FartHubLoad()
 					end
 				end
 				if closestGenerator then
-					closestGenerator.Remotes.RE:FireServer()
+					while closestGenerator.Progress.Value < 100 and loopty do
+						if BypassCooldown then
+							while
+								closestGenerator.Progress.Value < 100
+								and loopty
+								and shouldLoop
+								and Dogens
+								and BypassCooldown
+							do
+								task.wait(.5)
+								closestGenerator.Remotes.RE:FireServer()
+								task.wait(.5)
+								closestGenerator.Remotes.RF:InvokeServer("leave")
+								if closestGenerator.Main:WaitForChild("Prompt", 1) then
+									fireproximityprompt(closestGenerator.Main:WaitForChild("Prompt", 1))
+								end
+							end
+						else
+							task.wait(SkibidiWait + math.random(0, SkibidiRandomness))
+							closestGenerator.Remotes.RE:FireServer()
+							break
+						end
+					end
+				else
+					return
 				end
 			end
 		end
@@ -2885,11 +2909,16 @@ local function FartHubLoad()
 			CurrentValue = false,
 			Callback = function(state)
 				running = state
-				if state then
-					task.spawn(function()
-						SkibidiGenerator(true)
-					end)
-				end
+				Dogens = state
+				SkibidiGenerator(state)
+			end,
+		})
+
+		local BypassGensCooldown = GeneratorTab:CreateToggle({
+			Name = "Bypass Generator Cooldown",
+			CurrentValue = false,
+			Callback = function(state)
+				BypassCooldown = state
 			end,
 		})
 
