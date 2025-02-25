@@ -3070,20 +3070,40 @@ local JorkinKeybind = BlatantTab:CreateKeybind({
 
 humanoid.Died:Connect(stopTomfoolery)
 
--- The track variable to store the animation track
 local track = nil
+local humanoid = Players.LocalPlayer.Character and Players.LocalPlayer.Character:WaitForChild("Humanoid")
 
--- Run the animation in a non-blocking task
+-- Function to reinitialize the animation after death
+local function reinitializeAnimation()
+    if humanoid then
+        -- Reset the track on death or respawn
+        if track then
+            track:Stop()  -- Stop the old animation if it exists
+            track = nil  -- Reset the track variable
+        end
+        -- Recreate the track for the new humanoid (after respawn)
+        local anim = Instance.new("Animation")
+        anim.AnimationId = (humanoid.RigType == Enum.HumanoidRigType.R15) and "rbxassetid://698251653" or "rbxassetid://72042024"
+        track = humanoid:LoadAnimation(anim)
+    end
+end
+
+-- Connect to the humanoid's death event to reset the animation
+Players.LocalPlayer.CharacterAdded:Connect(function(character)
+    -- Wait for the new humanoid to be available
+    humanoid = character:WaitForChild("Humanoid")
+    -- Reinitialize the animation when respawned
+    reinitializeAnimation()
+end)
+
+-- Now run the animation in a non-blocking task
 task.spawn(function()
     while true do
         task.wait(0.1)  -- Small delay to avoid blocking other scripts
 
-        -- The original part of the code you wanted to keep
         if jorkin then
             if not track then
-                local anim = Instance.new("Animation")
-                anim.AnimationId = (humanoid.RigType == Enum.HumanoidRigType.R15) and "rbxassetid://698251653" or "rbxassetid://72042024"
-                track = humanoid:LoadAnimation(anim)
+                reinitializeAnimation()  -- Reinitialize the animation if track is not set
             end
             track:Play()
             track:AdjustSpeed(humanoid.RigType == Enum.HumanoidRigType.R15 and 0.7 or 0.65)
