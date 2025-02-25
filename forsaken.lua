@@ -90,6 +90,7 @@ local function FartHubLoad()
 	local LowAttentionSpanModeActivated = false
 	local BypassCooldown = false
 	local Dogens = false
+	local skibididtoiletchat = false
 	local SigmaData
 
 	-- sittings
@@ -1090,10 +1091,6 @@ local function FartHubLoad()
 				end
 			end
 		end
-	end
-
-	local function ToggleChat(state)
-		game:GetService("TextChatService").ChatWindowConfiguration.Enabled = state
 	end
 
 
@@ -3188,9 +3185,13 @@ local function FartHubLoad()
 
 		local ChatVisibleToggle = MiscTab:CreateToggle({
 			Name = "Toggle Chat Visibility",
-			CurrentValue = game:GetService("TextChatService").ChatWindowConfiguration.Enabled,
+			CurrentValue = skibididtoiletchat,
 			Callback = function(state)
-				ToggleChat(state)
+				skibididtoiletchat = state
+				while skibididtoiletchat do
+					game:GetService("TextChatService"):WaitForChild("ChatWindowConfiguration").Enabled = state
+					task.wait(1)
+				end
 			end,
 		})
 
