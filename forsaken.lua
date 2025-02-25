@@ -1980,8 +1980,6 @@ local function FartHubLoad()
 			loopty = true
 			local PuzzleUI = Players.LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("PuzzleUI", 9999)
 
-			task.wait(SkibidiWait + math.random(0, SkibidiRandomness))
-
 			local FartNapFolder = workspace:FindFirstChild("Map")
 				and workspace.Map:FindFirstChild("Ingame")
 				and workspace.Map.Ingame:FindFirstChild("Map")
@@ -2016,6 +2014,7 @@ local function FartHubLoad()
 								end
 							end
 						else
+							task.wait(SkibidiWait + math.random(0, SkibidiRandomness))
 							closestGenerator.Remotes.RE:FireServer()
 							break
 						end
