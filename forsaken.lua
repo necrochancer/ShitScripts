@@ -3027,6 +3027,65 @@ local function FartHubLoad()
 
 		BlatantTab:CreateDivider()
 
+		local JorkinKeybind = BlatantTab:CreateKeybind({
+   Name = "Jorkin my peanits",
+   CurrentKeybind = "Z",
+   HoldToInteract = false,
+   Flag = "Jork", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Keybind)
+
+local track = nil
+local jorkin = false
+
+local function stopTomfoolery()
+    jorkin = false
+    if track then
+        track.TimePosition = track.Length * 0.9
+        track:AdjustSpeed(0.5)
+        while track.TimePosition < track.Length do
+            task.wait(0.1)
+        end
+        track:Stop()
+        track = nil
+    end
+end
+
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    if gameProcessedEvent then return end
+    if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == keybind then
+        if not jorkin then
+            jorkin = true
+        else
+            stopTomfoolery()
+        end
+    end
+end)
+
+humanoid.Died:Connect(stopTomfoolery)
+
+while task.wait() do
+    if jorkin then
+        if not track then
+            local anim = Instance.new("Animation")
+            anim.AnimationId = (humanoid.RigType == Enum.HumanoidRigType.R15) and "rbxassetid://698251653" or "rbxassetid://72042024"
+            track = humanoid:LoadAnimation(anim)
+        end
+        track:Play()
+        track:AdjustSpeed(humanoid.RigType == Enum.HumanoidRigType.R15 and 0.7 or 0.65)
+        track.TimePosition = 0.6
+        while track and track.TimePosition < (humanoid.RigType == Enum.HumanoidRigType.R15 and 0.7 or 0.65) do
+            task.wait(0.1)
+        end
+    end
+end
+
+   -- The function that takes place when the keybind is pressed
+   -- The variable (Keybind) is a boolean for whether the keybind is being held or not (HoldToInteract needs to be true)
+   end,
+})
+
+		BlatantTab:CreateDivider()
+
 		local BlockKeybind = BlatantTab:CreateKeybind({
 			Name = "Fake Block Keybind",
 			CurrentKeybind = "Y",
