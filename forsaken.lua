@@ -1093,9 +1093,7 @@ local function FartHubLoad()
 	end
 
 	local function ToggleChat(state)
-		while task.wait(1) do
-			game:GetService("TextChatService").ChatWindowConfiguration.Enabled = state
-		end
+		game:GetService("TextChatService").ChatWindowConfiguration.Enabled = state
 	end
 
 
