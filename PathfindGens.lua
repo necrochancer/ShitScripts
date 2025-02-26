@@ -240,7 +240,7 @@ local function PathFinding(Model)
 		local targetPosition = targetObject:IsA("Model") and targetObject:GetPivot().Position or targetObject.Position
 
 		local pathination = PathfindingService:CreatePath({
-			AgentRadius = 5,
+			AgentRadius = 0,
 			AgentHeight = 0,
 			AgentCanJump = false,
 			AgentWalkableFloorAngle = 50,
@@ -257,7 +257,7 @@ local function PathFinding(Model)
 			local start = waypoints[i].Position
 			local finish = waypoints[i + 1].Position
 			local distance = (finish - start).Magnitude
-			local step = 3
+			local step = 5
 			for j = 0, distance, step do
 				createNode(start:Lerp(finish, j / distance))
 			end
