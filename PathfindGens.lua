@@ -1,10 +1,3 @@
-game:GetService("StarterGui"):SetCore("SendNotification", {
-	Title = "PathfindGens",
-	Text = "Wait",
-	Duration = 5,
-})
-
-
 task.wait(5)
 local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
@@ -16,6 +9,12 @@ if queueteleport then
 		"loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/main/PathfindGens.lua'))()"
 	)
 end
+
+game:GetService("StarterGui"):SetCore("SendNotification", {
+	Title = "PathfindGens",
+	Text = "Wait",
+	Duration = 5,
+})
 
 task.spawn(function()
 	pcall(function()
