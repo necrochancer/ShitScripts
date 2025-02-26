@@ -3,10 +3,16 @@ local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
 local PathfindingService = game:GetService("PathfindingService")
 local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+local DCWebhook = (getgenv and getgenv().DiscordWebhook) or false
+local ProfilePicture = ""
 local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
 if queueteleport then
 	queueteleport(
-		"loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/main/PathfindGens.lua'))()"
+		"if getgenv then getgenv().DiscoordWebhook = "
+			.. tostring(DCWebhook)
+			.. " end "
+			.. "loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/main/PathfindGens.lua'))()"
 	)
 end
 
@@ -15,6 +21,67 @@ game:GetService("StarterGui"):SetCore("SendNotification", {
 	Text = "Wait plsss",
 	Duration = 10,
 })
+
+local function GetProfilePicture()
+	local PlayerID = game:GetService("Players").LocalPlayer.UserId
+	local request = request or http_request or syn.request
+	local response = request({
+		Url = "https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds="
+			.. PlayerID
+			.. "&size=180x180&format=png",
+		Method = "GET",
+		Headers = {
+			["User-Agent"] = "Mozilla/5.0",
+		},
+	})
+	local urlStart, urlEnd = string.find(response.Body, "https://[%w-_%.%?%.:/%+=&]+")
+	if urlStart and urlEnd then
+		ProfilePicture = string.sub(response.Body, urlStart, urlEnd)
+	else
+		ProfilePicture = "https://cdn.sussy.dev/bleh.jpg"
+	end
+end
+
+if DCWebhook then
+	GetProfilePicture()
+end
+
+local function SendWebhook(Title, Description, Color, ProfilePicture, Footer)
+	if not DCWebhook then
+		return
+	end
+	local request = request or http_request or syn.request
+	if not request then
+		return
+	end
+
+	local success, errorMessage = pcall(function()
+		local response = request({
+			Url = DCWebhook,
+			Method = "POST",
+			Headers = { ["Content-Type"] = "application/json" },
+			Body = game:GetService("HttpService"):JSONEncode({
+				username = game:GetService("Players").LocalPlayer.DisplayName,
+				avatar_url = ProfilePicture,
+				embeds = {
+					{
+						title = Title,
+						description = Description,
+						color = Color,
+						footer = { text = Footer },
+					},
+				},
+			}),
+		})
+		if response and response.Body then
+			print(response.Body)
+		end
+	end)
+
+	if not success then
+		print("Error: " .. errorMessage)
+	end
+end
 
 task.spawn(function()
 	pcall(function()
@@ -93,7 +160,6 @@ task.delay(5, function()
 	end)
 end)
 
-
 local function findGenerators()
 	local folder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
 	local map = folder and folder:FindFirstChild("Map")
@@ -159,9 +225,6 @@ local function PathFinding(Model)
 	local function SkibidiPathfinding(targetObject)
 		clearNodes()
 
-		local VIMVIM = game:GetService("VirtualInputManager")
-		VIMVIM:SendKeyEvent(true, Enum.KeyCode.LeftShift, false, nil)
-
 		local player = Players.LocalPlayer
 		local character = player.Character
 		if not character or not character:FindFirstChild("HumanoidRootPart") or not targetObject then
@@ -174,7 +237,7 @@ local function PathFinding(Model)
 		local targetPosition = targetObject:IsA("Model") and targetObject:GetPivot().Position or targetObject.Position
 
 		local pathination = PathfindingService:CreatePath({
-			AgentRadius = 1,
+			AgentRadius = 2,
 			AgentHeight = 0,
 			AgentCanJump = false,
 			AgentWalkableFloorAngle = 50,
@@ -233,6 +296,7 @@ local function PathFinding(Model)
 	return SkibidiPathfinding(Model)
 end
 
+
 local function DoAllGenerators()
 	for _, g in ipairs(findGenerators()) do
 		local pathStarted = false
@@ -280,10 +344,32 @@ local function DoAllGenerators()
 			return
 		end
 	end
+	SendWebhook(
+		"Generator Autofarm thing",
+		"Finished all generators, Current Balance: "
+			.. game:GetService("Players").LocalPlayer.PlayerData.Stats.Currency.Money.Value
+			.. "\nTime Played: "
+			.. (function()
+				local seconds = game:GetService("Players").LocalPlayer.PlayerData.Stats.General.TimePlayed.Value
+				local days = math.floor(seconds / (60 * 60 * 24))
+				seconds = seconds % (60 * 60 * 24)
+				local hours = math.floor(seconds / (60 * 60))
+				seconds = seconds % (60 * 60)
+				local minutes = math.floor(seconds / 60)
+				seconds = seconds % 60
+				return string.format("%02d:%02d:%02d:%02d", days, hours, minutes, seconds)
+			end)(),
+		0x00FF00,
+		ProfilePicture,
+		".gg/fartsaken | <3"
+	)
+	task.wait(1)
 	teleportToRandomServer()
 end
 
 local function AmIInGameYet()
+	local VIMVIM = game:GetService("VirtualInputManager")
+	VIMVIM:SendKeyEvent(true, Enum.KeyCode.LeftShift, false, nil)
 	workspace.Players.Survivors.ChildAdded:Connect(function(child)
 		task.wait(1)
 		if child == game:GetService("Players").LocalPlayer.Character then
@@ -297,6 +383,7 @@ local function DidiDie()
 	while task.wait(0.5) do
 		if Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
 			if Players.LocalPlayer.Character.Humanoid.Health == 0 then
+				SendWebhook("Generator Autofarm", "THIS STUPID KILLER KILLED ME IM SO ANGRY OMG", 0xFF0000, ProfilePicture, ".gg/fartsaken | <3")
 				task.wait(5)
 				teleportToRandomServer()
 			end
