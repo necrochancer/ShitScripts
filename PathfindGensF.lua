@@ -13,7 +13,7 @@ local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or (flu
 if queueteleport then
 	queueteleport([[
         if getgenv then getgenv().DiscordWebhook = "]] .. tostring(DCWebhook) .. [[" end
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/main/PathfindGensCCC.lua'))()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/main/PathfindGensF.lua'))()
     ]])
 end
 
