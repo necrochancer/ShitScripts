@@ -1,3 +1,10 @@
+game:GetService("StarterGui"):SetCore("SendNotification", {
+	Title = "PathfindGens",
+	Text = "Wait",
+	Duration = 5,
+})
+
+
 task.wait(5)
 local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
@@ -69,6 +76,14 @@ local function teleportToRandomServer()
 		end
 	end
 end
+
+pcall(function()
+	local Time = game:GetService("Players").LocalPlayer.PlayerGui.RoundTimer.Main.Time.Text
+	local Minutes = tonumber(string.sub(Time, 1, 2)) * 60
+	if Minutes > 90 then
+		teleportToRandomServer()
+	end
+end)
 
 local function findGenerators()
 	local folder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
