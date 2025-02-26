@@ -240,7 +240,7 @@ local function PathFinding(Model)
 		local targetPosition = targetObject:IsA("Model") and targetObject:GetPivot().Position or targetObject.Position
 
 		local pathination = PathfindingService:CreatePath({
-			AgentRadius = 2,
+			AgentRadius = 3,
 			AgentHeight = 0,
 			AgentCanJump = false,
 			AgentWalkableFloorAngle = 50,
@@ -387,7 +387,19 @@ local function DidiDie()
 			if Players.LocalPlayer.Character.Humanoid.Health == 0 then
 				SendWebhook(
 					"Generator Autofarm",
-					"THIS STUPID KILLER KILLED ME IM SO ANGRY OMG",
+					"THIS STUPID KILLER KILLED ME IM SO ANGRY OMG \nCurrent Balance: "
+                    .. game:GetService("Players").LocalPlayer.PlayerData.Stats.Currency.Money.Value
+			        .. "\nTime Played: "
+			        .. (function()
+			        		local seconds = game:GetService("Players").LocalPlayer.PlayerData.Stats.General.TimePlayed.Value
+			        		local days = math.floor(seconds / (60 * 60 * 24))
+			        		seconds = seconds % (60 * 60 * 24)
+			        		local hours = math.floor(seconds / (60 * 60))
+			        		seconds = seconds % (60 * 60)
+			        		local minutes = math.floor(seconds / 60)
+			        		seconds = seconds % 60
+			        		return string.format("%02d:%02d:%02d:%02d", days, hours, minutes, seconds)
+			        end)(),
 					0xFF0000,
 					ProfilePicture,
 					".gg/fartsaken | <3"
