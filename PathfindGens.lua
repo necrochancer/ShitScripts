@@ -369,12 +369,12 @@ local function DoAllGenerators()
 end
 
 local function AmIInGameYet()
-	local VIMVIM = game:GetService("VirtualInputManager")
-	VIMVIM:SendKeyEvent(true, Enum.KeyCode.LeftShift, false, nil)
 	workspace.Players.Survivors.ChildAdded:Connect(function(child)
 		task.wait(1)
 		if child == game:GetService("Players").LocalPlayer.Character then
 			task.wait(5)
+			local VIMVIM = game:GetService("VirtualInputManager")
+			VIMVIM:SendKeyEvent(true, Enum.KeyCode.LeftShift, false, nil)
 			DoAllGenerators()
 		end
 	end)
