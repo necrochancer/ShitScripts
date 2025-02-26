@@ -1075,7 +1075,6 @@ local function FartHubLoad()
 		end
 	end
 
-
 	local function ToggleKillerCollide(state)
 		if state == true then
 			state = false
@@ -1093,7 +1092,6 @@ local function FartHubLoad()
 			end
 		end
 	end
-
 
 	local function Aimbot(Dur)
 		if not Dur then
@@ -1419,7 +1417,8 @@ local function FartHubLoad()
 							or item.path:match("^Assets/.+%.mp4$")
 							or item.path:match("Assets/(.+)%.mp3$")
 						then
-							local rawUrl = "https://raw.githubusercontent.com/necrochancer/ShitScripts/main/" .. item.path
+							local rawUrl = "https://raw.githubusercontent.com/necrochancer/ShitScripts/main/"
+								.. item.path
 							table.insert(assetList, rawUrl)
 
 							local name = item.path:match("Assets/(.+)%.png$") or item.path:match("Assets/(.+)%.mp4$")
@@ -2865,7 +2864,14 @@ local function FartHubLoad()
 			Name = "Allow To Walk Thru Killer Only Walls",
 			CurrentValue = false,
 			Callback = function(state)
-				if state then Rayfield:Notify({ Title = "Walk Thru Walls Enabled", Content = "Walk Thru Walls Enabled, Might Need To Re-Toggle In Game.", Duration = 5, Image = "drumstick" }) end
+				if state then
+					Rayfield:Notify({
+						Title = "Walk Thru Walls Enabled",
+						Content = "Walk Thru Walls Enabled, Might Need To Re-Toggle In Game.",
+						Duration = 5,
+						Image = "drumstick",
+					})
+				end
 				ToggleKillerCollide(state)
 			end,
 		})
@@ -2874,7 +2880,14 @@ local function FartHubLoad()
 			Name = "Disable Acid",
 			CurrentValue = false,
 			Callback = function(state)
-				if state then Rayfield:Notify({ Title = "Anti-Acid Enabled", Content = "Acid's Disabled, Might Need To Re-Toggle In Game.", Duration = 5, Image = "drumstick" }) end
+				if state then
+					Rayfield:Notify({
+						Title = "Anti-Acid Enabled",
+						Content = "Acid's Disabled, Might Need To Re-Toggle In Game.",
+						Duration = 5,
+						Image = "drumstick",
+					})
+				end
 				ToggleAcid(state)
 			end,
 		})
@@ -3080,98 +3093,100 @@ local function FartHubLoad()
 		})
 
 		local UserInputService = game:GetService("UserInputService")
-local humanoid = game.Players.LocalPlayer.Character:WaitForChild("Humanoid")
-local track = nil
-local jorkin = false
-local isAnimating = false
+		local humanoid = game.Players.LocalPlayer.Character:WaitForChild("Humanoid")
+		local track = nil
+		local jorkin = false
+		local isAnimating = false
 
-local function stopTomfoolery()
-    jorkin = false
-    if track then
-        track.TimePosition = track.Length * 0.9
-        track:AdjustSpeed(0.5)
-        while track.TimePosition < track.Length do
-            task.wait(0.1)
-        end
-        track:Stop()
-        track = nil
-    end
-end
+		local function stopTomfoolery()
+			jorkin = false
+			if track then
+				track.TimePosition = track.Length * 0.9
+				track:AdjustSpeed(0.5)
+				while track.TimePosition < track.Length do
+					task.wait(0.1)
+				end
+				track:Stop()
+				track = nil
+			end
+		end
 
-BlatantTab:CreateDivider()
+		BlatantTab:CreateDivider()
 
-local JorkinKeybind = BlatantTab:CreateKeybind({
-    Name = "Jorkin my peanits",
-    CurrentKeybind = "Z",
-    HoldToInteract = true,
-    Flag = "Jork",
-    Callback = function(Keybind)
-        if Keybind then
-            if not isAnimating then
-                isAnimating = true
-                if not jorkin then
-                    jorkin = true
-                end
-            end
-        else
-            if isAnimating then
-                isAnimating = false
-                stopTomfoolery()
-            end
-        end
-    end
-})
+		local JorkinKeybind = BlatantTab:CreateKeybind({
+			Name = "Jorkin my peanits",
+			CurrentKeybind = "Z",
+			HoldToInteract = true,
+			Flag = "Jork",
+			Callback = function(Keybind)
+				if Keybind then
+					if not isAnimating then
+						isAnimating = true
+						if not jorkin then
+							jorkin = true
+						end
+					end
+				else
+					if isAnimating then
+						isAnimating = false
+						stopTomfoolery()
+					end
+				end
+			end,
+		})
 
-humanoid.Died:Connect(stopTomfoolery)
+		humanoid.Died:Connect(stopTomfoolery)
 
-local track = nil
-local humanoid = Players.LocalPlayer.Character and Players.LocalPlayer.Character:WaitForChild("Humanoid")
+		local track = nil
+		local humanoid = Players.LocalPlayer.Character and Players.LocalPlayer.Character:WaitForChild("Humanoid")
 
--- Function to reinitialize the animation after death
-local function reinitializeAnimation()
-    if humanoid then
-        -- Reset the track on death or respawn
-        if track then
-            track:Stop()  -- Stop the old animation if it exists
-            track = nil  -- Reset the track variable
-        end
-        -- Recreate the track for the new humanoid (after respawn)
-        local anim = Instance.new("Animation")
-        anim.AnimationId = (humanoid.RigType == Enum.HumanoidRigType.R15) and "rbxassetid://698251653" or "rbxassetid://72042024"
-        track = humanoid:LoadAnimation(anim)
-    end
-end
+		-- Function to reinitialize the animation after death
+		local function reinitializeAnimation()
+			if humanoid then
+				-- Reset the track on death or respawn
+				if track then
+					track:Stop() -- Stop the old animation if it exists
+					track = nil -- Reset the track variable
+				end
+				-- Recreate the track for the new humanoid (after respawn)
+				local anim = Instance.new("Animation")
+				anim.AnimationId = (humanoid.RigType == Enum.HumanoidRigType.R15) and "rbxassetid://698251653"
+					or "rbxassetid://72042024"
+				track = humanoid:LoadAnimation(anim)
+			end
+		end
 
--- Connect to the humanoid's death event to reset the animation
-Players.LocalPlayer.CharacterAdded:Connect(function(character)
-    -- Wait for the new humanoid to be available
-    humanoid = character:WaitForChild("Humanoid")
-    -- Reinitialize the animation when respawned
-    reinitializeAnimation()
-end)
+		-- Connect to the humanoid's death event to reset the animation
+		Players.LocalPlayer.CharacterAdded:Connect(function(character)
+			-- Wait for the new humanoid to be available
+			humanoid = character:WaitForChild("Humanoid")
+			-- Reinitialize the animation when respawned
+			reinitializeAnimation()
+		end)
 
--- Now run the animation in a non-blocking task
-task.spawn(function()
-    while true do
-        task.wait(0.1)  -- Small delay to avoid blocking other scripts
+		-- Now run the animation in a non-blocking task
+		task.spawn(function()
+			while true do
+				task.wait(0.1) -- Small delay to avoid blocking other scripts
 
-        if jorkin then
-            if not track then
-                reinitializeAnimation()  -- Reinitialize the animation if track is not set
-            end
-            track:Play()
-            track:AdjustSpeed(humanoid.RigType == Enum.HumanoidRigType.R15 and 0.7 or 0.65)
-            track.TimePosition = 0.6
+				if jorkin then
+					if not track then
+						reinitializeAnimation() -- Reinitialize the animation if track is not set
+					end
+					track:Play()
+					track:AdjustSpeed(humanoid.RigType == Enum.HumanoidRigType.R15 and 0.7 or 0.65)
+					track.TimePosition = 0.6
 
-            -- Loop the animation position back to 0.6
-            while track and track.TimePosition < (humanoid.RigType == Enum.HumanoidRigType.R15 and 0.7 or 0.65) do
-                task.wait(0.1)  -- Wait before checking the position again
-            end
-        end
-    end
-end)
-
-
+					-- Loop the animation position back to 0.6
+					while
+						track
+						and track.TimePosition < (humanoid.RigType == Enum.HumanoidRigType.R15 and 0.7 or 0.65)
+					do
+						task.wait(0.1) -- Wait before checking the position again
+					end
+				end
+			end
+		end)
 
 		BlatantTab:CreateDivider()
 
