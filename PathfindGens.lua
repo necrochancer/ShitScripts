@@ -15,7 +15,7 @@ if queueteleport then
 		"if getgenv then getgenv().DiscordWebhook = "
 			.. tostring(DCWebhook)
 			.. " end "
-			.. "loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/main/PathfindGens.lua'))()"
+			.. "loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/main/PathfindGensCCC.lua'))()"
 	)
 end
 
