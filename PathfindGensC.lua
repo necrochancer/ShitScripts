@@ -10,7 +10,7 @@ local ProfilePicture = ""
 local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
 if queueteleport then
 	queueteleport(
-		"if getgenv then getgenv().DiscoordWebhook = "
+		"if getgenv then getgenv().DiscordWebhook = "
 			.. tostring(DCWebhook)
 			.. " end "
 			.. "loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/main/PathfindGens.lua'))()"
