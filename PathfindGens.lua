@@ -263,6 +263,15 @@ local function PathFinding(Model)
 			end
 		end
 
+		-- Check for obstacles and adjust path if necessary
+		for _, waypoint in ipairs(waypoints) do
+			local ray = Ray.new(rootPart.Position, (waypoint.Position - rootPart.Position).unit * (waypoint.Position - rootPart.Position).magnitude)
+			local hit, position = workspace:FindPartOnRay(ray, character, false, true)
+			if hit and hit.CanCollide then
+				return false
+			end
+		end
+
 		local stopped = false
 		_G.CancelPathEvent.Event:Connect(function()
 			stopped = true
