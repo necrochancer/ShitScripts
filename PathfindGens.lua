@@ -13,7 +13,7 @@ local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or (flu
 if queueteleport then
 	queueteleport([[
         if getgenv then getgenv().DiscordWebhook = "]] .. tostring(DCWebhook) .. [[" end
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/main/PathfindGensF.lua'))()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/main/PathfindGens.lua'))()
     ]])
 end
 
@@ -387,8 +387,8 @@ local function DidiDie()
 			if Players.LocalPlayer.Character.Humanoid.Health == 0 then
 				SendWebhook(
 					"Generator Autofarm",
-					"THIS STUPID KILLER KILLED ME IM SO ANGRY OMG \nCurrent Balance: "
-                    .. game:GetService("Players").LocalPlayer.PlayerData.Stats.Currency.Money.Value
+					"THIS STUPID KILLER KILLED ME IM SO ANGRY OMG \nCurrent Balance: " 
+					.. game:GetService("Players").LocalPlayer.PlayerData.Stats.Currency.Money.Value
 			        .. "\nTime Played: "
 			        .. (function()
 			        		local seconds = game:GetService("Players").LocalPlayer.PlayerData.Stats.General.TimePlayed.Value
