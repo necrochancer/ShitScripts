@@ -6,14 +6,14 @@ local Players = game:GetService("Players")
 local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
 if queueteleport then
 	queueteleport(
-		"loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/main/PathfindGens.lua'))()"
+		"print('hi') loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/main/PathfindGens.lua'))()"
 	)
 end
 
 game:GetService("StarterGui"):SetCore("SendNotification", {
 	Title = "PathfindGens",
 	Text = "Wait",
-	Duration = 5,
+	Duration = 10,
 })
 
 task.spawn(function()
@@ -76,7 +76,7 @@ local function teleportToRandomServer()
 	end
 end
 
-task.spawn(function()
+task.delay(5, function()
 	pcall(function()
 		local timer = game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild("RoundTimer").Main.Time.ContentText
 		local minutes, seconds = timer:match("(%d+):(%d+)")
