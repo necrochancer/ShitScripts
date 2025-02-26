@@ -261,7 +261,7 @@ local function DoAllGenerators()
 				if g:FindFirstChild("Remotes") and g.Remotes:FindFirstChild("RE") then
 					g.Remotes.RE:FireServer()
 				end
-				if i < 6 then
+				if i < 6 and g.Progress.Value < 100 then
 					task.wait(2.5)
 				end
 			end
