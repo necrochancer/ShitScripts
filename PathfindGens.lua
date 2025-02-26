@@ -71,6 +71,11 @@ local function teleportToRandomServer()
 			end
 
 			Counter = Counter + 1
+			game:GetService("StarterGui"):SetCore("SendNotification", {
+				Title = "Grahh",
+				Text = "Serverhop got ratelimited im angry",
+				Duration = 11,
+			})
 			task.wait(RetryingDelays)
 		end
 	end
