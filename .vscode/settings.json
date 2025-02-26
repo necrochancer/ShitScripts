@@ -22,7 +22,8 @@
         "gethwid",
         "delfolder",
         "listfiles",
-        "Rayfield"
+        "Rayfield",
+        "getgc"
     ],
     "stylua.targetReleaseVersion": "latest",
     "robloxLsp.diagnostics.disable": [
