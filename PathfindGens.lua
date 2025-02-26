@@ -240,7 +240,7 @@ local function PathFinding(Model)
 		local targetPosition = targetObject:IsA("Model") and targetObject:GetPivot().Position or targetObject.Position
 
 		local pathination = PathfindingService:CreatePath({
-			AgentRadius = 3,
+			AgentRadius = 5,
 			AgentHeight = 0,
 			AgentCanJump = false,
 			AgentWalkableFloorAngle = 50,
