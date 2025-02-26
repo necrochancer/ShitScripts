@@ -18,7 +18,7 @@ end
 
 game:GetService("StarterGui"):SetCore("SendNotification", {
 	Title = "PathfindGens",
-	Text = "Wait plsss",
+	Text = "Wait plsss yaya",
 	Duration = 10,
 })
 
