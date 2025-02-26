@@ -8,14 +8,7 @@ local DCWebhook = (getgenv and getgenv().DiscordWebhook) or false
 if DCWebhook == "" then DCWebhook = false end
 local ProfilePicture = ""
 local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
-if queueteleport then
-	queueteleport(
-		"if getgenv then getgenv().DiscordWebhook = "
-			.. tostring(DCWebhook)
-			.. " end "
-			.. "loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/main/PathfindGens.lua'))()"
-	)
-end
+if queueteleport then queueteleport("if getgenv then getgenv().DiscordWebhook = " .. tostring(DCWebhook) .. " end " .. "loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/main/PathfindGensCCC.lua'))()") end
 
 print(DCWebhook)
 
