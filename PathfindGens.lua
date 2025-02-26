@@ -257,7 +257,7 @@ local function PathFinding(Model)
 			local start = waypoints[i].Position
 			local finish = waypoints[i + 1].Position
 			local distance = (finish - start).Magnitude
-			local step = 5
+			local step = .5
 			for j = 0, distance, step do
 				createNode(start:Lerp(finish, j / distance))
 			end
