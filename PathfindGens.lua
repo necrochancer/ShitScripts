@@ -257,9 +257,18 @@ local function PathFinding(Model)
 			local start = waypoints[i].Position
 			local finish = waypoints[i + 1].Position
 			local distance = (finish - start).Magnitude
-			local step = 5
+			local step = .5
 			for j = 0, distance, step do
 				createNode(start:Lerp(finish, j / distance))
+			end
+		end
+
+		-- Check for obstacles and adjust path if necessary
+		for _, waypoint in ipairs(waypoints) do
+			local ray = Ray.new(rootPart.Position, (waypoint.Position - rootPart.Position).unit * (waypoint.Position - rootPart.Position).magnitude)
+			local hit, position = workspace:FindPartOnRay(ray, character, false, true)
+			if hit and hit.CanCollide then
+				return false
 			end
 		end
 
