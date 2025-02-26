@@ -138,14 +138,14 @@ local function PathFinding(Model)
 
 	local function createNode(position)
 		local part = Instance.new("Part")
-		part.Size = Vector3.new(1, 1, 1)
+		part.Size = Vector3.new(1.2, 1.2, 1.2)
 		part.Shape = Enum.PartType.Ball
 		part.Material = Enum.Material.Neon
-		part.Color = Color3.fromRGB(206, 129, 221)
+		part.Color = Color3.fromRGB(248, 255, 150)
 		part.Transparency = 0.5
 		part.Anchored = true
 		part.CanCollide = false
-		part.Position = position
+		part.Position = position + Vector3.new(0, 1.5, 0)
 		part.Parent = workspace
 		table.insert(activeNodes, part)
 		game:GetService("Debris"):AddItem(part, 15)
