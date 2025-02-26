@@ -212,7 +212,7 @@ local function PathFinding(Model)
 
 	local function createNode(position)
 		local part = Instance.new("Part")
-		part.Size = Vector3.new(1.2, 1.2, 1.2)
+		part.Size = Vector3.new(.6, .6, .6)
 		part.Shape = Enum.PartType.Ball
 		part.Material = Enum.Material.Neon
 		part.Color = Color3.fromRGB(248, 255, 150)
@@ -257,7 +257,7 @@ local function PathFinding(Model)
 			local start = waypoints[i].Position
 			local finish = waypoints[i + 1].Position
 			local distance = (finish - start).Magnitude
-			local step = 2
+			local step = 3
 			for j = 0, distance, step do
 				createNode(start:Lerp(finish, j / distance))
 			end
