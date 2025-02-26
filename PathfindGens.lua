@@ -5,12 +5,14 @@ local PathfindingService = game:GetService("PathfindingService")
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
 local DCWebhook = (getgenv and getgenv().DiscordWebhook) or false
-if DCWebhook == "" then DCWebhook = false end
+if DCWebhook == "" then
+	DCWebhook = false
+end
 local ProfilePicture = ""
 local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
 if queueteleport then
 	queueteleport(
-		"if getgenv then getgenv().DiscoordWebhook = "
+		"if getgenv then getgenv().DiscordWebhook = "
 			.. tostring(DCWebhook)
 			.. " end "
 			.. "loadstring(game:HttpGet('https://raw.githubusercontent.com/ivannetta/ShitScripts/main/PathfindGens.lua'))()"
@@ -299,7 +301,6 @@ local function PathFinding(Model)
 	return SkibidiPathfinding(Model)
 end
 
-
 local function DoAllGenerators()
 	for _, g in ipairs(findGenerators()) do
 		local pathStarted = false
@@ -386,7 +387,13 @@ local function DidiDie()
 	while task.wait(0.5) do
 		if Players.LocalPlayer.Character:FindFirstChild("Humanoid") then
 			if Players.LocalPlayer.Character.Humanoid.Health == 0 then
-				SendWebhook("Generator Autofarm", "THIS STUPID KILLER KILLED ME IM SO ANGRY OMG", 0xFF0000, ProfilePicture, ".gg/fartsaken | <3")
+				SendWebhook(
+					"Generator Autofarm",
+					"THIS STUPID KILLER KILLED ME IM SO ANGRY OMG",
+					0xFF0000,
+					ProfilePicture,
+					".gg/fartsaken | <3"
+				)
 				task.wait(5)
 				teleportToRandomServer()
 			end
