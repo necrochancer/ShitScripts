@@ -77,12 +77,15 @@ local function teleportToRandomServer()
 	end
 end
 
-pcall(function()
-	local Time = game:GetService("Players").LocalPlayer.PlayerGui.RoundTimer.Main.Time.Text
-	local Minutes = tonumber(string.sub(Time, 1, 2)) * 60
-	if Minutes > 90 then
-		teleportToRandomServer()
-	end
+task.spawn(function()
+	pcall(function()
+		local timer = game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild("RoundTimer").Main.Time.Text
+		local seconds = tonumber(string.sub(timer, 1, 2)) * 60
+		print(seconds .. " Left till round end.")
+		if seconds > 90 then
+			teleportToRandomServer()
+		end
+	end)
 end)
 
 local function findGenerators()
