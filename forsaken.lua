@@ -159,7 +159,7 @@ local function FartHubLoad()
 					local Request = http_request or syn.request or request
 					return Request
 						and Request({
-							Url = "https://raw.githubusercontent.com/necrochancer/ShitScripts/main/Assets/random/AmazingExecutor.mp3",
+							Url = "https://raw.githubusercontent.com/ivannetta/ShitScripts/main/Assets/random/AmazingExecutor.mp3",
 							Method = "GET",
 						})
 				end)
@@ -214,7 +214,7 @@ local function FartHubLoad()
 		LoadingTitle = "Fart Hub",
 		LoadingSubtitle = "meow meow meow meow meow meow",
 		Icon = "microwave",
-		Link = "https://github.com/necrochancer/ShitScripts/Forsaken",
+		Link = "https://github.com/ivannetta/ShitScripts/Forsaken",
 
 		DisableBuildWarnings = true,
 		DisableRayfieldPrompts = true,
@@ -1399,7 +1399,7 @@ local function FartHubLoad()
 	end
 
 	local function GetAssetList()
-		local url = "https://api.github.com/repos/necrochancer/ShitScripts/git/trees/main?recursive=1"
+		local url = "https://api.github.com/repos/ivannetta/ShitScripts/git/trees/main?recursive=1"
 		local assetList = {}
 
 		local success, errorMessage = pcall(function()
@@ -1419,7 +1419,7 @@ local function FartHubLoad()
 							or item.path:match("^Assets/.+%.mp4$")
 							or item.path:match("Assets/(.+)%.mp3$")
 						then
-							local rawUrl = "https://raw.githubusercontent.com/necrochancer/ShitScripts/main/" .. item.path
+							local rawUrl = "https://raw.githubusercontent.com/ivannetta/ShitScripts/main/" .. item.path
 							table.insert(assetList, rawUrl)
 
 							local name = item.path:match("Assets/(.+)%.png$") or item.path:match("Assets/(.+)%.mp4$")
@@ -3335,7 +3335,7 @@ end)
 				"Oh My Boy",
 				"Kendrake",
 				"Total Extermination",
-				"Bad Apple",
+				--"Bad Apple",
 				"Random",
 			},
 			CurrentOption = { "Subway Surfers" },
@@ -3354,7 +3354,7 @@ end)
 					["Kendrake"] = "SomethingScary.mp4.Fart4",
 					["Oh My Boy"] = "OhMyBoy.mp4.Fart4",
 					["Total Extermination"] = "EvilFight.mp4.Fart4",
-					["Bad Apple"] = "BadApple.mp4.Fart4",
+					--["Bad Apple"] = "BadApple.mp4.Fart4",
 				}
 
 				local videoKeys = {}
