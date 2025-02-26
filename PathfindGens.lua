@@ -5,6 +5,7 @@ local PathfindingService = game:GetService("PathfindingService")
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
 local DCWebhook = (getgenv and getgenv().DiscordWebhook) or false
+if DCWebhook == "" then DCWebhook = false end
 local ProfilePicture = ""
 local queueteleport = syn and syn.queue_on_teleport or queue_on_teleport or fluxus and fluxus.queue_on_teleport
 if queueteleport then
