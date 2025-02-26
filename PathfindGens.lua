@@ -80,13 +80,15 @@ end
 task.spawn(function()
 	pcall(function()
 		local timer = game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild("RoundTimer").Main.Time.ContentText
-		local seconds = tonumber(string.sub(timer, 1, 2)) * 60
-		print(seconds .. " Left till round end.")
-		if seconds > 90 then
+		local minutes, seconds = timer:match("(%d+):(%d+)")
+		local totalSeconds = tonumber(minutes) * 60 + tonumber(seconds)
+		print(totalSeconds .. " Left till round end.")
+		if totalSeconds > 90 then
 			teleportToRandomServer()
 		end
 	end)
 end)
+
 
 local function findGenerators()
 	local folder = workspace:FindFirstChild("Map") and workspace.Map:FindFirstChild("Ingame")
