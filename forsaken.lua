@@ -226,7 +226,7 @@ local function FartHubLoad()
 			FileName = "FartHubKey",
 			SaveKey = true,
 			GrabKeyFromSite = false,
-			Key = { "spongebob" },
+			Key = { "lopticasasirom" },
 		},
 	})
 
