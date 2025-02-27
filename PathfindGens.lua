@@ -3,6 +3,7 @@ local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
 local PathfindingService = game:GetService("PathfindingService")
 local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
 local HttpService = game:GetService("HttpService")
 local DCWebhook = (getgenv and getgenv().DiscordWebhook) or false
 if DCWebhook == "" then
@@ -198,17 +199,16 @@ local function findGenerators()
 	return generators
 end
 
-local function PathFinding(Model)
-	local activeNodes = {}
-
-	local function clearNodes()
-		for _, node in ipairs(activeNodes) do
-			if node and node.Parent then
-				node:Destroy()
-			end
-		end
-		activeNodes = {}
+local function InGenerator()
+	for i, v in ipairs(game:GetService("Players").LocalPlayer.PlayerGui.TemporaryUI:GetChildren()) do
+		if v:IsA("Frame") and v.Name == "GeneratorWarning" then
+			return false
+		else return true end
 	end
+end
+
+local function PathFinding(generator)
+	local activeNodes = {}
 
 	local function createNode(position)
 		local part = Instance.new("Part")
@@ -225,73 +225,6 @@ local function PathFinding(Model)
 		game:GetService("Debris"):AddItem(part, 15)
 	end
 
-	local function SkibidiPathfinding(targetObject)
-		clearNodes()
-
-		local player = Players.LocalPlayer
-		local character = player.Character
-		if not character or not character:FindFirstChild("HumanoidRootPart") or not targetObject then
-			return false
-		end
-
-		local humanoidus = character:FindFirstChildOfClass("Humanoid")
-		local rootPart = character:FindFirstChild("HumanoidRootPart")
-
-		local targetPosition = targetObject:IsA("Model") and targetObject:GetPivot().Position or targetObject.Position
-
-		local pathination = PathfindingService:CreatePath({
-			AgentRadius = 0,
-			AgentHeight = 0,
-			AgentCanJump = false,
-			AgentWalkableFloorAngle = 50,
-			Costs = { Acid = math.huge },
-		})
-
-		pathination:ComputeAsync(rootPart.Position, targetPosition)
-		if pathination.Status ~= Enum.PathStatus.Success then
-			return false
-		end
-
-		local waypoints = pathination:GetWaypoints()
-		for i = 1, #waypoints - 1 do
-			local start = waypoints[i].Position
-			local finish = waypoints[i + 1].Position
-			local distance = (finish - start).Magnitude
-			local step = .5
-			for j = 0, distance, step do
-				createNode(start:Lerp(finish, j / distance))
-			end
-		end
-
-		-- Check for obstacles and adjust path if necessary
-		for _, waypoint in ipairs(waypoints) do
-			local ray = Ray.new(rootPart.Position, (waypoint.Position - rootPart.Position).unit * (waypoint.Position - rootPart.Position).magnitude)
-			local hit, position = workspace:FindPartOnRay(ray, character, false, true)
-			if hit and hit.CanCollide then
-				return false
-			end
-		end
-
-		local stopped = false
-		_G.CancelPathEvent.Event:Connect(function()
-			stopped = true
-		end)
-
-		for _, wayponentos in ipairs(waypoints) do
-			if stopped then
-				return false
-			end
-			humanoidus:MoveTo(wayponentos.Position)
-			local moveStartTime = tick()
-			humanoidus.MoveToFinished:Wait()
-			if stopped or (tick() - moveStartTime) > 1 then
-				return false
-			end
-		end
-
-		return true
-	end
-
 	local acidContainer = workspace:FindFirstChild("Map")
 		and workspace.Map:FindFirstChild("Ingame")
 		and workspace.Map.Ingame:FindFirstChild("Map")
@@ -305,7 +238,65 @@ local function PathFinding(Model)
 		end
 	end
 
-	return SkibidiPathfinding(Model)
+	if not generator or not generator.Parent then return false end
+	if not Players.LocalPlayer.Character or not Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then return false end
+
+	local humanoid = Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+	local rootPart = Players.LocalPlayer.Character.HumanoidRootPart
+	if not humanoid then
+		return false
+		end
+
+	local targetPosition = generator:GetPivot().Position
+	if not targetPosition then
+		return false
+	end
+
+	local path = game:GetService("PathfindingService"):CreatePath({
+		AgentRadius = 2,
+		AgentHeight = 1,
+		AgentCanJump = true
+	})
+
+	local success = pcall(function()
+		path:ComputeAsync(rootPart.Position, targetPosition)
+	end)
+
+	if not success or path.Status ~= Enum.PathStatus.Success then
+		return false
+	end
+
+	local waypoints = path:GetWaypoints()
+
+	if #waypoints <= 1 then
+		return false
+	end
+
+	for i, waypoint in ipairs(waypoints) do
+		createNode(waypoint.Position)
+		humanoid:MoveTo(waypoint.Position)
+
+		local reachedWaypoint = false
+		local startTime = tick()
+		while not reachedWaypoint and tick() - startTime < 5 do
+			local distance = (rootPart.Position - waypoint.Position).Magnitude
+			if distance < 5 then
+				reachedWaypoint = true
+				break
+			end
+			RunService.Heartbeat:Wait()
+		end
+
+		if not reachedWaypoint then
+			return false
+		end
+	end
+
+	for _, node in ipairs(activeNodes) do
+		node:Destroy()
+	end
+
+	return true
 end
 
 local function DoAllGenerators()
@@ -340,6 +331,22 @@ local function DoAllGenerators()
 			local prompt = g:FindFirstChild("Main") and g.Main:FindFirstChild("Prompt")
 			if prompt then
 				fireproximityprompt(prompt)
+				task.wait(0.025)
+				if not InGenerator() then
+					local positions = {
+						g:GetPivot().Position - g:GetPivot().RightVector * 3,
+						g:GetPivot().Position + g:GetPivot().RightVector * 3,
+					}
+					for i, pos in ipairs(positions) do
+						print("Trying position", i)
+						Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(pos)
+						task.wait(0.25)
+						fireproximityprompt(prompt)
+						if InGenerator() then
+							break
+						end
+					end
+				end
 			end
 			for i = 1, 6 do
 				if g.Progress.Value < 100 and g:FindFirstChild("Remotes") and g.Remotes:FindFirstChild("RE") then
@@ -413,8 +420,9 @@ local function DidiDie()
 					ProfilePicture,
 					".gg/fartsaken | <3"
 				)
-				task.wait(5)
+				task.wait(1)
 				teleportToRandomServer()
+				break
 			end
 		end
 	end
