@@ -247,8 +247,12 @@ local function PathFinding(Model)
 			Costs = { Acid = math.huge },
 		})
 
-		pathination:ComputeAsync(rootPart.Position, targetPosition)
-		if pathination.Status ~= Enum.PathStatus.Success then
+		local function computePath()
+			pathination:ComputeAsync(rootPart.Position, targetPosition)
+			return pathination.Status == Enum.PathStatus.Success
+		end
+
+		if not computePath() then
 			return false
 		end
 
@@ -276,7 +280,10 @@ local function PathFinding(Model)
 			local moveStartTime = tick()
 			humanoidus.MoveToFinished:Wait()
 			if stopped or (tick() - moveStartTime) > 1 then
-				return false
+				if not computePath() then
+					return false
+				end
+				waypoints = pathination:GetWaypoints()
 			end
 		end
 
