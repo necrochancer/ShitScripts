@@ -353,7 +353,7 @@ local function DoAllGenerators()
 					g.Remotes.RE:FireServer()
 				end
 				if i < 6 and g.Progress.Value < 100 then
-					task.wait(2.4)
+					task.wait(2.5)
 				end
 			end
 		else
