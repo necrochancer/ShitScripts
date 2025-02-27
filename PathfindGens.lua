@@ -22,7 +22,7 @@ print(DCWebhook)
 
 game:GetService("StarterGui"):SetCore("SendNotification", {
 	Title = "PathfindGens",
-	Text = "Wait plsss yaya",
+	Text = "Sigma Loaded",
 	Duration = 10,
 })
 
@@ -255,7 +255,7 @@ local function PathFinding(generator)
 	local path = game:GetService("PathfindingService"):CreatePath({
 		AgentRadius = 2,
 		AgentHeight = 1,
-		AgentCanJump = true
+		AgentCanJump = false
 	})
 
 	local success = pcall(function()
@@ -350,6 +350,9 @@ local function DoAllGenerators()
 			end
 			for i = 1, 6 do
 				if g.Progress.Value < 100 and g:FindFirstChild("Remotes") and g.Remotes:FindFirstChild("RE") then
+					if g.Main:FindFirstChild("Prompt") then
+						fireproximityprompt(g.Main.Prompt)
+					end
 					g.Remotes.RE:FireServer()
 				else
 					break
