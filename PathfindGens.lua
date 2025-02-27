@@ -350,12 +350,14 @@ local function DoAllGenerators()
 			end
 			for i = 1, 6 do
 				if g.Progress.Value < 100 and g:FindFirstChild("Remotes") and g.Remotes:FindFirstChild("RE") then
-					g.Remotes.RE:FireServer()
-
 					if not Players.LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("PuzzleUI") then
 						if g.Main:FindFirstChild("Prompt") then
 							fireproximityprompt(g.Main.Prompt)
+							task.wait(0.5)
+							g.Remotes.RE:FireServer()
 						end
+					else
+						g.Remotes.RE:FireServer()
 					end
 				else
 					break
