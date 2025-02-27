@@ -109,7 +109,7 @@ Controller:Disable()
 
 local success, SkibidiSprinting = pcall(function()
 	local a = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
-	a.StaminaLossDisabled = nil
+	a.StaminaLossDisabled = true
 end)
 
 local function teleportToRandomServer()
@@ -392,7 +392,7 @@ local function AmIInGameYet()
 	workspace.Players.Survivors.ChildAdded:Connect(function(child)
 		task.wait(1)
 		if child == game:GetService("Players").LocalPlayer.Character then
-			task.wait(5)
+			task.wait(4)
 			local VIMVIM = game:GetService("VirtualInputManager")
 			VIMVIM:SendKeyEvent(true, Enum.KeyCode.LeftShift, false, nil)
 			DoAllGenerators()
