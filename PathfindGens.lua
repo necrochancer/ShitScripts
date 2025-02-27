@@ -22,7 +22,7 @@ print(DCWebhook)
 
 game:GetService("StarterGui"):SetCore("SendNotification", {
 	Title = "PathfindGens",
-	Text = "Wait plsss yaya",
+	Text = "Sigma Loaded",
 	Duration = 10,
 })
 
