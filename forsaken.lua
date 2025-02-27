@@ -3415,7 +3415,24 @@ local function FartHubLoad()
 				end
 			end,
 		})
+		if player.Character.Name ~= "Elliot" then
+			local function FemboyElliot()
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/necrochancer/ShitScripts/main/FemboyElliot"))()
+				Rayfield:Notify({
+					Title = "Wrong Character",
+					Content = "Oops, your current character isn't Elliot, this POSSIBLY can bug out, so untoggle unless you're on Elliot!",
+					Duration = 5,
+				})
+				return
+			end
+		end
 
+		local femboyelliot = MiscTab:CreateButton({
+			Name = "Femboy Elliot Skin",
+			Callback = function()
+				FemboyElliot()
+			end,
+		})
 		MiscTab:CreateSection("Music Replacement.")
 
 		local MusicDropdown = MiscTab:CreateDropdown({
