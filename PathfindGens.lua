@@ -350,6 +350,9 @@ local function DoAllGenerators()
 			end
 			for i = 1, 6 do
 				if g.Progress.Value < 100 and g:FindFirstChild("Remotes") and g.Remotes:FindFirstChild("RE") then
+					if g.Main:FindFirstChild("Prompt") then
+						fireproximityprompt(g.Main.Prompt)
+					end
 					g.Remotes.RE:FireServer()
 				else
 					break
