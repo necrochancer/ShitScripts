@@ -23,7 +23,7 @@ print(DCWebhook)
 game:GetService("StarterGui"):SetCore("SendNotification", {
 	Title = "PathfindGens",
 	Text = "Sigma Loaded",
-	Duration = 10,
+	Duration = 30,
 })
 
 local function GetProfilePicture()
