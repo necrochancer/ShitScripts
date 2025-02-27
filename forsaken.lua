@@ -3415,8 +3415,8 @@ local function FartHubLoad()
 				end
 			end,
 		})
-		if player.Character.Name ~= "Elliot" then
-			local function FemboyElliot()
+		local function FemboyElliot()
+if player.Character.Name ~= "Elliot" then
 				loadstring(game:HttpGet("https://raw.githubusercontent.com/necrochancer/ShitScripts/main/FemboyElliot"))()
 				Rayfield:Notify({
 					Title = "Wrong Character",
