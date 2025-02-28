@@ -30,6 +30,7 @@
     "stylua.targetReleaseVersion": "latest",
     "robloxLsp.diagnostics.disable": [
         "unused-local",
-        "redefined-local"
+        "redefined-local",
+        "unbalanced-assignments"
     ]
 }
