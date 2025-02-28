@@ -3338,23 +3338,24 @@ local function fartsakenLoad()
 				end
 			end,
 		})
+		--[[
+		MiscTab:CreateDivider()
 
-		-- MiscTab:CreateDivider()
--- 
-		-- MiscTab:CreateButton({
-			-- Name = "Global Messages ( ass )",
-			-- Callback = function()
-				-- if SillyMessagesEnabled then
-					-- return
-				-- end
-				-- loadstring(
-					-- game:HttpGet(
-						-- "https://raw.githubusercontent.com/ivannetta/ShitScripts/main/SillyMessageUI.lua",
-						-- true
-					-- )
-				-- )()
-			-- end,
-		-- })
+		MiscTab:CreateButton({
+			Name = "Global Messages ( ass )",
+			Callback = function()
+				if SillyMessagesEnabled then
+					return
+				end
+				loadstring(
+					game:HttpGet(
+						"https://raw.githubusercontent.com/ivannetta/ShitScripts/main/SillyMessageUI.lua",
+						true
+					)
+				)()
+			end,
+		})
+		]]
 
 		AnimationsTab:CreateSection("You can emote as killer using this.")
 
