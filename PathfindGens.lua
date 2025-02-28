@@ -107,11 +107,6 @@ local Controller =
 	require(game.Players.LocalPlayer:WaitForChild("PlayerScripts"):WaitForChild("PlayerModule")):GetControls()
 Controller:Disable()
 
-local success, SkibidiSprinting = pcall(function()
-	local a = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
-	a.StaminaLossDisabled = true
-end)
-
 local function teleportToRandomServer()
 	local Counter = 0
 	local MaxRetry = 10
@@ -208,6 +203,11 @@ local function InGenerator()
 end
 
 local function PathFinding(generator)
+	local success, SkibidiSprinting = pcall(function()
+		local a = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
+		a.StaminaLossDisabled = true
+	end)
+
 	local activeNodes = {}
 
 	local function createNode(position)
