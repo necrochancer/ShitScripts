@@ -3343,7 +3343,7 @@ local function FartHubLoad()
 
 		local SillyMessagesEnabled = false
 		MiscTab:CreateButton({
-			Name = "Load Global Messages UI. ( IDK IF IT EVEN WORKS ON MOVBLE )",
+			Name = "Load Global Messages ( IDK IF IT WORKS ON MOBILE )",
 			Callback = function()
 				if SillyMessagesEnabled then
 					return
