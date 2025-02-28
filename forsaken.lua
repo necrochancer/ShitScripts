@@ -3416,9 +3416,10 @@ local function FartHubLoad()
 			end,
 		})
 		local function FemboyElliot()
-if player.Character.Name ~= "Elliot" then
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/necrochancer/ShitScripts/main/FemboyElliot"))()
-				Rayfield:Notify({
+if player.Character.Name = "Elliot" then
+loadstring(game:HttpGet("https://raw.githubusercontent.com/necrochancer/ShitScripts/main/FemboyElliot"))()
+else
+					Rayfield:Notify({
 					Title = "Wrong Character",
 					Content = "Oops, your current character isn't Elliot, this POSSIBLY can bug out, so untoggle unless you're on Elliot!",
 					Duration = 5,
