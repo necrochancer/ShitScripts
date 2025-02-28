@@ -3338,7 +3338,7 @@ local function fartsakenLoad()
 				end
 			end,
 		})
-		--[[
+		--[[ -- this stupid chat
 		MiscTab:CreateDivider()
 
 		MiscTab:CreateButton({
