@@ -1523,7 +1523,7 @@ local function FartHubLoad()
 
 			local VideoFrame = Instance.new("VideoFrame", Frame)
 			VideoFrame.Size = UDim2.new(1, 0, 1, 0)
-			VideoFrame.Video = LoadAsset("FatMan.mp4.Fart4")
+			VideoFrame.Video = getcustomasset("FartHub/Assets/FatMan.mp4.Fart4")
 			VideoFrame.Looped = true
 			VideoFrame.Playing = true
 
