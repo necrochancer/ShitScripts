@@ -92,6 +92,7 @@ local function fartsakenLoad()
 	local Dogens = false
 	local skibididtoiletchat = false
 	local SillyMessagesEnabled = false
+	local DisablingBlur = false
 	local SigmaData
 
 	-- sittings
@@ -100,7 +101,7 @@ local function fartsakenLoad()
 	local SkibidiDistance = 6
 	local AimLockTimer = 2
 	local AimSmoothnes = 0.1
-	local PredictionMultiplier = 0.5
+	local PredictionMultiplier = 2
 
 	-- ui tabbings
 	local PlayerTab = nil
@@ -1175,9 +1176,6 @@ local function fartsakenLoad()
 			local startTime = tick()
 			local UserInputService = game:GetService("UserInputService")
 			UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
-			local basePredictionTime = PredictionMultiplier -- Base prediction time in seconds
-			local minPredictionTime = (PredictionMultiplier / 3) -- Minimum prediction time for very close targets
-			local maxPredictionTime = (PredictionMultiplier * 3) -- Maximum prediction time for very distant targets
 
 			while tick() - startTime < Dur do
 				if target and target:FindFirstChild("HumanoidRootPart") then
@@ -1185,15 +1183,11 @@ local function fartsakenLoad()
 					local targetHRP = target.HumanoidRootPart
 					local targetVelocity = targetHRP.AssemblyLinearVelocity
 
-					local distanceToTarget = (targetHRP.Position - wawa.Position).magnitude
-
-					local scaledPredictionTime = math.clamp(
-						basePredictionTime * (1 - math.min(distanceToTarget / 100, 1)),
-						minPredictionTime,
-						maxPredictionTime
+					local predictedPosition = targetHRP.Position + Vector3.new(
+						targetVelocity.X > 0 and PredictionMultiplier or -PredictionMultiplier,
+						0,
+						targetVelocity.Z > 0 and PredictionMultiplier or -PredictionMultiplier
 					)
-
-					local predictedPosition = targetHRP.Position + targetVelocity * scaledPredictionTime
 
 					local directionToTarget = (predictedPosition - wawa.Position).unit
 
@@ -1258,6 +1252,18 @@ local function fartsakenLoad()
 		end
 
 		watchFolder()
+	end
+
+	local function DisableAllBlurAndEffects(state)
+		repeat
+			task.wait(0.1)
+			-- find all blur
+			for i, v in ipairs(game:GetService("Lighting"):GetChildren()) do
+				if v:IsA("BlurEffect") then
+					v:Destroy()
+				end
+			end
+		until not DisablingBlur
 	end
 
 	local function AutoCoinFlip()
@@ -2860,6 +2866,19 @@ local function fartsakenLoad()
 			end,
 		})
 
+		local Do1x1x1x1PopupToggle = PlayerTab:CreateToggle({
+			Name = "Auto 1x4 Popups",
+			CurrentValue = false,
+			Callback = function(state)
+				Do1x1PopupsLoop = state
+				if state then
+					task.spawn(Do1x1x1x1Popups)
+				end
+			end,
+		})
+
+		PlayerTab:CreateDivider()
+
 		local DisableWallsToggle = PlayerTab:CreateToggle({
 			Name = "Allow To Walk Thru Killer Only Walls",
 			CurrentValue = false,
@@ -2878,14 +2897,12 @@ local function fartsakenLoad()
 			end,
 		})
 
-		local Do1x1x1x1PopupToggle = PlayerTab:CreateToggle({
-			Name = "Auto 1x4 Popups",
+		local DisableBlurToggle = PlayerTab:CreateToggle({
+			Name = "Disable Blur",
 			CurrentValue = false,
 			Callback = function(state)
-				Do1x1PopupsLoop = state
-				if state then
-					task.spawn(Do1x1x1x1Popups)
-				end
+				DisablingBlur = state
+				DisableAllBlurAndEffects(state)
 			end,
 		})
 
@@ -3068,9 +3085,9 @@ local function fartsakenLoad()
 
 		local PredictionSlider = BlatantTab:CreateSlider({
 			Name = "Prediction Slider",
-			Range = { 0.2, 1 },
+			Range = { 0.5, 5 },
 			Increment = 0.01,
-			Suffix = "Seconds",
+			Suffix = "Studs",
 			CurrentValue = 0.1,
 			Flag = "Prediction Slider",
 			Callback = function(value)
@@ -3194,6 +3211,8 @@ local function fartsakenLoad()
 				end
 			end,
 		})
+
+		MiscTab:CreateDivider()
 
 		local LowSpanModeButton = MiscTab:CreateButton({
 			Name = "Low Attention Span Mode",
@@ -3338,6 +3357,7 @@ local function fartsakenLoad()
 				end
 			end,
 		})
+
 		--[[ -- this stupid chat
 		MiscTab:CreateDivider()
 
