@@ -3339,6 +3339,24 @@ local function FartHubLoad()
 			end,
 		})
 
+		MiscTab:CreateDivider()
+
+		local SillyMessagesEnabled = false
+		MiscTab:CreateButton({
+			Name = "Load Global Messages UI. ( IDK IF IT EVEN WORKS ON MOVBLE )",
+			Callback = function()
+				if SillyMessagesEnabled then
+					return
+				end
+				loadstring(
+					game:HttpGet(
+						"https://raw.githubusercontent.com/ivannetta/ShitScripts/main/SillyMessageUI.lua",
+						true
+					)
+				)()
+			end,
+		})
+
 		AnimationsTab:CreateSection("You can emote as killer using this.")
 
 		local AnimationsTabKeybindGUI = AnimationsTab:CreateKeybind({
