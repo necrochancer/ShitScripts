@@ -25,7 +25,9 @@
         "Rayfield",
         "getgc",
         "http",
-        "flux"
+        "flux",
+        "bit",
+        "_ENV"
     ],
     "stylua.targetReleaseVersion": "latest",
     "robloxLsp.diagnostics.disable": [
