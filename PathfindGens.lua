@@ -418,7 +418,7 @@ local function DidiDie()
 					ProfilePicture,
 					".gg/fartsaken | <3"
 				)
-				task.wait(1)
+				task.wait(.5)
 				teleportToRandomServer()
 				break
 			end
