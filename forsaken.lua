@@ -3423,7 +3423,7 @@ local function FartHubLoad()
 					Duration = 5,
 				})
 			else
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/necrochancer/ShitScripts/main/FemboyElliot"))()
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/necrochancer/ShitScripts/main/FemboyElliot.lua"))()
 
 				return
 			end
