@@ -12,7 +12,7 @@ local CheckKeyButton
 local UICorner_3
 local GetKey
 local UICorner_4
-
+local player = game.Players.LocalPlayer
 -- this is like the worst script ever bro
 -- like allat needs to be deleted 🙏
 
