@@ -22,8 +22,8 @@ print(DCWebhook)
 
 game:GetService("StarterGui"):SetCore("SendNotification", {
 	Title = "PathfindGens",
-	Text = "Sigma Loaded",
-	Duration = 10,
+	Text = "Sigma Loaded 2",
+	Duration = 30,
 })
 
 local function GetProfilePicture()
@@ -106,11 +106,6 @@ _G.CancelPathEvent = Instance.new("BindableEvent")
 local Controller =
 	require(game.Players.LocalPlayer:WaitForChild("PlayerScripts"):WaitForChild("PlayerModule")):GetControls()
 Controller:Disable()
-
-local success, SkibidiSprinting = pcall(function()
-	local a = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
-	a.StaminaLossDisabled = nil
-end)
 
 local function teleportToRandomServer()
 	local Counter = 0
@@ -208,6 +203,11 @@ local function InGenerator()
 end
 
 local function PathFinding(generator)
+	local success, SkibidiSprinting = pcall(function()
+		local a = require(game.ReplicatedStorage.Systems.Character.Game.Sprinting)
+		a.StaminaLossDisabled = true
+	end)
+
 	local activeNodes = {}
 
 	local function createNode(position)
@@ -350,12 +350,7 @@ local function DoAllGenerators()
 			end
 			for i = 1, 6 do
 				if g.Progress.Value < 100 and g:FindFirstChild("Remotes") and g.Remotes:FindFirstChild("RE") then
-					if g.Main:FindFirstChild("Prompt") then
-						fireproximityprompt(g.Main.Prompt)
-					end
 					g.Remotes.RE:FireServer()
-				else
-					break
 				end
 				if i < 6 and g.Progress.Value < 100 then
 					task.wait(2.5)
@@ -392,7 +387,7 @@ local function AmIInGameYet()
 	workspace.Players.Survivors.ChildAdded:Connect(function(child)
 		task.wait(1)
 		if child == game:GetService("Players").LocalPlayer.Character then
-			task.wait(5)
+			task.wait(4)
 			local VIMVIM = game:GetService("VirtualInputManager")
 			VIMVIM:SendKeyEvent(true, Enum.KeyCode.LeftShift, false, nil)
 			DoAllGenerators()
@@ -423,7 +418,7 @@ local function DidiDie()
 					ProfilePicture,
 					".gg/fartsaken | <3"
 				)
-				task.wait(1)
+				task.wait(.5)
 				teleportToRandomServer()
 				break
 			end
