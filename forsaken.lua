@@ -1568,8 +1568,7 @@ local function FartHubLoad()
 				local tweenInfo = TweenInfo.new(0.01, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
 				local tween = TweenService:Create(Frame, tweenInfo, {
 					Position = Frame.Position
-						+ UDim2.new(direction.X * speed / screenSize.X, 0, direction.Y * speed / screenSize.Y, 0),
-					Rotation = Frame.Rotation + 10,
+						+ UDim2.new(direction.X * speed / screenSize.X, 0, direction.Y * speed / screenSize.Y, 0)
 				})
 				tween:Play()
 				tween.Completed:Connect(bounce)
