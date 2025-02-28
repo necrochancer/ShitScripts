@@ -23,7 +23,9 @@
         "delfolder",
         "listfiles",
         "Rayfield",
-        "getgc"
+        "getgc",
+        "http",
+        "flux"
     ],
     "stylua.targetReleaseVersion": "latest",
     "robloxLsp.diagnostics.disable": [
