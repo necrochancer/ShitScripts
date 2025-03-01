@@ -101,7 +101,7 @@ local function fartsakenLoad()
 	local SkibidiDistance = 6
 	local AimLockTimer = 2
 	local AimSmoothnes = 0.1
-	local PredictionMultiplier = 2
+	local PredictionMultiplier = 0.5
 
 	-- ui tabbings
 	local PlayerTab = nil
@@ -1178,6 +1178,9 @@ local function fartsakenLoad()
 			local startTime = tick()
 			local UserInputService = game:GetService("UserInputService")
 			UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
+			local basePredictionTime = PredictionMultiplier
+			local minPredictionTime = (PredictionMultiplier / 3)
+			local maxPredictionTime = (PredictionMultiplier * 3)
 
 			while tick() - startTime < Dur do
 				if target and target:FindFirstChild("HumanoidRootPart") then
@@ -1185,11 +1188,15 @@ local function fartsakenLoad()
 					local targetHRP = target.HumanoidRootPart
 					local targetVelocity = targetHRP.AssemblyLinearVelocity
 
-					local predictedPosition = targetHRP.Position + Vector3.new(
-						targetVelocity.X > 0 and PredictionMultiplier or -PredictionMultiplier,
-						0,
-						targetVelocity.Z > 0 and PredictionMultiplier or -PredictionMultiplier
+					local distanceToTarget = (targetHRP.Position - wawa.Position).magnitude
+
+					local scaledPredictionTime = math.clamp(
+						basePredictionTime * (1 - math.min(distanceToTarget / 100, 1)),
+						minPredictionTime,
+						maxPredictionTime
 					)
+
+					local predictedPosition = targetHRP.Position + targetVelocity * scaledPredictionTime
 
 					local directionToTarget = (predictedPosition - wawa.Position).unit
 
@@ -3087,10 +3094,10 @@ local function fartsakenLoad()
 
 		local PredictionSlider = BlatantTab:CreateSlider({
 			Name = "Prediction Slider",
-			Range = { 0.5, 5 },
+			Range = { 0.1, 5 },
 			Increment = 0.01,
 			Suffix = "Studs",
-			CurrentValue = 0.1,
+			CurrentValue = 0.5,
 			Flag = "Prediction Slider",
 			Callback = function(value)
 				PredictionMultiplier = value
