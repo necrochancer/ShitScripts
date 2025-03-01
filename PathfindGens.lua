@@ -307,21 +307,21 @@ local function DoAllGenerators()
 	for _, g in ipairs(findGenerators()) do
 		local pathStarted = false
 		for attempt = 1, 3 do
-			local playersNearby = false
-			for _, player in ipairs(Players:GetPlayers()) do
-				if player ~= Players.LocalPlayer and player:DistanceFromCharacter(g:GetPivot().Position) <= 25 then
-					playersNearby = true
-					break
-				end
-			end
+			-- local playersNearby = false
+			-- for _, player in ipairs(Players:GetPlayers()) do
+			-- 	if player ~= Players.LocalPlayer and player:DistanceFromCharacter(g:GetPivot().Position) <= 25 then
+			-- 		playersNearby = true
+			-- 		break
+			-- 	end
+			-- end
 
 			if (Players.LocalPlayer.Character:GetPivot().Position - g:GetPivot().Position).Magnitude > 500 then
 				break
 			end
 
-			if not playersNearby and g:FindFirstChild("Progress") and g.Progress.Value < 100 then
-				g:GetPivot()
-			end
+			-- if not playersNearby and g:FindFirstChild("Progress") and g.Progress.Value < 100 then
+				-- g:GetPivot()
+			-- end
 
 			pathStarted = PathFinding(g)
 			if pathStarted then
