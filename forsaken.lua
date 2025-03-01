@@ -13,6 +13,8 @@ local UICorner_3
 local GetKey
 local UICorner_4
 
+local CurrentGameVersion = "Version: 9264 (Latest)"
+
 -- this is like the worst script ever bro
 -- like allat needs to be deleted 🙏
 
@@ -3480,4 +3482,36 @@ local function fartsakenLoad()
 	MakeButton()
 end
 
-fartsakenLoad()
+if
+	game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui")
+	and game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("MainUI")
+then
+	local versionLabel =
+		game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui").MainUI:FindFirstChild("Version")
+	if versionLabel and versionLabel.Text ~= CurrentGameVersion then
+		local bindable = Instance.new("BindableFunction")
+		bindable.OnInvoke = function(buttonPressed)
+			if buttonPressed == "Yes" then
+				game:GetService("StarterGui"):SetCore("SendNotification", {
+					Title = "Game Version Mismatch",
+					Text = "Game updated so some features might not work.",
+					Duration = 999,
+				})
+				fartsakenLoad()
+			end
+		end
+
+		game:GetService("StarterGui"):SetCore("SendNotification", {
+			Title = "Game Version Mismatch",
+			Text = "Game Has Updated, Are you sure you want to run the script?",
+			Duration = 999,
+			Button1 = "Yes",
+			Button2 = "Cancel",
+			Callback = bindable,
+		})
+	else
+		fartsakenLoad()
+	end
+else
+	fartsakenLoad()
+end
