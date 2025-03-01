@@ -1204,7 +1204,7 @@ local function fartsakenLoad()
 					local targetCFrame = CFrame.lookAt(
 						Camera.CFrame.Position,
 						Camera.CFrame.Position
-							+ Vector3.new(directionToTarget.X, directionToTarget.Y, directionToTarget.Z)
+							+ Vector3.new(directionToTarget.X, directionToTarget.Y -0.5, directionToTarget.Z)
 					)
 
 					game:GetService("TweenService")
