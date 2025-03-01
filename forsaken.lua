@@ -3416,20 +3416,23 @@ local function FartHubLoad()
 			end,
 		})
 		local function FemboyElliot()
+    local notificationSent = false -- Flag to track if the notification was sent
+
     while true do
         if player.Character and player.Character.Name == "Elliot" then
             loadstring(game:HttpGet("https://raw.githubusercontent.com/necrochancer/ShitScripts/main/FemboyElliot.lua"))()
-        else
+            notificationSent = false -- Reset the flag if the correct character is found.
+        elseif not notificationSent then
             Rayfield:Notify({
                 Title = "Wrong Character",
                 Content = "Oops, your current character isn't Elliot, this POSSIBLY can bug out, so untoggle unless you're on Elliot!",
                 Duration = 5,
             })
+            notificationSent = true -- Set the flag to true after sending the notification
         end
         wait(1)
     end
 end
-
 		local femboyelliot = MiscTab:CreateToggle({
 			Name = "Femboy Elliot Skin",
 			Callback = function()
