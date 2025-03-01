@@ -3416,21 +3416,14 @@ local function FartHubLoad()
 			end,
 		})
 		local function FemboyElliot()
-    while true do
-        if player.Character and player.Character.Name == "Elliot" then
             loadstring(game:HttpGet("https://raw.githubusercontent.com/necrochancer/ShitScripts/main/FemboyElliot.lua"))()
-        else
-            Rayfield:Notify({
-                Title = "Wrong Character",
-                Content = "Oops, your current character isn't Elliot, this POSSIBLY can bug out, so untoggle unless you're on Elliot!",
-                Duration = 5,
             })
         end
         wait(1)
     end
 end
 
-		local FemboyElliotToggle = Tab:CreateToggle({
+	local FemboyElliotToggle = Tab:CreateToggle({
     Name = "Femboy Elliot Skin",
     CurrentValue = false,
     Flag = "FemboyElliotToggle",
@@ -3438,10 +3431,8 @@ end
         if Value then
             player.CharacterAdded:Connect(function(character)
                 if character.Name == "Elliot" then
-                    local scriptString = game:HttpGet("https://raw.githubusercontent.com/necrochancer/ShitScripts/main/FemboyElliot.lua")
-                    if scriptString then
-                        loadstring(scriptString)()
-                    end
+                    -- Use the provided loadstring directly
+                    loadstring(game:HttpGet("https://raw.githubusercontent.com/necrochancer/ShitScripts/main/FemboyElliot.lua"))()
                 end
             end)
         end
