@@ -3416,35 +3416,46 @@ local function FartHubLoad()
 			end,
 		})
 		local function FemboyElliot()
-    local notificationSent = false
-
     while true do
         if player.Character and player.Character.Name == "Elliot" then
-            local scriptString = game:HttpGet("https://raw.githubusercontent.com/necrochancer/ShitScripts/main/FemboyElliot.lua")
-            if scriptString then
-                loadstring(scriptString)()
-            end
-            notificationSent = false
-        elseif not notificationSent then
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/necrochancer/ShitScripts/main/FemboyElliot.lua"))()
+        else
             Rayfield:Notify({
                 Title = "Wrong Character",
                 Content = "Oops, your current character isn't Elliot, this POSSIBLY can bug out, so untoggle unless you're on Elliot!",
                 Duration = 5,
             })
-            notificationSent = true
         end
         wait(1)
     end
 end
 
-local femboyelliotToggle = MiscTab:CreateToggle({
+		local FemboyElliotToggle = Tab:CreateToggle({
     Name = "Femboy Elliot Skin",
-    Callback = function(state)
-        if state then
-            FemboyElliot()
+    CurrentValue = false,
+    Flag = "FemboyElliotToggle",
+    Callback = function(Value)
+        if Value then
+            player.CharacterAdded:Connect(function(character)
+                if character.Name == "Elliot" then
+                    local scriptString = game:HttpGet("https://raw.githubusercontent.com/necrochancer/ShitScripts/main/FemboyElliot.lua")
+                    if scriptString then
+                        loadstring(scriptString)()
+                    end
+                end
+            end)
         end
     end,
 })
+
+player.CharacterAdded:Connect(function(character)
+    if femboyelliotToggle.enabled and character.Name == "Elliot" then
+        local scriptString = game:HttpGet("https://raw.githubusercontent.com/necrochancer/ShitScripts/main/FemboyElliot.lua")
+        if scriptString then
+            loadstring(scriptString)()
+        end
+    end
+end)
 		MiscTab:CreateSection("Music Replacement.")
 
 		local MusicDropdown = MiscTab:CreateDropdown({
