@@ -13,7 +13,6 @@ local UICorner_3
 local GetKey
 local UICorner_4
 
-local CurrentGameVersion = "Version: 9264 (Latest)"
 local SupportedVersions = {"9264", "9252"}
 -- this is like the worst script ever bro
 -- like allat needs to be deleted 🙏
