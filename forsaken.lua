@@ -94,6 +94,7 @@ local function fartsakenLoad()
 	local skibididtoiletchat = false
 	local SillyMessagesEnabled = false
 	local DisablingBlur = false
+	local PrincessModeEnabled = false
 	local SigmaData
 
 	-- sittings
@@ -2003,6 +2004,77 @@ local function fartsakenLoad()
 		end
 	end
 
+	local function PrincessMode()
+		if PrincessModeEnabled then
+			PrincessModeEnabled = true
+		else
+			PrincessModeEnabled = false
+		end
+
+		local function TurnMeIntoAPrincess()
+			repeat
+				local dwbklq = game:GetService("Players")
+				local fartass = dwbklq.LocalPlayer.Character or dwbklq.LocalPlayer.CharacterAdded:Wait()
+
+				local function createAccessory(name, meshId, textureId, scale, pos, weldC0, weldC1, part1)
+					local acc = Instance.new("Accessory")
+					local handle = Instance.new("Part", acc)
+					local mesh = Instance.new("SpecialMesh", handle)
+					local weld = Instance.new("Weld", handle)
+					acc.Name, handle.Name, handle.Size = name, "Handle", Vector3.new(1, 1, 1)
+					handle.Anchored, handle.CanCollide, handle.Position = false, false, fartass[part1].Position
+					mesh.MeshId, mesh.TextureId, mesh.Scale = meshId, textureId, scale
+					weld.Part0, weld.Part1, weld.C0, weld.C1 =
+						handle, fartass:FindFirstChild(part1), CFrame.new(unpack(weldC0)), CFrame.new(unpack(weldC1))
+					acc.Parent = fartass
+				end
+
+
+				task.wait(0.1)
+				if not fartass:FindFirstChild("PrincessHat") and PrincessModeEnabled then
+					createAccessory(
+						"PrincessHat",
+						"rbxassetid://124557135042320",
+						"rbxassetid://131289755447441",
+						Vector3.new(1, 1, 1),
+						Vector3.new(-0.2333, -0.8279, -0.0531),
+						{ -0.2333, -0.8279, -0.0531 },
+						{ 0, 0.6, 0 },
+						"Head"
+					)
+				end
+				if not fartass:FindFirstChild("PrincessDress") and PrincessModeEnabled then
+					createAccessory(
+						"PrincessDress",
+						"rbxassetid://14607028720",
+						"http://www.roblox.com/asset/?id=14570266857",
+						Vector3.new(0.765, 0.878, 0.72),
+						Vector3.new(0, 0, 0),
+						{ 4.59e-18, 0.0125, 4.59e-18 },
+						{ 0, -1, 0 },
+						"Torso"
+					)
+				end
+			until not PrincessModeEnabled
+		end
+
+		local function MakeMeNormal()
+			local dwbklq = game:GetService("Players")
+			local fartass = dwbklq.LocalPlayer.Character or dwbklq.LocalPlayer.CharacterAdded:Wait()
+			for i, v in pairs(fartass:GetChildren()) do
+				if v:IsA("Accessory") and v.Name == "PrincessHat" or v.Name == "PrincessDress" then
+					v:Destroy()
+				end
+			end
+		end
+
+		if PrincessModeEnabled then
+			TurnMeIntoAPrincess()
+		else
+			MakeMeNormal()
+		end
+	end
+
 	local function SetupSurfers(PuzzlesUi)
 		local Container = PuzzlesUi:WaitForChild("Container")
 		local GridHolder = Container:WaitForChild("GridHolder")
@@ -3218,6 +3290,15 @@ local function fartsakenLoad()
 			CurrentValue = false,
 			Callback = function(state)
 				ToggleFatMan(state)
+			end,
+		})
+
+		local PrincessToggle = MiscTab:CreateToggle({
+			Name = "Toggle Princess",
+			CurrentValue = false,
+			Callback = function(state)
+				PrincessModeEnabled = state
+				PrincessMode()
 			end,
 		})
 
