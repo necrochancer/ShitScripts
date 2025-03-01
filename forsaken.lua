@@ -13,6 +13,8 @@ local UICorner_3
 local GetKey
 local UICorner_4
 
+local CurrentGameVersion = "Version: 9264 (Latest)"
+
 -- this is like the worst script ever bro
 -- like allat needs to be deleted 🙏
 
@@ -101,7 +103,7 @@ local function fartsakenLoad()
 	local SkibidiDistance = 6
 	local AimLockTimer = 2
 	local AimSmoothnes = 0.1
-	local PredictionMultiplier = 2
+	local PredictionMultiplier = 0.5
 
 	-- ui tabbings
 	local PlayerTab = nil
@@ -155,7 +157,8 @@ local function fartsakenLoad()
 
 	task.spawn(function()
 		if executorname == "AWP" then
-			local folder, originalFile, tempFile = "fartsaken", "fartsaken/AmazingExecutor.mp3.Fart3", "fartsaken/temp.mp3"
+			local folder, originalFile, tempFile =
+				"fartsaken", "fartsaken/AmazingExecutor.mp3.Fart3", "fartsaken/temp.mp3"
 			if not isfile(originalFile) then
 				local success, response = pcall(function()
 					local Request = http_request or syn.request or request
@@ -204,6 +207,7 @@ local function fartsakenLoad()
 		["Canto 3 Boss Battle"] = "Canto3BossBattle.mp3",
 		["Sigma Boy Phonk"] = "SigmaBoyPhonk.mp3",
 		["McMental"] = "McMental.mp3",
+		["Butcher Vanity"] = "ButcherVanity.mp3",
 		--["GrassSkirt"] = "GrassSkirt.mp3", removed because its too short and i didnt check when they uploaded this.
 		["HueHueHue"] = "huehuehue.mp3",
 	}
@@ -908,6 +912,7 @@ local function fartsakenLoad()
 		NameUIC.Parent = Name
 
 		local Images = {
+			{ name = "Jumpstyle", renderImage = "rbxassetid://73574803924243" },
 			{ name = "JumpingForJoy", renderImage = "rbxassetid://129614581942080" },
 			{ name = "Drumsticks", renderImage = "rbxassetid://80678095206124" },
 			{ name = "KazotskyKick", renderImage = "rbxassetid://132653220480177" },
@@ -1096,11 +1101,7 @@ local function fartsakenLoad()
 	end
 
 	local function Aimbot(Dur)
-		if not Dur then
-			return
-		end
-
-		if not EnableIAIMBOTPLS then
+		if not Dur or not EnableIAIMBOTPLS then
 			return
 		end
 
@@ -1175,6 +1176,9 @@ local function fartsakenLoad()
 			local startTime = tick()
 			local UserInputService = game:GetService("UserInputService")
 			UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
+			local basePredictionTime = PredictionMultiplier
+			local minPredictionTime = (PredictionMultiplier / 3)
+			local maxPredictionTime = (PredictionMultiplier * 3)
 
 			while tick() - startTime < Dur do
 				if target and target:FindFirstChild("HumanoidRootPart") then
@@ -1182,13 +1186,19 @@ local function fartsakenLoad()
 					local targetHRP = target.HumanoidRootPart
 					local targetVelocity = targetHRP.AssemblyLinearVelocity
 
-					local predictedPosition = targetHRP.Position + Vector3.new(
-						targetVelocity.X > 0 and PredictionMultiplier or -PredictionMultiplier,
-						0,
-						targetVelocity.Z > 0 and PredictionMultiplier or -PredictionMultiplier
+					local distanceToTarget = (targetHRP.Position - wawa.Position).magnitude
+
+					local scaledPredictionTime = math.clamp(
+						basePredictionTime * (1 - math.min(distanceToTarget / 100, 1)),
+						minPredictionTime,
+						maxPredictionTime
 					)
 
+					local predictedPosition = targetHRP.Position + targetVelocity * scaledPredictionTime
+					predictedPosition = predictedPosition - Vector3.new(0, 0.5, 0)
+
 					local directionToTarget = (predictedPosition - wawa.Position).unit
+					directionToTarget = Vector3.new(directionToTarget.X, directionToTarget.Y - 0.5, directionToTarget.Z)
 
 					local Camera = game.Workspace.CurrentCamera
 					local targetCFrame = CFrame.lookAt(
@@ -1575,7 +1585,7 @@ local function fartsakenLoad()
 				local tweenInfo = TweenInfo.new(0.01, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
 				local tween = TweenService:Create(Frame, tweenInfo, {
 					Position = Frame.Position
-						+ UDim2.new(direction.X * speed / screenSize.X, 0, direction.Y * speed / screenSize.Y, 0)
+						+ UDim2.new(direction.X * speed / screenSize.X, 0, direction.Y * speed / screenSize.Y, 0),
 				})
 				tween:Play()
 				tween.Completed:Connect(bounce)
@@ -3099,10 +3109,10 @@ local function fartsakenLoad()
 
 		local PredictionSlider = BlatantTab:CreateSlider({
 			Name = "Prediction Slider",
-			Range = { 0.5, 5 },
+			Range = { 0.1, 5 },
 			Increment = 0.01,
 			Suffix = "Studs",
-			CurrentValue = 0.1,
+			CurrentValue = 0.5,
 			Flag = "Prediction Slider",
 			Callback = function(value)
 				PredictionMultiplier = value
@@ -3526,6 +3536,7 @@ local femboyelliot = MiscTab:CreateToggle({
 				"Canto 3 Boss Battle",
 				"Sigma Boy Phonk",
 				"McMental",
+				"Butcher Vanity",
 				--"GrassSkirt",
 				"HueHueHue",
 			},
@@ -3662,4 +3673,36 @@ local femboyelliot = MiscTab:CreateToggle({
 	MakeButton()
 end
 
-fartsakenLoad()
+if
+	game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui")
+	and game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("MainUI")
+then
+	local versionLabel =
+		game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui").MainUI:FindFirstChild("Version")
+	if versionLabel and versionLabel.Text ~= CurrentGameVersion then
+		local bindable = Instance.new("BindableFunction")
+		bindable.OnInvoke = function(buttonPressed)
+			if buttonPressed == "Yes" then
+				game:GetService("StarterGui"):SetCore("SendNotification", {
+					Title = "Game Version Mismatch",
+					Text = "Game updated so some features might not work.",
+					Duration = 20,
+				})
+				fartsakenLoad()
+			end
+		end
+
+		game:GetService("StarterGui"):SetCore("SendNotification", {
+			Title = "Game Version Mismatch",
+			Text = "Game Has Updated, Are you sure you want to run the script?",
+			Duration = 999,
+			Button1 = "Yes",
+			Button2 = "Cancel",
+			Callback = bindable,
+		})
+	else
+		fartsakenLoad()
+	end
+else
+	fartsakenLoad()
+end
