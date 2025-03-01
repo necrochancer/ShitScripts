@@ -14,7 +14,7 @@ local GetKey
 local UICorner_4
 
 local CurrentGameVersion = "Version: 9264 (Latest)"
-
+local SupportedVersions = {"9264", "9252"}
 -- this is like the worst script ever bro
 -- like allat needs to be deleted 🙏
 
@@ -3499,7 +3499,14 @@ if
 then
 	local versionLabel =
 		game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui").MainUI:FindFirstChild("Version")
-	if versionLabel and versionLabel.Text ~= CurrentGameVersion then
+	local isSupportedVersion = false
+	for _, version in ipairs(SupportedVersions) do
+		if versionLabel and versionLabel.Text == "Version: " .. version .. " (Latest)"then
+			isSupportedVersion = true
+			break
+		end
+	end
+	if not isSupportedVersion then
 		local bindable = Instance.new("BindableFunction")
 		bindable.OnInvoke = function(buttonPressed)
 			if buttonPressed == "Yes" then
