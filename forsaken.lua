@@ -908,6 +908,7 @@ local function fartsakenLoad()
 		NameUIC.Parent = Name
 
 		local Images = {
+			{ name = "Jumpstyle", renderImage = "rbxassetid://73574803924243" },
 			{ name = "JumpingForJoy", renderImage = "rbxassetid://129614581942080" },
 			{ name = "Drumsticks", renderImage = "rbxassetid://80678095206124" },
 			{ name = "KazotskyKick", renderImage = "rbxassetid://132653220480177" },
