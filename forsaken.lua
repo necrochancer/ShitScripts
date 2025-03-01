@@ -3434,95 +3434,84 @@ local function fartsakenLoad()
 				end
 			end,
 		})
-		local isFemboyElliotEnabled = false
-local hasActivatedOnRoundStart = false -- Renamed flag, tracks round start activation
-local characterDiedConnection = nil
-local characterAddedConnection = nil -- To store CharacterAdded connection
+local isFemboyElliotEnabled = false
+local hasActivatedOnRoundStart = false
+local characterAddedConnection = nil
 
 
 local function ApplyFemboySkin()
-    print("ApplyFemboySkin: Function called") -- DEBUG PRINT
-    local success, errorMessage = pcall(function() -- Use pcall to catch loadstring errors
+    print("ApplyFemboySkin: Function called")
+    local success, errorMessage = pcall(function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/necrochancer/ShitScripts/main/FemboyElliot.lua"))()
     end)
     if success then
-        print("ApplyFemboySkin: loadstring executed successfully") -- DEBUG PRINT
+        print("ApplyFemboySkin: loadstring executed successfully")
     else
-        warn("ApplyFemboySkin: loadstring ERROR: " .. errorMessage) -- DEBUG PRINT for loadstring errors
+        warn("ApplyFemboySkin: loadstring ERROR: " .. errorMessage)
     end
-    hasActivatedOnRoundStart = true -- Prevent re-activation within the same round start
-    print("ApplyFemboySkin: hasActivatedOnRoundStart set to true") -- DEBUG PRINT
+    hasActivatedOnRoundStart = true
+    print("ApplyFemboySkin: hasActivatedOnRoundStart set to true")
 end
 
-local function CheckAndApplySkinOnRoundStart(character)
-    print("CheckAndApplySkinOnRoundStart: Function called") -- DEBUG PRINT
+
+local function OnCharacterAdded(character)
+    print("OnCharacterAdded: Function called, character Name: " .. character.Name)
+    print("OnCharacterAdded: **BEFORE RESET - hasActivatedOnRoundStart value:** " .. tostring(hasActivatedOnRoundStart)) -- DEBUG - Check value before reset
+
+    hasActivatedOnRoundStart = false -- **FORCE RESET FLAG AT START OF OnCharacterAdded**
+    print("OnCharacterAdded: **AFTER RESET - hasActivatedOnRoundStart value:** " .. tostring(hasActivatedOnRoundStart)) -- DEBUG - Check value after reset
+
+
     if isFemboyElliotEnabled and not hasActivatedOnRoundStart then
-        print("CheckAndApplySkinOnRoundStart: isFemboyElliotEnabled is true and hasActivatedOnRoundStart is false") -- DEBUG PRINT
+        print("OnCharacterAdded: isFemboyElliotEnabled is true and hasActivatedOnRoundStart is false")
         if character and character.Name == "Elliot" then
-            print("CheckAndApplySkinOnRoundStart: Character name is Elliot") -- DEBUG PRINT
+            print("OnCharacterAdded: Character name IS Elliot")
             ApplyFemboySkin()
         else
-            print("CheckAndApplySkinOnRoundStart: Character name is NOT Elliot, it is: " .. (character and character.Name or "nil")) -- DEBUG PRINT
-            if isFemboyElliotEnabled then -- Only notify if toggle is ON to avoid unnecessary messages when toggle is off
-                Rayfield:Notify({
-                    Title = "Wrong Character (Round Start)",
-                    Content = "Round started but character isn't named Elliot. Skin not applied.",
-                    Duration = 5,
-                })
-            end
+            print("OnCharacterAdded: Character name is NOT Elliot, it is: " .. (character and character.Name or "nil"))
+            Rayfield:Notify({
+                Title = "Wrong Character (Round Start)",
+                Content = "Round started but character isn't named Elliot. Skin not applied.",
+                Duration = 5,
+            })
         end
     else
-        print("CheckAndApplySkinOnRoundStart: Condition not met (isFemboyElliotEnabled=" .. tostring(isFemboyElliotEnabled) .. ", hasActivatedOnRoundStart=" .. tostring(hasActivatedOnRoundStart) .. ")") -- DEBUG PRINT
+        print("OnCharacterAdded: Condition not met (isFemboyElliotEnabled=" .. tostring(isFemboyElliotEnabled) .. ", hasActivatedOnRoundStart=" .. tostring(hasActivatedOnRoundStart) .. ")")
     end
 end
 
-
-local function OnCharacterDied()
-    print("OnCharacterDied: Function called") -- DEBUG PRINT
-    -- Death behavior is now removed, focusing on round start activation
-    -- If you want skin to re-apply on death *within the round*, you can add ApplyFemboySkin() here (without resetting hasActivatedOnRoundStart)
-end
 
 
 local function ToggleFemboyElliot(Value)
-    print("ToggleFemboyElliot: Function called, Value=" .. tostring(Value)) -- DEBUG PRINT
+    print("ToggleFemboyElliot: Function called, Value=" .. tostring(Value))
     isFemboyElliotEnabled = Value
-    hasActivatedOnRoundStart = false -- Reset round start activation flag when toggle is toggled
-    print("ToggleFemboyElliot: isFemboyElliotEnabled set to " .. tostring(isFemboyElliotEnabled) .. ", hasActivatedOnRoundStart reset to false") -- DEBUG PRINT
+    hasActivatedOnRoundStart = false
+    print("ToggleFemboyElliot: isFemboyElliotEnabled set to " .. tostring(isFemboyElliotEnabled) .. ", hasActivatedOnRoundStart reset to false")
+
 
     if isFemboyElliotEnabled then
-        if not player.Character or player.Character.Name ~= "Elliot" then
-            Rayfield:Notify({
-                Title = "Character Check",
-                Content = "Remember to only enable this toggle when your character is named Elliot!",
-                Duration = 5,
-            })
-        else
-            CheckAndApplySkinOnRoundStart(player.Character) -- **APPLY SKIN IMMEDIATELY WHEN TOGGLE IS TURNED ON (and character is Elliot)**
+        if not characterAddedConnection then
+            characterAddedConnection = player.CharacterAdded:Connect(OnCharacterAdded)
+            print("ToggleFemboyElliot: Connected to player.CharacterAdded(OnCharacterAdded)")
         end
-
-        if not characterAddedConnection then -- Connect to CharacterAdded only once when toggle is turned ON
-            characterAddedConnection = player.CharacterAdded:Connect(CheckAndApplySkinOnRoundStart)
-            print("ToggleFemboyElliot: Connected to player.CharacterAdded(CheckAndApplySkinOnRoundStart)") -- DEBUG PRINT
+         if player.Character and player.Character.Name == "Elliot" then -- Apply immediately on toggle if character is already Elliot
+            ApplyFemboySkin()
         end
-
-
-        -- Death event handling is now removed for round start activation focus
 
     else
         if characterAddedConnection then
             characterAddedConnection:Disconnect()
             characterAddedConnection = nil
-            print("ToggleFemboyElliot: Disconnected from player.CharacterAdded event") -- DEBUG PRINT
+            print("ToggleFemboyElliot: Disconnected from player.CharacterAdded event")
         end
-        -- Death event disconnection removed as death behavior is removed for now
     end
 end
 
 
+
 local femboyelliot = MiscTab:CreateToggle({
     Name = "Femboy Elliot Skin",
-    CurrentValue = false, -- Default to false
+    CurrentValue = false,
     Callback = ToggleFemboyElliot,
 })
 		MiscTab:CreateSection("Music Replacement.")
