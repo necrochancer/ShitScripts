@@ -3420,11 +3420,10 @@ local function FartHubLoad()
 
     while true do
         if player.Character and player.Character.Name == "Elliot" then
-            local scriptString = game:HttpGet("https://raw.githubusercontent.com/necrochancer/ShitScripts/main/FemboyElliot.lua") --Load the script.
-            if scriptString then -- Make sure the script loaded.
+            local scriptString = game:HttpGet("https://raw.githubusercontent.com/necrochancer/ShitScripts/main/FemboyElliot.lua")
+            if scriptString then
                 loadstring(scriptString)()
             end
-
             notificationSent = false
         elseif not notificationSent then
             Rayfield:Notify({
@@ -3437,12 +3436,15 @@ local function FartHubLoad()
         wait(1)
     end
 end
-		local femboyelliot = MiscTab:CreateToggle({
-			Name = "Femboy Elliot Skin",
-			Callback = function()
-				FemboyElliot()
-			end,
-		})
+
+local femboyelliotToggle = MiscTab:CreateToggle({
+    Name = "Femboy Elliot Skin",
+    Callback = function(state)
+        if state then
+            FemboyElliot()
+        end
+    end,
+})
 		MiscTab:CreateSection("Music Replacement.")
 
 		local MusicDropdown = MiscTab:CreateDropdown({
