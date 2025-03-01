@@ -331,7 +331,7 @@ local function DoAllGenerators()
 			local prompt = g:FindFirstChild("Main") and g.Main:FindFirstChild("Prompt")
 			if prompt then
 				fireproximityprompt(prompt)
-				task.wait(0.025)
+				task.wait(0.2)
 				if not InGenerator() then
 					local positions = {
 						g:GetPivot().Position - g:GetPivot().RightVector * 3,

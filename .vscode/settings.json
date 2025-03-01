@@ -23,11 +23,16 @@
         "delfolder",
         "listfiles",
         "Rayfield",
-        "getgc"
+        "getgc",
+        "http",
+        "flux",
+        "bit",
+        "_ENV"
     ],
     "stylua.targetReleaseVersion": "latest",
     "robloxLsp.diagnostics.disable": [
         "unused-local",
-        "redefined-local"
+        "redefined-local",
+        "unbalanced-assignments"
     ]
 }
