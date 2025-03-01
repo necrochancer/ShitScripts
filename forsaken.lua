@@ -3495,7 +3495,7 @@ then
 				game:GetService("StarterGui"):SetCore("SendNotification", {
 					Title = "Game Version Mismatch",
 					Text = "Game updated so some features might not work.",
-					Duration = 999,
+					Duration = 20,
 				})
 				fartsakenLoad()
 			end
