@@ -307,6 +307,8 @@ local function DoAllGenerators()
 	for _, g in ipairs(findGenerators()) do
 		local pathStarted = false
 		for attempt = 1, 3 do
+
+			-- dont need cuz im sigma mafiza boy
 			-- local playersNearby = false
 			-- for _, player in ipairs(Players:GetPlayers()) do
 			-- 	if player ~= Players.LocalPlayer and player:DistanceFromCharacter(g:GetPivot().Position) <= 25 then
