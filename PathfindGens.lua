@@ -196,11 +196,14 @@ end
 
 local function InGenerator()
 	for i, v in ipairs(game:GetService("Players").LocalPlayer.PlayerGui.TemporaryUI:GetChildren()) do
-		if v:IsA("Frame") and v.Name == "GeneratorWarning" then
+		print(v.Name)
+		if string.sub(v.Name, 1, 3) == "Gen" then
 			print("not in generator")
 			return false
-		else return true end
+		end
 	end
+	print("didnt find frame")
+	return true
 end
 
 local function PathFinding(generator)
@@ -332,7 +335,7 @@ local function DoAllGenerators()
 			local prompt = g:FindFirstChild("Main") and g.Main:FindFirstChild("Prompt")
 			if prompt then
 				fireproximityprompt(prompt)
-				task.wait(0.5)
+				task.wait(0.2)
 				if not InGenerator() then
 					local positions = {
 						g:GetPivot().Position - g:GetPivot().RightVector * 3,
