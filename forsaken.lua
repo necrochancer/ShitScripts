@@ -1196,7 +1196,7 @@ local function fartsakenLoad()
 						maxPredictionTime
 					)
 
-					local predictedPosition = targetHRP.Position + targetVelocity * scaledPredictionTime
+					local predictedPosition = targetHRP.Position + targetVelocity * scaledPredictionTime - Vector3.new(0, 0.5, 0)
 
 					local directionToTarget = (predictedPosition - wawa.Position).unit
 
