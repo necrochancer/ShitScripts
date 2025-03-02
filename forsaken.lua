@@ -13,7 +13,7 @@ local UICorner_3
 local GetKey
 local UICorner_4
 
-local SupportedVersions = {"9264", "9252"}
+local SupportedVersion = 9264
 -- this is like the worst script ever bro
 -- like allat needs to be deleted 🙏
 
@@ -2029,7 +2029,6 @@ local function fartsakenLoad()
 					acc.Parent = fartass
 				end
 
-
 				task.wait(0.1)
 				if not fartass:FindFirstChild("PrincessHat") and PrincessModeEnabled then
 					createAccessory(
@@ -3577,14 +3576,10 @@ if
 	game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui")
 	and game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("MainUI")
 then
-	local versionLabel =
-		game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui").MainUI:FindFirstChild("Version")
 	local isSupportedVersion = false
-	for _, version in ipairs(SupportedVersions) do
-		if versionLabel and versionLabel.Text == "Version: " .. version .. " (Latest)"then
-			isSupportedVersion = true
-			break
-		end
+	local versionLabel = game:GetService("Players").LocalPlayer.PlayerGui.MainUI:FindFirstChild("Version")
+	if versionLabel and tonumber(versionLabel.Text:match("Version: (%d+)")) <= SupportedVersion then
+		isSupportedVersion = true
 	end
 	if not isSupportedVersion then
 		local bindable = Instance.new("BindableFunction")
