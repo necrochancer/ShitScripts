@@ -1354,6 +1354,7 @@ local function fartsakenLoad()
 								IsSkibidiToiletMode = true
 
 								if CharacterGender == "Dusekkar" then
+									if DusekkarSilentAim then return end
 									local originalsmooth = AimSmoothnes
 									AimSmoothnes = 0.03
 									task.spawn(Aimbot, VeryLongDuration)
