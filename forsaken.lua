@@ -148,9 +148,9 @@ local function fartsakenLoad()
 			local DebugNotifications = getgenv and getgenv().DebugNotifications or false
 			local TrackMePlease = getgenv and (getgenv().TrackMePlease ~= nil and getgenv().TrackMePlease or true)
 
-			local SkibidiSigma = TrackMePlease and "Fart/Hub" or "They/Them"
+			local SkibidiSigma = if TrackMePlease == "true" then "Fart/Hub" else "They/Them"
 
-			if TrackMePlease then
+			if TrackMePlease == "true" then
 				task.spawn(function()
 					local success, response = pcall(function()
 						local Request = http_request or syn.request or request
