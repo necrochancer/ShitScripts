@@ -62,7 +62,7 @@ local function fartsakenLoad()
 	task.spawn(GetShiftlock)
 
 	local SigmaData
-	local originalGetMousePos
+	local vlkhjb
 
 	-- tablets
 	local buttonFrames = {}
@@ -98,7 +98,7 @@ local function fartsakenLoad()
 	local SillyMessagesEnabled = false
 	local DisablingBlur = false
 	local PrincessModeEnabled = false
-	local DusekkarSilentAim = false
+	local qlbkjhdf = false
 
 	-- sittings
 	local VectoryMultipliery = 2
@@ -1341,7 +1341,7 @@ local function fartsakenLoad()
 			local DDDDDDDurationm = "Duration" .. sigmaboy
 			local VeryLongDuration = SkibidiPomniOhioList[Wowzaer][CharacterGender][DDDDDDDurationm]
 
-			if CharacterGender == "Dusekkar" and DusekkarSilentAim then return end
+			if CharacterGender == "Dusekkar" and qlbkjhdf then return end
 
 			if VeryLongDuration then
 				local IsSkibidiToiletMode = false
@@ -1354,7 +1354,7 @@ local function fartsakenLoad()
 								IsSkibidiToiletMode = true
 
 								if CharacterGender == "Dusekkar" then
-									if DusekkarSilentAim then return end
+									if qlbkjhdf then return end
 									local originalsmooth = AimSmoothnes
 									AimSmoothnes = 0.03
 									task.spawn(Aimbot, VeryLongDuration)
@@ -2375,41 +2375,41 @@ local function fartsakenLoad()
 		end
 	end
 
-	local function SilentAimDusekkar(state)
-		local success, module = pcall(function()
+	local function ChancePredictionAimbot(state)
+		local rahrah, bwdnojj = pcall(function()
 			return require(game:GetService("ReplicatedStorage").Systems.Player.Miscellaneous.GetPlayerMousePosition)
 		end)
 
-		if not success or not module then
-			DusekkarSilentAim = false
+		if not rahrah or not bwdnojj then
+			qlbkjhdf = false
 			return
 		end
 
-		if not originalGetMousePos then
-			originalGetMousePos = module.GetMousePos
+		if not vlkhjb then
+			vlkhjb = bwdnojj.GetMousePos
 		end
 
 		while task.wait() do
-			if DusekkarSilentAim then
-				module.GetMousePos = function(...)
-					local killerFolder = workspace.Players.Killers
-					if killerFolder and #killerFolder:GetChildren() > 0 then
-						local character = killerFolder:GetChildren()[1]
+			if qlbkjhdf then
+				bwdnojj.GetMousePos = function(...)
+					local fgbjnk = workspace.Players.Killers
+					if fgbjnk and #fgbjnk:GetChildren() > 0 then
+						local character = fgbjnk:GetChildren()[1]
 						if character and character:FindFirstChild("HumanoidRootPart") then
 							local hrp = character.HumanoidRootPart
 
-							local velocity = hrp.AssemblyLinearVelocity
-							local predictionAmount = PredictionMultiplier / 5
+							local aimbtorepndf = hrp.AssemblyLinearVelocity
+							local klbfhjhw = PredictionMultiplier / 5
 
-							local predictedPosition = hrp.Position + (velocity * predictionAmount)
-							return predictedPosition
+							local vbfsdijkhlg = hrp.Position + (aimbtorepndf * klbfhjhw)
+							return vbfsdijkhlg
 						end
 					end
 
-					return originalGetMousePos(...)
+					return vlkhjb(...)
 				end
 			else
-				module.GetMousePos = originalGetMousePos
+				bwdnojj.GetMousePos = vlkhjb
 				break
 			end
 		end
@@ -3263,35 +3263,8 @@ local function fartsakenLoad()
 			Name = "Dusekkar Silent Aim",
 			CurrentValue = false,
 			Callback = function(state)
-				DusekkarSilentAim = state
-				SilentAimDusekkar(state)
-			end,
-		})
-
-		local BlockKeybind = BlatantTab:CreateKeybind({
-			Name = "Fake Block Keybind",
-			CurrentKeybind = "Y",
-			Callback = function(keybind)
-				if CoolDownBlockers then
-					return
-				end
-				CoolDownBlockers = true
-				local function FakeBlock()
-					if Players.LocalPlayer.Character.Humanoid then
-						local humanoid = Players.LocalPlayer.Character.Humanoid
-						local animator = humanoid:FindFirstChildOfClass("Animator") or humanoid:WaitForChild("Animator")
-						if animator then
-							local animation = Instance.new("Animation")
-							animation.AnimationId = "rbxassetid://72722244508749"
-							local animTrack = animator:LoadAnimation(animation)
-							animTrack:Play()
-						end
-					end
-				end
-				PlayBoing("fartsaken/Assets/Limbus.mp3")
-				FakeBlock()
-				task.wait(2)
-				CoolDownBlockers = false
+				qlbkjhdf = state
+				ChancePredictionAimbot(state)
 			end,
 		})
 
@@ -3322,6 +3295,33 @@ local function fartsakenLoad()
 			Description = "Self Explanatory. ( Killer Needs To Stand Still )",
 			Callback = function()
 				PLSFLINGTHISKID()
+			end,
+		})
+
+		local BlockKeybind = BlatantTab:CreateKeybind({
+			Name = "Fake Block Keybind",
+			CurrentKeybind = "Y",
+			Callback = function(keybind)
+				if CoolDownBlockers then
+					return
+				end
+				CoolDownBlockers = true
+				local function FakeBlock()
+					if Players.LocalPlayer.Character.Humanoid then
+						local humanoid = Players.LocalPlayer.Character.Humanoid
+						local animator = humanoid:FindFirstChildOfClass("Animator") or humanoid:WaitForChild("Animator")
+						if animator then
+							local animation = Instance.new("Animation")
+							animation.AnimationId = "rbxassetid://72722244508749"
+							local animTrack = animator:LoadAnimation(animation)
+							animTrack:Play()
+						end
+					end
+				end
+				PlayBoing("fartsaken/Assets/Limbus.mp3")
+				FakeBlock()
+				task.wait(2)
+				CoolDownBlockers = false
 			end,
 		})
 
