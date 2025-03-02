@@ -61,6 +61,9 @@ local function fartsakenLoad()
 
 	task.spawn(GetShiftlock)
 
+	local SigmaData
+	local originalGetMousePos
+
 	-- tablets
 	local buttonFrames = {}
 	local imageButtons = {}
@@ -95,7 +98,7 @@ local function fartsakenLoad()
 	local SillyMessagesEnabled = false
 	local DisablingBlur = false
 	local PrincessModeEnabled = false
-	local SigmaData
+	local DusekkarSilentAim = false
 
 	-- sittings
 	local VectoryMultipliery = 2
@@ -1338,6 +1341,8 @@ local function fartsakenLoad()
 			local DDDDDDDurationm = "Duration" .. sigmaboy
 			local VeryLongDuration = SkibidiPomniOhioList[Wowzaer][CharacterGender][DDDDDDDurationm]
 
+			if CharacterGender == "Dusekkar" and DusekkarSilentAim then return end
+
 			if VeryLongDuration then
 				local IsSkibidiToiletMode = false
 				local CONNECTOR
@@ -1488,6 +1493,25 @@ local function fartsakenLoad()
 			end
 		end
 	end
+
+	-- fart executors die ez ez ez bypass ez
+	task.spawn(function()
+		local RunService = game:GetService("RunService")
+		local player = workspace:FindFirstChild("Players")
+		local localPlayer = player and player:FindFirstChild("LocalPlayer")
+		local character = localPlayer and localPlayer:FindFirstChild("Character")
+		local speedMult = character and character:FindFirstChild("SpeedMultipliers")
+
+		if speedMult then
+			for _, v in ipairs(speedMult:GetChildren()) do
+				if v.Name == "PlasmaBeam" or v.Name == "Spawn Protection" then
+					print("Fart detected")
+					v.Value = 1
+				end
+			end
+		end
+		task.wait(0)
+	end)
 
 	task.delay(5, function()
 		pcall(function()
@@ -2350,6 +2374,46 @@ local function fartsakenLoad()
 		end
 	end
 
+	local function SilentAimDusekkar(state)
+		local success, module = pcall(function()
+			return require(game:GetService("ReplicatedStorage").Systems.Player.Miscellaneous.GetPlayerMousePosition)
+		end)
+
+		if not success or not module then
+			DusekkarSilentAim = false
+			return
+		end
+
+		if not originalGetMousePos then
+			originalGetMousePos = module.GetMousePos
+		end
+
+		while task.wait() do
+			if DusekkarSilentAim then
+				module.GetMousePos = function(...)
+					local killerFolder = workspace.Players.Killers
+					if killerFolder and #killerFolder:GetChildren() > 0 then
+						local character = killerFolder:GetChildren()[1]
+						if character and character:FindFirstChild("HumanoidRootPart") then
+							local hrp = character.HumanoidRootPart
+
+							local velocity = hrp.AssemblyLinearVelocity
+							local predictionAmount = PredictionMultiplier / 5
+
+							local predictedPosition = hrp.Position + (velocity * predictionAmount)
+							return predictedPosition
+						end
+					end
+
+					return originalGetMousePos(...)
+				end
+			else
+				module.GetMousePos = originalGetMousePos
+				break
+			end
+		end
+	end
+
 	local function PLSFLINGTHISKID()
 		local MyHRP = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 		local KillerHRP =
@@ -3188,6 +3252,20 @@ local function fartsakenLoad()
 		})
 
 		BlatantTab:CreateDivider()
+
+		local Label = BlatantTab:CreateLabel(
+			"Dusekkar Silent-Aim Will NOT Work On Free Executors, Only AWP, Wave, Synapse z is supported",
+			"ban"
+		)
+
+		local SilentAimToggle = BlatantTab:CreateToggle({
+			Name = "Dusekkar Silent Aim",
+			CurrentValue = false,
+			Callback = function(state)
+				DusekkarSilentAim = state
+				SilentAimDusekkar(state)
+			end,
+		})
 
 		local BlockKeybind = BlatantTab:CreateKeybind({
 			Name = "Fake Block Keybind",
