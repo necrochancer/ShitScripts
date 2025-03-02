@@ -1495,23 +1495,23 @@ local function fartsakenLoad()
 	end
 
 	-- fart executors die ez ez ez bypass ez
-	task.spawn(function()
-		local RunService = game:GetService("RunService")
-		local player = workspace:FindFirstChild("Players")
-		local localPlayer = player and player:FindFirstChild("LocalPlayer")
-		local character = localPlayer and localPlayer:FindFirstChild("Character")
-		local speedMult = character and character:FindFirstChild("SpeedMultipliers")
-
-		if speedMult then
-			for _, v in ipairs(speedMult:GetChildren()) do
-				if v.Name == "PlasmaBeam" or v.Name == "Spawn Protection" then
-					print("Fart detected")
-					v.Value = 1
-				end
-			end
-		end
-		task.wait(0)
-	end)
+	-- task.spawn(function()
+		-- local RunService = game:GetService("RunService")
+		-- local player = workspace:FindFirstChild("Players")
+		-- local localPlayer = player and player:FindFirstChild("LocalPlayer")
+		-- local character = localPlayer and localPlayer:FindFirstChild("Character")
+		-- local speedMult = character and character:FindFirstChild("SpeedMultipliers")
+-- 
+		-- if speedMult then
+			-- for _, v in ipairs(speedMult:GetChildren()) do
+				-- if v.Name == "PlasmaBeam" or v.Name == "Spawn Protection" then
+					-- print("Fart detected")
+					-- v.Value = 1
+				-- end
+			-- end
+		-- end
+		-- task.wait(0)
+	-- end)
 
 	task.delay(5, function()
 		pcall(function()
