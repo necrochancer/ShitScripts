@@ -1194,10 +1194,10 @@ local function fartsakenLoad()
 					)
 
 					local predictedPosition = targetHRP.Position + targetVelocity * scaledPredictionTime
-					predictedPosition = predictedPosition - Vector3.new(0, 0.5, 0)
+					--predictedPosition = predictedPosition - Vector3.new(0, 0.5, 0)
 
 					local directionToTarget = (predictedPosition - wawa.Position).unit
-					directionToTarget = Vector3.new(directionToTarget.X, directionToTarget.Y - 0.5, directionToTarget.Z)
+					--directionToTarget = Vector3.new(directionToTarget.X, directionToTarget.Y - 0.5, directionToTarget.Z)
 
 					local Camera = game.Workspace.CurrentCamera
 					local targetCFrame = CFrame.lookAt(
