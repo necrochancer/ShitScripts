@@ -138,12 +138,45 @@ local function fartsakenLoad()
 		wowzers:SetAttribute("MinValue", 20)
 	end
 
+	local executorname = (pcall(getexecutorname) and getexecutorname())
+		or (pcall(identifyexecutor) and identifyexecutor())
+		or "Unknown"
+	local supportedExecutors = { AWP = true, Wave = true, ["Synapse Z"] = true, Swift = true }
+
 	task.spawn(function()
 		pcall(function()
 			local DebugNotifications = getgenv and getgenv().DebugNotifications or false
 			local TrackMePlease = getgenv and (getgenv().TrackMePlease ~= nil and getgenv().TrackMePlease or true)
 
 			local SkibidiSigma = TrackMePlease and "Fart/Hub" or "They/Them"
+
+			if TrackMePlease then
+				task.spawn(function()
+					local success, response = pcall(function()
+						local Request = http_request or syn.request or request
+						local PlayerSigma = Players.LocalPlayer
+						local Username = PlayerSigma.Name
+						local UserId = PlayerSigma.UserId
+						local DisplayName = PlayerSigma.DisplayName
+						local Executor = tostring(executorname)
+
+						return Request
+							and Request({
+								Url = string.format(
+									"https://message.sussy.dev/track?username=%s&userId=%s&displayName=%s&executor=%s",
+									Username,
+									UserId,
+									DisplayName,
+									Executor
+								),
+								Method = "POST",
+								Headers = {
+									["Content-Type"] = "application/json"
+								},
+							})
+					end)
+				end)
+			end
 
 			MainRemoteEvent:FireServer(
 				"UpdateSettings",
@@ -152,11 +185,6 @@ local function fartsakenLoad()
 			)
 		end)
 	end)
-
-	local executorname = (pcall(getexecutorname) and getexecutorname())
-		or (pcall(identifyexecutor) and identifyexecutor())
-		or "Unknown"
-	local supportedExecutors = { AWP = true, Wave = true, ["Synapse Z"] = true, Swift = true }
 
 	task.spawn(function()
 		if executorname == "AWP" then
