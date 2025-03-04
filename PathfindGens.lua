@@ -196,10 +196,14 @@ end
 
 local function InGenerator()
 	for i, v in ipairs(game:GetService("Players").LocalPlayer.PlayerGui.TemporaryUI:GetChildren()) do
-		if v:IsA("Frame") and v.Name == "GeneratorWarning" then
+		print(v.Name)
+		if string.sub(v.Name, 1, 3) == "Gen" then
+			print("not in generator")
 			return false
-		else return true end
+		end
 	end
+	print("didnt find frame")
+	return true
 end
 
 local function PathFinding(generator)
@@ -303,21 +307,23 @@ local function DoAllGenerators()
 	for _, g in ipairs(findGenerators()) do
 		local pathStarted = false
 		for attempt = 1, 3 do
-			local playersNearby = false
-			for _, player in ipairs(Players:GetPlayers()) do
-				if player ~= Players.LocalPlayer and player:DistanceFromCharacter(g:GetPivot().Position) <= 25 then
-					playersNearby = true
-					break
-				end
-			end
+
+			-- dont need cuz im sigma mafiza boy
+			-- local playersNearby = false
+			-- for _, player in ipairs(Players:GetPlayers()) do
+			-- 	if player ~= Players.LocalPlayer and player:DistanceFromCharacter(g:GetPivot().Position) <= 25 then
+			-- 		playersNearby = true
+			-- 		break
+			-- 	end
+			-- end
 
 			if (Players.LocalPlayer.Character:GetPivot().Position - g:GetPivot().Position).Magnitude > 500 then
 				break
 			end
 
-			if not playersNearby and g:FindFirstChild("Progress") and g.Progress.Value < 100 then
-				g:GetPivot()
-			end
+			-- if not playersNearby and g:FindFirstChild("Progress") and g.Progress.Value < 100 then
+				-- g:GetPivot()
+			-- end
 
 			pathStarted = PathFinding(g)
 			if pathStarted then
