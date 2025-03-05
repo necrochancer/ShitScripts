@@ -263,7 +263,7 @@ local function fartsakenLoad()
 			FileName = "fartsakenKey",
 			SaveKey = true,
 			GrabKeyFromSite = false,
-			Key = { "mogged" },
+			Key = { "fanumtax" },
 		},
 	})
 
