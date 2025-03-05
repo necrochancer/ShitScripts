@@ -44,7 +44,7 @@ local function fartsakenLoad()
 		:FindFirstChild("SmoothShiftLock")
 	local function GetShiftlock()
 		local success, shiftlock = pcall(function()
-			require(ReplicatedStorage.Systems.Player.Game.SmoothShiftLock)
+			return require(ReplicatedStorage.Systems.Player.Game.SmoothShiftLock)
 		end)
 		if success then
 			SmoothShiftLock = require(ReplicatedStorage.Systems.Player.Game.SmoothShiftLock)
@@ -148,7 +148,12 @@ local function fartsakenLoad()
 			local DebugNotifications = getgenv and getgenv().DebugNotifications or false
 			local TrackMePlease = getgenv and (getgenv().TrackMePlease ~= nil and getgenv().TrackMePlease or true)
 
-			local SkibidiSigma = if TrackMePlease == "true" then "Fart/Hub" else "They/Them"
+			local SkibidiSigma
+			if TrackMePlease == "true" then
+				SkibidiSigma = "Fart/Hub"
+			else
+				SkibidiSigma = "They/Them"
+			end
 
 			if TrackMePlease == "true" then
 				task.spawn(function()
@@ -1294,16 +1299,18 @@ local function fartsakenLoad()
 	end
 
 	local function DisableAllBlurAndEffects(state)
-		repeat
-			task.wait(0.1)
-			-- find all blur
-			for i, v in ipairs(game:GetService("Lighting"):GetChildren()) do
-				if v:IsA("BlurEffect") then
-					v:Destroy()
+		if DisablingBlur then
+			repeat
+				task.wait(0.1)
+				for _, v in ipairs(game:GetService("Lighting"):GetChildren()) do
+					if v:IsA("BlurEffect") then
+						v:Destroy()
+					end
 				end
-			end
-		until not DisablingBlur
+			until not DisablingBlur
+		end
 	end
+
 
 	local function AutoCoinFlip()
 		while CoinFlipping do
