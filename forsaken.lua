@@ -268,7 +268,7 @@ local function fartsakenLoad()
 			FileName = "fartsakenKey",
 			SaveKey = true,
 			GrabKeyFromSite = false,
-			Key = { "fanumtax" },
+			Key = { "skibidi" },
 		},
 	})
 
