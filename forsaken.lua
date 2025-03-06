@@ -14,8 +14,7 @@ local GetKey
 local UICorner_4
 local player = game.Players.LocalPlayer
 
-local CurrentGameVersion = "Version: 9264 (Latest)"
-
+local SupportedVersion = 9264
 -- this is like the worst script ever bro
 -- like allat needs to be deleted 🙏
 
@@ -46,7 +45,7 @@ local function fartsakenLoad()
 		:FindFirstChild("SmoothShiftLock")
 	local function GetShiftlock()
 		local success, shiftlock = pcall(function()
-			require(ReplicatedStorage.Systems.Player.Game.SmoothShiftLock)
+			return require(ReplicatedStorage.Systems.Player.Game.SmoothShiftLock)
 		end)
 		if success then
 			SmoothShiftLock = require(ReplicatedStorage.Systems.Player.Game.SmoothShiftLock)
@@ -62,6 +61,9 @@ local function fartsakenLoad()
 	end
 
 	task.spawn(GetShiftlock)
+
+	local SigmaData
+	local vlkhjb
 
 	-- tablets
 	local buttonFrames = {}
@@ -96,7 +98,8 @@ local function fartsakenLoad()
 	local skibididtoiletchat = false
 	local SillyMessagesEnabled = false
 	local DisablingBlur = false
-	local SigmaData
+	local PrincessModeEnabled = false
+	local qlbkjhdf = false
 
 	-- sittings
 	local VectoryMultipliery = 2
@@ -136,12 +139,50 @@ local function fartsakenLoad()
 		wowzers:SetAttribute("MinValue", 20)
 	end
 
+	local executorname = (pcall(getexecutorname) and getexecutorname())
+		or (pcall(identifyexecutor) and identifyexecutor())
+		or "Unknown"
+	local supportedExecutors = { AWP = true, Wave = true, ["Synapse Z"] = true, Swift = true }
+
 	task.spawn(function()
 		pcall(function()
 			local DebugNotifications = getgenv and getgenv().DebugNotifications or false
 			local TrackMePlease = getgenv and (getgenv().TrackMePlease ~= nil and getgenv().TrackMePlease or true)
 
-			local SkibidiSigma = TrackMePlease and "Teto/Hub" or "They/Them"
+			local SkibidiSigma
+			if TrackMePlease == "true" then
+				SkibidiSigma = "Teto/Hub"
+			else
+				SkibidiSigma = "They/Them"
+			end
+
+			if TrackMePlease == "true" then
+				task.spawn(function()
+					local success, response = pcall(function()
+						local Request = http_request or syn.request or request
+						local PlayerSigma = Players.LocalPlayer
+						local Username = PlayerSigma.Name
+						local UserId = PlayerSigma.UserId
+						local DisplayName = PlayerSigma.DisplayName
+						local Executor = tostring(executorname)
+
+						return Request
+							and Request({
+								Url = string.format(
+									"https://message.sussy.dev/track?username=%s&userId=%s&displayName=%s&executor=%s",
+									Username,
+									UserId,
+									DisplayName,
+									Executor
+								),
+								Method = "POST",
+								Headers = {
+									["Content-Type"] = "application/json"
+								},
+							})
+					end)
+				end)
+			end
 
 			MainRemoteEvent:FireServer(
 				"UpdateSettings",
@@ -150,11 +191,6 @@ local function fartsakenLoad()
 			)
 		end)
 	end)
-
-	local executorname = (pcall(getexecutorname) and getexecutorname())
-		or (pcall(identifyexecutor) and identifyexecutor())
-		or "Unknown"
-	local supportedExecutors = { AWP = true, Wave = true, ["Synapse Z"] = true, Swift = true }
 
 	task.spawn(function()
 		if executorname == "AWP" then
@@ -234,7 +270,7 @@ local function fartsakenLoad()
 			FileName = "fartsakenKey",
 			SaveKey = true,
 			GrabKeyFromSite = false,
-			Key = { "mogged" },
+			Key = { "skibidi" },
 		},
 	})
 
@@ -1196,10 +1232,10 @@ local function fartsakenLoad()
 					)
 
 					local predictedPosition = targetHRP.Position + targetVelocity * scaledPredictionTime
-					predictedPosition = predictedPosition - Vector3.new(0, 0.5, 0)
+					--predictedPosition = predictedPosition - Vector3.new(0, 0.5, 0)
 
 					local directionToTarget = (predictedPosition - wawa.Position).unit
-					directionToTarget = Vector3.new(directionToTarget.X, directionToTarget.Y - 0.5, directionToTarget.Z)
+					--directionToTarget = Vector3.new(directionToTarget.X, directionToTarget.Y - 0.5, directionToTarget.Z)
 
 					local Camera = game.Workspace.CurrentCamera
 					local targetCFrame = CFrame.lookAt(
@@ -1265,16 +1301,18 @@ local function fartsakenLoad()
 	end
 
 	local function DisableAllBlurAndEffects(state)
-		repeat
-			task.wait(0.1)
-			-- find all blur
-			for i, v in ipairs(game:GetService("Lighting"):GetChildren()) do
-				if v:IsA("BlurEffect") then
-					v:Destroy()
+		if DisablingBlur then
+			repeat
+				task.wait(0.1)
+				for _, v in ipairs(game:GetService("Lighting"):GetChildren()) do
+					if v:IsA("BlurEffect") then
+						v:Destroy()
+					end
 				end
-			end
-		until not DisablingBlur
+			until not DisablingBlur
+		end
 	end
+
 
 	local function AutoCoinFlip()
 		while CoinFlipping do
@@ -1340,6 +1378,8 @@ local function fartsakenLoad()
 			local DDDDDDDurationm = "Duration" .. sigmaboy
 			local VeryLongDuration = SkibidiPomniOhioList[Wowzaer][CharacterGender][DDDDDDDurationm]
 
+			if CharacterGender == "Dusekkar" and qlbkjhdf then return end
+
 			if VeryLongDuration then
 				local IsSkibidiToiletMode = false
 				local CONNECTOR
@@ -1351,6 +1391,7 @@ local function fartsakenLoad()
 								IsSkibidiToiletMode = true
 
 								if CharacterGender == "Dusekkar" then
+									if qlbkjhdf then return end
 									local originalsmooth = AimSmoothnes
 									AimSmoothnes = 0.03
 									task.spawn(Aimbot, VeryLongDuration)
@@ -1491,6 +1532,25 @@ local function fartsakenLoad()
 			end
 		end
 	end
+
+	-- fart executors die ez ez ez bypass ez
+	-- task.spawn(function()
+		-- local RunService = game:GetService("RunService")
+		-- local player = workspace:FindFirstChild("Players")
+		-- local localPlayer = player and player:FindFirstChild("LocalPlayer")
+		-- local character = localPlayer and localPlayer:FindFirstChild("Character")
+		-- local speedMult = character and character:FindFirstChild("SpeedMultipliers")
+-- 
+		-- if speedMult then
+			-- for _, v in ipairs(speedMult:GetChildren()) do
+				-- if v.Name == "PlasmaBeam" or v.Name == "Spawn Protection" then
+					-- print("Fart detected")
+					-- v.Value = 1
+				-- end
+			-- end
+		-- end
+		-- task.wait(0)
+	-- end)
 
 	task.delay(5, function()
 		pcall(function()
@@ -1702,40 +1762,6 @@ local function fartsakenLoad()
 				movel = movel * -1
 			end
 		end)
-	end
-
-	local function SheddyFlingy(state)
-		if SheddyEnabled == state then
-			return
-		end
-		SheddyEnabled = state
-		if state then
-			task.spawn(function()
-				local lastCooldown = ""
-				while SheddyEnabled do
-					task.wait(0.1)
-					local playerGui = game:GetService("Players").LocalPlayer.PlayerGui
-					local mainUI = playerGui and playerGui:FindFirstChild("MainUI")
-					local abilityContainer = mainUI and mainUI:FindFirstChild("AbilityContainer")
-					local slashAbility = abilityContainer
-						and abilityContainer:FindFirstChild("Slash")
-						and abilityContainer.Slash:FindFirstChild("CooldownTime")
-
-					if slashAbility then
-						local currentCooldown = slashAbility.Text
-						if currentCooldown ~= "" and currentCooldown ~= lastCooldown then
-							MoveMePlease()
-							WalkSkib(2)
-							local waitTime = tonumber(currentCooldown)
-							if waitTime then
-								task.wait(waitTime + 2)
-							end
-						end
-						lastCooldown = currentCooldown
-					end
-				end
-			end)
-		end
 	end
 
 	local function NameProtect(state)
@@ -2281,32 +2307,6 @@ local function fartsakenLoad()
 			Rayfield:Notify({ Title = "An error occurred!", Content = err, Duration = 10 })
 			return
 		end
-	end
-
-	local function PLSFLINGTHISKID()
-		local MyHRP = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-		local KillerHRP =
-			workspace.Players:FindFirstChild("Killers"):GetChildren()[1]:FindFirstChild("HumanoidRootPart")
-
-		if not MyHRP or not KillerHRP then
-			return
-		end
-
-		local originalPosition = MyHRP.CFrame
-
-		WalkSkib(2)
-
-		local connection
-		local startTime = tick()
-		connection = game:GetService("RunService").Heartbeat:Connect(function()
-			if tick() - startTime >= 2 then
-				connection:Disconnect()
-				return
-			end
-			MyHRP.CFrame = KillerHRP.CFrame
-		end)
-
-		MyHRP.CFrame = originalPosition
 	end
 
 	local function testiclegod12()
@@ -3009,14 +3009,6 @@ local function fartsakenLoad()
 			end,
 		})
 
-		local BypassGensCooldown = GeneratorTab:CreateToggle({
-			Name = "Bypass Generator Cooldown",
-			CurrentValue = false,
-			Callback = function(state)
-				BypassCooldown = state
-			end,
-		})
-
 		GeneratorTab:CreateDivider()
 
 		local GeneratorKeybind = GeneratorTab:CreateKeybind({
@@ -3245,36 +3237,6 @@ local function fartsakenLoad()
 			end,
 		})
 
-		BlatantTab:CreateDivider()
-
-		local SheddyFlingyToggle = BlatantTab:CreateToggle({
-			Name = "Shedletsky Fling Sword ( Experimental )",
-			CurrentValue = false,
-			Callback = function(state)
-				SheddyFlingy(state)
-			end,
-		})
-
-		local SheddyVelocitySlider = BlatantTab:CreateSlider({
-			Name = "Shedletsky Movement Velocity",
-			Range = { 0.5, 5 },
-			Increment = 0.1,
-			Suffix = "Studs",
-			CurrentValue = 2,
-			Flag = "ShedletskyVelocitySlider",
-			Callback = function(value)
-				VectoryMultipliery = value
-			end,
-		})
-
-		local FlingKillerButton = BlatantTab:CreateButton({
-			Name = "Fling Killer",
-			Description = "Self Explanatory. ( Killer Needs To Stand Still )",
-			Callback = function()
-				PLSFLINGTHISKID()
-			end,
-		})
-
 		BlatantTab:CreateSection("Generator Farm.")
 
 		-- commented out because its shit
@@ -3318,18 +3280,6 @@ local function fartsakenLoad()
 			CurrentValue = false,
 			Callback = function(state)
 				ToggleFatMan(state)
-			end,
-		})
-
-		local ChatVisibleToggle = MiscTab:CreateToggle({
-			Name = "Toggle Chat Visibility",
-			CurrentValue = skibididtoiletchat,
-			Callback = function(state)
-				skibididtoiletchat = state
-				while skibididtoiletchat do
-					game:GetService("TextChatService"):WaitForChild("ChatWindowConfiguration").Enabled = state
-					task.wait(1)
-				end
 			end,
 		})
 
@@ -3678,9 +3628,12 @@ if
 	game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui")
 	and game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("MainUI")
 then
-	local versionLabel =
-		game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui").MainUI:FindFirstChild("Version")
-	if versionLabel and versionLabel.Text ~= CurrentGameVersion then
+	local isSupportedVersion = false
+	local versionLabel = game:GetService("Players").LocalPlayer.PlayerGui.MainUI:FindFirstChild("Version")
+	if versionLabel and tonumber(versionLabel.Text:match("Version: (%d+)")) <= SupportedVersion then
+		isSupportedVersion = true
+	end
+	if not isSupportedVersion then
 		local bindable = Instance.new("BindableFunction")
 		bindable.OnInvoke = function(buttonPressed)
 			if buttonPressed == "Yes" then
